@@ -104,9 +104,30 @@ You need: [Claude Code](https://claude.com/claude-code), Figma Desktop, and the 
 
 1. Clone this repo and open the folder in Claude Code. The skills in `.claude/skills/` load automatically.
 2. Open your Figma file in Figma Desktop and start the Desktop Bridge plugin.
-3. Type a line from the table above in Claude Code.
+3. Run a skill (see below).
 
 To use the skills in other projects, copy the folders in `.claude/skills/` to `~/.claude/skills/`.
+
+## Running a skill
+
+Two ways, same result:
+
+| Way | Example | When to use |
+|---|---|---|
+| **Type the line** | `Spacing` | Fastest. Claude matches the line to the right skill |
+| **Slash command** | `/figma-spacing` | Forces that skill. Safer for short lines like `Mapped` or `Responsive` |
+
+Parameters go after the skill name:
+
+```
+/figma-color-scale Purple:#5C3FC4
+/figma-alias-bridge Brand/Purple -> Alias/Primary (Purple)
+/figma-mapped-roles Mapped/Text dark
+/figma-spacing Spacing/4
+/figma-type-scale Typography base 18 ratio 1.333 mobile 1.2
+```
+
+With no parameters, the skill does its default run (`/figma-spacing` writes the whole scale). Add `dry run` to preview. Type `/` to see the installed skills.
 
 ## Try it
 
