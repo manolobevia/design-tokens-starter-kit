@@ -24,6 +24,15 @@ Every Alias variable references a Brand variable. Every Mapped variable referenc
 
 Add `dry run` to any line to preview without writing.
 
+## Build order
+
+Run the skills in this order, because each tier references the one before it:
+
+1. **`figma-color-scale`**: your brand and neutral colors, or `-default` for the system colors. Fills Brand.
+2. **`figma-alias-bridge`**: map Brand groups into Alias roles, with Light and Dark values.
+3. **`figma-mapped-roles`**: build the usage tier on top of Alias.
+4. **`figma-spacing`** and **`figma-type-scale`**: the non-color primitives. These don't depend on the color steps, so run them any time after step 1.
+
 ## Parameters
 
 Every skill reads one typed line. These are all the forms each one accepts.
