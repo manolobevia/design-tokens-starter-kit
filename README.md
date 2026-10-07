@@ -24,6 +24,80 @@ Every Alias variable references a Brand variable. Every Mapped variable referenc
 
 Add `dry run` to any line to preview without writing.
 
+## Parameters
+
+Every skill reads one typed line. These are all the forms each one accepts.
+
+**Any skill:** add `dry run` or `preview` to report what would happen and write nothing.
+
+### `figma-color-scale`
+
+| Type | Result |
+|---|---|
+| `Purple:#5C3FC4` | Scale `Purple/950` to `Purple/50`. The hex is the 500 Default |
+| `Name=#HEX`, `Name:HEX`, `Name:#ABC` | Also accepted (with or without `#`, 3 or 6 digits) |
+| Several colors | One per line, or separated by spaces or commas |
+
+### `figma-alias-bridge`
+
+| Type | Result |
+|---|---|
+| `Brand/Purple -> Alias/Primary` | Every `Purple` step becomes a reference in `Primary` |
+| `... Alias/Primary (Purple)` | Text in parentheses is a note and is dropped from the name |
+| Arrow | `->`, `→`, `=>` or the word `to` |
+| Several lines | One bridge per line. Running again repoints, never duplicates |
+
+### `figma-mapped-roles`
+
+| Type | Result |
+|---|---|
+| `Mapped` | Full preset: Surface, Border, Text, Icon (Light mode) |
+| `Mapped/Text`, `Mapped/Icon` | Only those groups. Combine several in one message |
+| `Mapped dark` | Add the Dark mode and fill it for everything that exists |
+| `Mapped/Text dark` | Create the group and add Dark in one run |
+| `Alias/Neutral/900 -> Mapped/Text/heading` | Point one variable at one Alias variable |
+| `... -> Mapped/Text/action (dark)` | Same, for Dark only. `(light)` also works |
+| `rename Surface/sucess to Surface/success` | Rename in place, bindings stay connected |
+| `reset Mapped/Text` | Put hand-changed variables back to the preset |
+
+Hand-tuned values are kept on later runs unless you `reset` or use an arrow line.
+
+### `figma-spacing`
+
+| Type | Result |
+|---|---|
+| `Spacing` or `Spacing scale` | The whole scale |
+| `Spacing/4` | One step. Several can share a message |
+| `reset Spacing`, `regenerate the spacing scale` | Overwrite hand-changed values |
+
+Token = number of 4px units: `Spacing/4` is 16px. Steps: `0` (0px), `0-25` (1px), `0-5` (2px), `1` (4), `2` (8), `3` (12), `4` (16), `5` (20), `6` (24), `8` (32), `10` (40), `12` (48), `16` (64), `20` (80), `24` (96).
+
+### `figma-type-scale`
+
+| Type | Result |
+|---|---|
+| `Typography` | Variables, then text styles |
+| `Responsive` or `Type scale` | Variables only (Desktop and Mobile modes) |
+| `Responsive/Heading` | One variable group |
+| `Type styles`, `Type styles/Body` | Text styles only, or one group |
+| `Brand/Font family/Body = Roboto` | Set the body font (`Heading` works too) |
+| `reset Responsive`, `reset type styles` | Recalculate or rebind to the preset |
+
+Settings can follow `Typography` in any order. Anything omitted keeps its default:
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `base 18` | 16 | Body size in px |
+| `ratio 1.333` | 1.25 | Desktop scale ratio. Names work too (`Perfect Fourth`) |
+| `mobile 1.2` | 1.2 | Mobile scale ratio |
+| `line height 1.2` | 1.2 | Line height multiplier |
+| `body line height 1.5` | 1.2 | Line height for Body and Caption only |
+| `spacing 0.5` | 0.5 | Paragraph spacing multiplier |
+| `body spacing 1` | 0.5 | Paragraph spacing for Body and Caption only |
+| `grid 4` | 4 | Sizes round to a multiple of this |
+
+Example: `Typography base 18 ratio 1.333 mobile 1.2`. Settings are not stored, so repeat them on later runs.
+
 ## Setup
 
 You need: [Claude Code](https://claude.com/claude-code), Figma Desktop, and the [Figma Console MCP](https://github.com/southleft/figma-console-mcp) with its Desktop Bridge plugin running.
