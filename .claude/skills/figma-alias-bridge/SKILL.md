@@ -1,6 +1,6 @@
 ---
 name: "figma-alias-bridge"
-description: Link Brand groups to Alias roles in Figma as references. Use for arrow lines like Brand/Purple -> Alias/Primary (Purple), or -default for Primary, Neutral, Error, Success, Warning, Information.
+description: Link Brand groups to Alias roles in Figma as references. Use for arrow lines like Brand/Purple -> Alias/Primary (Purple), or -default for Neutral, Error, Success, Warning, Information.
 ---
 
 # Figma alias bridge
@@ -27,10 +27,9 @@ Read it as "take everything in the Purple group of the Brand collection and mirr
 
 ### Default set
 
-`-default` is shorthand for these six lines. Put them in `BRIDGES` exactly as written:
+`-default` is shorthand for these five lines. Put them in `BRIDGES` exactly as written:
 
 ```
-Brand/Purple -> Alias/Primary (Purple)
 Brand/Gray -> Alias/Neutral (Gray)
 Brand/Red -> Alias/Error (Red)
 Brand/Green -> Alias/Success (Green)
@@ -38,7 +37,7 @@ Brand/Orange -> Alias/Warning (Orange)
 Brand/Blue -> Alias/Information (Blue)
 ```
 
-It can be combined with typed lines, for example `-default` followed by `Brand/Brown -> Alias/Primary`. A typed line replaces the default line for the same target role, so the example above feeds Primary from Brown and not from Purple. If a Brand group in the set does not exist, the script reports it under the usual missing-source rule: bridge the groups that exist, name the ones that do not, and do not guess. Foundation is not part of the set.
+It does not create Primary or any other brand role (Secondary, Tertiary and so on). Which brand color feeds those is the user's choice, so they type those lines themselves, for example `-default` followed by `Brand/Purple -> Alias/Primary (Purple)`. A typed line replaces the default line for the same target role. If a Brand group in the set does not exist, the script reports it under the usual missing-source rule: bridge the groups that exist, name the ones that do not, and do not guess. Foundation is not part of the set.
 
 A message in this format is the whole request and the go-ahead. Run it without asking for confirmation first, because the user designed this to be a one-line action and the operation is safe to repeat (see "What the script guarantees"). The only reasons to stop are listed under "When to ask".
 

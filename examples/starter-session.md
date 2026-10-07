@@ -13,9 +13,10 @@ Paste each line into Claude Code, one at a time or several together.
 ## 2. Alias roles
 ```
 /figma-alias-bridge -default
+Brand/Purple -> Alias/Primary (Purple)
 ```
 
-`-default` bridges Purple → Primary, Gray → Neutral, Red → Error, Green → Success, Orange → Warning, Blue → Information. To feed Primary from another color, add `Brand/Brown -> Alias/Primary` to the same message.
+`-default` bridges Gray → Neutral, Red → Error, Green → Success, Orange → Warning, Blue → Information. Brand roles such as Primary are yours to add, as in the last line.
 
 ## 3. Mapped usage
 ```
