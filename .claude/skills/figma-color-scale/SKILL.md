@@ -1,6 +1,6 @@
 ---
 name: figma-color-scale
-description: Create an 11-step color scale (950-50) as Figma Brand color variables from one base color. Use when the user types Name:#HEX (e.g. Purple:#5C3FC4) or asks for a color ramp or tints and shades.
+description: Create 11-step color scales (950-50) as Figma Brand variables from Name:#HEX, or add the default set (-default: red, blue, orange, green, gray, Foundation) for tints, shades and color ramps.
 ---
 
 # Figma color scale
@@ -16,6 +16,17 @@ Purple:#5C3FC4
 ```
 
 The name becomes the variable group. The hex is the 500 Default step. Several colors can arrive in one message, one per line or separated by spaces or commas. Handle each the same way.
+
+### Default set
+
+Two extra triggers add the standard system colors without typing hexes:
+
+| The user types | What it writes |
+|---|---|
+| `-default` | Red (error), Blue (information), Orange (warning), Green (success), Gray (neutral), each a full scale, plus Foundation |
+| `Foundation` | Only `Foundation/White` (#FFFFFF) and `Foundation/Black` (#000000), single variables, not scales |
+
+They combine with typed colors, for example `-default` followed by `Purple:#3B1A53`. A color typed by the user wins over the preset color of the same name. Pass `-default` or `Foundation` to the script as an argument and use its output like any other color. Foundation steps are not scales, so create them as plain variables with no 500 Default.
 
 A message in this format is the whole request and the go-ahead. Build the scale and write it to Figma without asking for confirmation first, because the user designed this to be a one-line action. The only reasons to stop and ask are listed under "When to ask".
 
@@ -89,10 +100,10 @@ From the result you need: the collections, and the names of existing variables.
 
 ### Choose the collection
 
-- If a collection with "Primitives" in its name exists, use it.
-- If the file has exactly one collection, use it.
-- If the file has no collections, create one named `Brand/Primitives` (see the first case below).
-- If there are several collections and none is clearly the primitives one, ask which to use.
+The collection is always named `Brand`, never Primitives.
+
+- If a collection named `Brand` exists (ignore case), use it.
+- Otherwise create one named `Brand` (see the first case below), even if other collections exist.
 
 ### Create the variables
 
@@ -107,7 +118,7 @@ Rules that apply in every case:
 
 ```json
 {
-  "collectionName": "Brand/Primitives",
+  "collectionName": "Brand",
   "modes": ["Mode 1"],
   "tokens": [
     {"name": "Purple/950", "resolvedType": "COLOR", "values": {"Mode 1": "#090614"}},
@@ -147,5 +158,4 @@ Do not add contrast audits or usage advice unless asked. The one exception: if a
 ## When to ask
 
 - The input cannot be parsed as a name plus a hex color.
-- Several collections exist and none is clearly the primitives collection.
 - After a tool search, no Figma tool that can write variables is connected, or the write fails because Figma Desktop or the Desktop Bridge plugin is not running. In that case give the scale table, say plainly that the variables were not created, and name what is missing so the user can fix it and resend the color.

@@ -35,7 +35,9 @@ falling back to values.
 Turns one base color into an 11-step scale (950 to 50) written as color
 variables in Brand.
 - **Trigger:** a line in the form `Name:#HEX`, for example `Purple:#5C3FC4`.
-  Several colors can arrive in one message, one per line.
+  Several colors can arrive in one message, one per line. `-default` adds Red,
+  Blue, Orange, Green and Gray scales plus Foundation (White, Black);
+  `Foundation` adds only the last.
 - **Method:** the hex is the 500 Default. Darker steps lower the base color's
   opacity over pure black, lighter steps over pure white, in 20% increments,
   with the two ends (950 and 50) at 10%. This reproduces the manual Figma

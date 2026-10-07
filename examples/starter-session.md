@@ -5,10 +5,10 @@ Paste each line into Claude Code, one at a time or several together.
 ## 1. Brand colors
 ```
 Purple:#5C3FC4
-Gray:#6B7280
-Red:#DC2626
-Green:#16A34A
+-default
 ```
+
+`-default` adds Red, Blue, Orange, Green, Gray and Foundation (White and Black).
 
 ## 2. Alias roles
 ```

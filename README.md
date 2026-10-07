@@ -37,6 +37,10 @@ Every skill reads one typed line. These are all the forms each one accepts.
 | `Purple:#5C3FC4` | Scale `Purple/950` to `Purple/50`. The hex is the 500 Default |
 | `Name=#HEX`, `Name:HEX`, `Name:#ABC` | Also accepted (with or without `#`, 3 or 6 digits) |
 | Several colors | One per line, or separated by spaces or commas |
+| `-default` | Red (error), Blue (information), Orange (warning), Green (success), Gray, plus Foundation |
+| `Foundation` | Only `Foundation/White` and `Foundation/Black` |
+
+`-default` can be combined with your own colors. A color you type wins over the preset one of the same name. All colors go in the `Brand` collection.
 
 ### `figma-alias-bridge`
 
@@ -135,7 +139,7 @@ Run these in order (more in [examples/starter-session.md](examples/starter-sessi
 
 ```
 Purple:#5C3FC4
-Gray:#6B7280
+-default
 Brand/Purple -> Alias/Primary (Purple)
 Brand/Gray -> Alias/Neutral (Gray)
 Mapped

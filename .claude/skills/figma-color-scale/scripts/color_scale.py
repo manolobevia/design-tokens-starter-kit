@@ -4,6 +4,8 @@
 Usage:
     python color_scale.py "Purple:#5C3FC4" ["Teal:#1A8647" ...]
     python color_scale.py --table "Purple:#5C3FC4"
+    python color_scale.py -default            # Red, Blue, Orange, Green, Gray + Foundation
+    python color_scale.py Foundation          # White and Black only
 
 The base color is the 500 step. Every other step is the base color at a
 given opacity, flattened over pure black (darker steps) or pure white
@@ -31,6 +33,18 @@ STEPS = [
     ("100", 0.20, WHITE),
     ("50", 0.10, WHITE),
 ]
+
+# -default preset: status colors and a neutral grey, each a full scale.
+DEFAULT_COLORS = [
+    "Red:#DC2626",     # error
+    "Blue:#2563EB",    # information
+    "Orange:#F97316",  # warning
+    "Green:#16A34A",   # success
+    "Gray:#6B7280",    # neutral
+]
+
+# Foundation: single variables, not scales.
+FOUNDATION = [("White", "#FFFFFF"), ("Black", "#000000")]
 
 PATTERN = re.compile(r"^\s*(.+?)\s*[:=]\s*#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\s*$")
 
@@ -73,7 +87,16 @@ def scale(name, hx):
     return {"name": name, "base": f"#{hx}", "steps": steps}
 
 
+def foundation():
+    steps = [{"variable": f"Foundation/{n}", "step": n, "hex": hx} for n, hx in FOUNDATION]
+    return {"name": "Foundation", "base": None, "steps": steps}
+
+
 def table(result):
+    if result["base"] is None:
+        lines = [result["name"], "", "| Variable | Hex |", "|---|---|"]
+        lines += [f"| {s['variable']} | {s['hex']} |" for s in result["steps"]]
+        return "\n".join(lines)
     lines = [f"{result['name']} (base {result['base']})", "",
              "| Variable | Opacity | Surface | Hex |", "|---|---|---|---|"]
     for s in result["steps"]:
@@ -87,8 +110,20 @@ def main(argv):
     if not args:
         print(__doc__)
         return 1
+    results, seen = [], set()
     try:
-        results = [scale(*parse(a)) for a in args]
+        for a in args:
+            key = a.strip().lower()
+            if key in ("-default", "--default"):
+                items = [scale(*parse(c)) for c in DEFAULT_COLORS] + [foundation()]
+            elif key == "foundation":
+                items = [foundation()]
+            else:
+                items = [scale(*parse(a))]
+            for r in items:
+                if r["name"] not in seen:  # explicit colors typed first win over the preset
+                    seen.add(r["name"])
+                    results.append(r)
     except ValueError as e:
         print(str(e), file=sys.stderr)
         return 2
