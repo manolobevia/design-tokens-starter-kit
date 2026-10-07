@@ -1,6 +1,6 @@
 ---
 name: "figma-alias-bridge"
-description: Link a Brand variable group to an Alias group in Figma as references, step for step. Use for arrow lines like Brand/Purple -> Alias/Primary (Purple), or when asked to create or repoint alias tokens.
+description: Link Brand groups to Alias roles in Figma as references. Use for arrow lines like Brand/Purple -> Alias/Primary (Purple), or -default for Primary, Neutral, Error, Success, Warning, Information.
 ---
 
 # Figma alias bridge
@@ -24,6 +24,21 @@ Read it as "take everything in the Purple group of the Brand collection and mirr
 - Apart from the note, the target group name is used exactly as typed, including spaces and capitalization.
 - The note is optional. `Brand/Purple -> Alias/Primary` gives the same result.
 - The arrow can be `->`, `→`, `=>`, or the word "to". Several bridges can arrive in one message, one per line. Handle each the same way.
+
+### Default set
+
+`-default` is shorthand for these six lines. Put them in `BRIDGES` exactly as written:
+
+```
+Brand/Purple -> Alias/Primary (Purple)
+Brand/Gray -> Alias/Neutral (Gray)
+Brand/Red -> Alias/Error (Red)
+Brand/Green -> Alias/Success (Green)
+Brand/Orange -> Alias/Warning (Orange)
+Brand/Blue -> Alias/Information (Blue)
+```
+
+It can be combined with typed lines, for example `-default` followed by `Brand/Brown -> Alias/Primary`. A typed line replaces the default line for the same target role, so the example above feeds Primary from Brown and not from Purple. If a Brand group in the set does not exist, the script reports it under the usual missing-source rule: bridge the groups that exist, name the ones that do not, and do not guess. Foundation is not part of the set.
 
 A message in this format is the whole request and the go-ahead. Run it without asking for confirmation first, because the user designed this to be a one-line action and the operation is safe to repeat (see "What the script guarantees"). The only reasons to stop are listed under "When to ask".
 

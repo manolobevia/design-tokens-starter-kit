@@ -49,7 +49,9 @@ Links a whole Brand group to an Alias group, step for step, so each Alias
 variable references the matching Brand variable.
 - **Trigger:** an arrow line, source left, target right:
   `Brand/Purple -> Alias/Primary (Purple)`. The arrow can be `->`, the arrow
-  glyph, `=>`, or the word "to".
+  glyph, `=>`, or the word "to". `-default` runs six bridges: Purple to
+  Primary, Gray to Neutral, Red to Error, Green to Success, Orange to Warning,
+  Blue to Information. A typed line replaces the default for the same role.
 - **Notes:** the part in parentheses is a reminder of which brand color feeds
   the role and is stripped from the name. The group is created as `Primary`,
   so an alias name survives a change of color later. This skill also sets the

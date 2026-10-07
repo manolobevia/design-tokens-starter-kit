@@ -4,19 +4,18 @@ Paste each line into Claude Code, one at a time or several together.
 
 ## 1. Brand colors
 ```
-Purple:#5C3FC4
--default
+/figma-color-scale Purple:#5C3FC4
+/figma-color-scale -default
 ```
 
 `-default` adds Red, Blue, Orange, Green, Gray and Foundation (White and Black).
 
 ## 2. Alias roles
 ```
-Brand/Purple -> Alias/Primary (Purple)
-Brand/Gray -> Alias/Neutral (Gray)
-Brand/Red -> Alias/Error (Red)
-Brand/Green -> Alias/Success (Green)
+/figma-alias-bridge -default
 ```
+
+`-default` bridges Purple → Primary, Gray → Neutral, Red → Error, Green → Success, Orange → Warning, Blue → Information. To feed Primary from another color, add `Brand/Brown -> Alias/Primary` to the same message.
 
 ## 3. Mapped usage
 ```

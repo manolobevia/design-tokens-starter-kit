@@ -59,6 +59,9 @@ Every skill reads one typed line. These are all the forms each one accepts.
 | `... Alias/Primary (Purple)` | Text in parentheses is a note and is dropped from the name |
 | Arrow | `->`, `→`, `=>` or the word `to` |
 | Several lines | One bridge per line. Running again repoints, never duplicates |
+| `-default` | Six bridges: Purple → Primary, Gray → Neutral, Red → Error, Green → Success, Orange → Warning, Blue → Information |
+
+Combine `-default` with your own lines. A line you type replaces the default for the same role, for example `Brand/Brown -> Alias/Primary` feeds Primary from Brown. If a Brand group is missing, the skill names it and does not guess.
 
 ### `figma-mapped-roles`
 
@@ -147,10 +150,9 @@ With no parameters, the skill does its default run (`/figma-spacing` writes the 
 Run these in order (more in [examples/starter-session.md](examples/starter-session.md)):
 
 ```
-Purple:#5C3FC4
--default
-Brand/Purple -> Alias/Primary (Purple)
-Brand/Gray -> Alias/Neutral (Gray)
+/figma-color-scale Purple:#5C3FC4
+/figma-color-scale -default
+/figma-alias-bridge -default
 Mapped
 Spacing
 Typography
