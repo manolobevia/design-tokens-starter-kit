@@ -114,8 +114,7 @@ in Brand under a Border width group (token x 4 = px).
 ### figma-token-docs
 Builds a page named Design Tokens that documents the whole system visually:
 a How to use guide (a card per skill), a Token health frame (issues, notes and
-passing checks computed from the live file), Brand scales, token lineage (each
-Mapped token traced through Alias to Brand), Alias roles, Mapped Light vs Dark, contrast checks, text styles
+passing checks computed from the live file), Brand scales, Alias roles, Mapped Light vs Dark, contrast checks, text styles
 in Desktop and Mobile, fonts and weights, spacing, radius and border width.
 - **Trigger:** `Design Tokens`. Also handles dry-run.
 - **How:** generated from the live variables and styles, and bound to them, so

@@ -21,7 +21,7 @@ Builds the Design Tokens page from the variables and text styles in the open fil
   dry run              Report what would be built, writes nothing
 
 Sections, in order: header, How to use, Token health, Brand colors, Alias roles, Mapped Light vs Dark,
-token lineage, contrast checks, typography (Desktop and Mobile), font families and weights,
+contrast checks, typography (Desktop and Mobile), font families and weights,
 spacing, border radius, border width.
 Missing pieces get a one-line note on the page, never an error.
 ```
@@ -45,7 +45,6 @@ A message in this form is the whole request and the go-ahead. Run it without ask
 | 2 | Brand colors | Every color group, 950 to 50, with hex |
 | 3 | Alias roles | Every role, with the Brand group it points to |
 | 4 | Mapped usage | Surface, Border, Text and Icon, Light and Dark side by side |
-| 4b | Token lineage | Every Mapped token with its chain through Alias to Brand and the final hex, in Light and Dark, so it is clear where each color comes from |
 | 5 | Contrast checks | A "Does not pass" list up front, then every text and border pair against WCAG AA in Light and Dark, with failing rows highlighted |
 | 6 | Typography | Every text style, Desktop and Mobile, with font, size, line height, paragraph spacing |
 | 7 | Font families and weights | Heading and Body specimens in every weight |
@@ -77,7 +76,7 @@ One call cannot build everything inside the 30 second limit, so build in groups 
 | Call | `SECTIONS` |
 |---|---|
 | 1 | `["header", "guide", "health", "brand", "alias"]` |
-| 2 | `["mapped", "lineage"]` |
+| 2 | `["mapped"]` |
 | 3 | `["contrast"]` |
 | 4 | `["typography", "fonts"]` |
 | 5 | `["spacing", "radius", "border"]` |

@@ -16,13 +16,13 @@
 
 // ---- CONFIG ----
 const PAGE = "Design Tokens";
-const SECTIONS = ["all"]; // "all", or any of: header, guide, health, brand, alias, mapped, lineage, contrast, typography, fonts, spacing, radius, border
+const SECTIONS = ["all"]; // "all", or any of: header, guide, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border
 const DRY_RUN = false;    // true = report what would be built, write nothing
 const EXPECT_FILE = "";   // optional file name guard, e.g. "Design System MB"
 // ---- END CONFIG ----
 
 const TAG = "figma-token-docs";
-const ORDER = ["header", "guide", "health", "brand", "alias", "mapped", "lineage", "contrast", "typography", "fonts", "spacing", "radius", "border"];
+const ORDER = ["header", "guide", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border"];
 const W = 1440, PAD = 80, CONTENT = W - PAD * 2; // 1280
 
 const low = (s) => String(s).trim().toLowerCase();
@@ -551,56 +551,6 @@ SECTION_FN.mapped = async () => {
     }
   }
   built.mapped = n;
-};
-
-// ===================== lineage =====================
-// Follow a variable's alias chain: Mapped -> Alias -> Brand. Returns every variable on the way, first one included.
-function chainOf(v, mId) {
-  const nodes = [v];
-  let cur = v, mode = mId;
-  for (let i = 0; i < 10; i++) {
-    const c = collById.get(cur.variableCollectionId);
-    const val = cur.valuesByMode[mode || c.defaultModeId];
-    if (val && val.type === "VARIABLE_ALIAS") { cur = varById.get(val.id); mode = null; if (!cur) break; nodes.push(cur); } else break;
-  }
-  return nodes;
-}
-SECTION_FN.lineage = async () => {
-  const c = await section("lineage", "Token lineage", "Where every Mapped token comes from: the chain through Alias to Brand, and the final color, in Light and Dark. Change the Brand color a role points to and this chain shows what follows.");
-  if (!mapped) { await sectionNote(c, "No Mapped collection found."); built.lineage = 0; return; }
-  const lightId = modeId(mapped, "Light"), darkId = modeId(mapped, "Dark");
-  const show = (n) => collById.get(n.variableCollectionId).name + "/" + n.name.replace(/\s+Default$/i, "");
-  const cell = async (parent, v, id) => {
-    const box = F(parent, "Chain", { dir: "HORIZONTAL", gap: 10, w: 470, align: "CENTER" });
-    if (!id) return;
-    const nodes = chainOf(v, id);
-    const last = nodes[nodes.length - 1];
-    const sw = R(box, "Color", 20, 20, { fill: last, radius: rad1, stroke: { color: lineColor, weight: hair } });
-    const rest = nodes.slice(1).map(show);
-    const hex = hexOf(colorOf(v, id));
-    await T(box, (rest.length ? rest.join("  →  ") : "(set directly)") + "  ·  " + hex, "Body/Small", { color: tBody, w: 440 });
-  };
-  let n = 0;
-  for (const [g, vars] of groupsOf(mapped, (v) => v.resolvedType === "COLOR")) {
-    const block = F(c, g, { dir: "VERTICAL", gap: 12 });
-    await T(block, g, "Heading/H4", { color: tHead });
-    const tbl = F(block, "Table", { dir: "VERTICAL", gap: 0, w: CONTENT });
-    const hd = F(tbl, "Head", { dir: "HORIZONTAL", gap: 16, py: 8, w: CONTENT });
-    await T(hd, "Mapped token", "Label/Small", { color: tMuted, w: 270 });
-    await T(hd, "Light", "Label/Small", { color: tMuted, w: 470 });
-    await T(hd, "Dark", "Label/Small", { color: tMuted, w: 470 });
-    for (const v of vars) {
-      const row = F(tbl, v.name, { dir: "HORIZONTAL", gap: 16, py: 8, w: CONTENT, align: "CENTER" });
-      row.strokes = [paint(softLine)]; row.strokeAlign = "INSIDE";
-      for (const k of ["strokeTopWeight", "strokeLeftWeight", "strokeRightWeight"]) row.setBoundVariable(k, bv("Border width/0"));
-      row.setBoundVariable("strokeBottomWeight", hair);
-      await T(row, v.name, "Label/Default", { color: tHead, w: 270 });
-      await cell(row, v, lightId);
-      await cell(row, v, darkId);
-      n++;
-    }
-  }
-  built.lineage = n;
 };
 
 // ===================== contrast =====================
