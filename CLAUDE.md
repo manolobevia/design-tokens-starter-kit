@@ -117,7 +117,8 @@ Brand scales, Alias roles, Mapped Light vs Dark, contrast checks, text styles
 in Desktop and Mobile, fonts and weights, spacing, radius and border width.
 - **Trigger:** `Design Tokens`. Also handles dry-run.
 - **How:** generated from the live variables and styles, and bound to them, so
-  rerunning refreshes the page. It only rebuilds frames it made itself.
+  rerunning refreshes the page. Each section is its own top-level frame on the
+  page. It only rebuilds frames it made itself.
 - **Writes to:** the Design Tokens page. It never edits variables or styles.
 
 ## Conventions

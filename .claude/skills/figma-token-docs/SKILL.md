@@ -5,7 +5,7 @@ description: Build a Design Tokens reference page in Figma from your live variab
 
 # Figma token docs
 
-Build a page named **Design Tokens** in the open Figma file: a visual reference for the whole system. It is generated from the live variables and text styles, so rerunning it refreshes the page after any token change.
+Build a page named **Design Tokens** in the open Figma file: a visual reference for the whole system. Each section is its own frame (1440 wide, with its own background), stacked top to bottom with space between, so people can find, link to or copy one section at a time. It is generated from the live variables and text styles, so rerunning it refreshes the page after any token change.
 
 **The deliverable is the page in Figma.** A list in chat is only the receipt. The task is finished when the page exists, you have looked at it (see Step 3), and you have said what it shows.
 
@@ -83,7 +83,7 @@ The script puts each section in its fixed place, so any order or subset works. A
 
 ### What the script guarantees
 
-- **Rebuilds only its own frames.** Every section it makes carries plugin data. A run replaces those sections and never touches anything else on the page, so rerunning never duplicates.
+- **Rebuilds only its own frames.** Every section frame it makes carries plugin data. A run replaces those frames, restacks them in order, and never touches anything else on the page, so rerunning never duplicates.
 - **Never edits variables or styles.** It only reads them.
 - **Bound, not copied.** Fills, widths, corners, strokes and modes are bindings to the variables. Text uses the file's own text styles.
 - **Skips what is missing.** A section whose variables do not exist (no Radius yet, say) shows one line saying which skill to run. Contrast pairs whose variables are missing are listed under the summary.
@@ -94,13 +94,13 @@ The script puts each section in its fixed place, so any order or subset works. A
 - `status`: `ok`, `partial` (a section failed; see its `error`) or `error` (nothing written).
 - `sections`: one row per section with `action` (`built` or `failed`) and `items` (groups, variables or styles shown).
 - `notes`: anything skipped, for example contrast pairs without variables.
-- `root`: the page frame and its height.
+- `frames`: how many section frames are on the page. Each row in `sections` also has its `frame` id and `height`, handy for screenshots.
 
 If a section failed, retry that section once on its own, then report what happened.
 
 ## Step 3: Look at it and report
 
-The Figma Console server requires checking visual work. After each call, take a screenshot of the new sections with `figma_capture_screenshot` (find a section's node id with a short `figma_execute` that lists the root frame's children by plugin data, or use the `root.id` from the result). Look for clipped text, missing swatches and sections in the wrong order. Fix and rerun the section once if something is wrong.
+The Figma Console server requires checking visual work. After each call, take a screenshot of the new sections with `figma_capture_screenshot` (use the `frame` id on each row of `sections` in the result). Look for clipped text, missing swatches and sections in the wrong order. Fix and rerun the section once if something is wrong.
 
 Then reply briefly:
 

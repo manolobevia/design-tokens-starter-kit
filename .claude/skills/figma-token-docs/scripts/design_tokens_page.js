@@ -8,6 +8,7 @@
 // type samples use the real text styles, and the Light/Dark and Desktop/Mobile
 // columns are frames set to those variable modes.
 //
+// Each section is its own frame on the page (1440 wide, stacked top to bottom).
 // Only frames this script made are rebuilt (they carry plugin data). Anything
 // else on the page is never touched. Running it again replaces its own sections.
 //
@@ -161,26 +162,27 @@ const hair = bv("Border width/0-25"), thin = bv("Border width/0-5");
 const lineColor = mv("Border/secondary"), softLine = mv("Border/tertiary");
 const tHead = mv("Text/heading"), tBody = mv("Text/body"), tMuted = mv("Text/body-secondary");
 
-// ---------- page and root ----------
+// ---------- page ----------
 let page = figma.root.children.find((p) => p.name === PAGE);
 if (!page) { page = figma.createPage(); page.name = PAGE; out.pageCreated = true; }
 await figma.setCurrentPageAsync(page);
-let root = page.children.find((n) => n.type === "FRAME" && n.getPluginData(TAG) === "root");
-if (!root) {
-  root = F(page, PAGE, { dir: "VERTICAL", gap: 96, pad: PAD, fill: mv("Surface/page"), w: W });
-  root.setPluginData(TAG, "root");
-  root.x = 0; root.y = 0;
+const lightMode = mapped ? modeId(mapped, "Light") : null;
+const GAP = 120; // space between section frames on the canvas
+const mine = () => page.children.filter((n) => n.type === "FRAME" && n.getPluginData(TAG).startsWith("section:"));
+// Stack the section frames top to bottom in ORDER, from the top left of the page.
+function restack() {
+  const frames = mine().sort((a, b) => ORDER.indexOf(a.getPluginData(TAG).slice(8)) - ORDER.indexOf(b.getPluginData(TAG).slice(8)));
+  let y = 0;
+  for (const f of frames) { f.primaryAxisSizingMode = "AUTO"; f.x = 0; f.y = y; y += f.height + GAP; }
+  return frames.length;
 }
-if (mapped) { const l = modeId(mapped, "Light"); if (l) root.setExplicitVariableModeForCollection(mapped, l); }
 
-// A section: titled frame, replaced on every run, kept in ORDER inside the root.
+// A section: titled frame, replaced on every run, stacked in ORDER on the page.
 async function section(id, title, subtitle) {
-  for (const n of root.children.slice()) if (n.getPluginData(TAG) === "section:" + id) n.remove();
-  const f = F(null, title, { dir: "VERTICAL", gap: 40, w: CONTENT });
+  for (const n of mine()) if (n.getPluginData(TAG) === "section:" + id) n.remove();
+  const f = F(page, title, { dir: "VERTICAL", gap: 40, pad: PAD, fill: mv("Surface/page"), w: W });
   f.setPluginData(TAG, "section:" + id);
-  const pos = root.children.filter((n) => { const t = n.getPluginData(TAG); return t.startsWith("section:") && ORDER.indexOf(t.slice(8)) < ORDER.indexOf(id); }).length;
-  root.insertChild(pos, f);
-  f.layoutSizingHorizontal = "FIXED";
+  if (lightMode) f.setExplicitVariableModeForCollection(mapped, lightMode);
   const head = F(f, "Heading", { dir: "VERTICAL", gap: 8 });
   await T(head, title, "Heading/H2", { color: tHead });
   if (subtitle) await T(head, subtitle, "Body/Default", { color: tMuted, w: CONTENT });
@@ -525,5 +527,6 @@ for (const id of todo) {
     out.status = "partial";
   }
 }
-out.root = { id: root.id, width: root.width, height: Math.round(root.height) };
+out.frames = restack();
+out.sections.forEach((r) => { const f = mine().find((n) => n.getPluginData(TAG) === "section:" + r.id); if (f) { r.frame = f.id; r.height = Math.round(f.height); } });
 return out;
