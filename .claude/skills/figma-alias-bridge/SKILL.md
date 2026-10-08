@@ -44,6 +44,10 @@ Read it as "take everything in the Purple group of the Brand collection and mirr
 - The note is optional. `Brand/Purple -> Alias/Primary` gives the same result.
 - The arrow can be `->`, `→`, `=>`, or the word "to". Several bridges can arrive in one message, one per line. Handle each the same way.
 
+### Neutral is fixed
+
+`Alias/Neutral` always uses `Brand/Gray`. Never bridge another Brand group into Neutral, even if the user types it: the script refuses and reports why. If the user wants a different color for the neutral role, they pick another role name (for example `Brand/Midnight -> Alias/Dark`). If `Alias/Neutral` already points somewhere else, `Brand/Gray -> Alias/Neutral` (or `-default`) repoints it in place.
+
 ### Default set
 
 `-default` is shorthand for these six lines. Put them in `BRIDGES` exactly as written:

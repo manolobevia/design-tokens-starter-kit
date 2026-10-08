@@ -59,7 +59,7 @@ Every skill reads one typed line. These are all the forms each one accepts.
 | `... Alias/Primary (Purple)` | Text in parentheses is a note and is dropped from the name |
 | Arrow | `->`, `→`, `=>` or the word `to` |
 | Several lines | One bridge per line. Running again repoints, never duplicates |
-| `-default` | Six bridges: Gray → Neutral, Red → Error, Green → Success, Orange → Warning, Blue → Information, Foundation → Foundation |
+| `-default` | Six bridges: Gray → Neutral (Neutral is always Gray), Red → Error, Green → Success, Orange → Warning, Blue → Information, Foundation → Foundation |
 
 `-default` does not create Primary, Secondary and so on. Add those yourself, in the same message: `-default` plus `Brand/Purple -> Alias/Primary`. A line you type replaces the default for the same role. If a Brand group is missing, the skill names it and does not guess.
 

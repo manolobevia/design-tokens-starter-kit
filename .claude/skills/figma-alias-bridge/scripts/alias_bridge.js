@@ -7,6 +7,8 @@
 // is a reminder for the person typing the line. It is removed from the name,
 // so the group is created as "Primary".
 //
+// Alias/Neutral is locked to Brand/Gray (see the guard below).
+//
 // Edit ONLY the CONFIG block. Send everything else unchanged.
 
 // ---- CONFIG ----
@@ -115,6 +117,10 @@ for (const bridge of BRIDGES) {
     }
     if (dst.collection && dst.collection.id === src.collection.id && low(dst.group) === low(src.group)) {
       throw new Error("Source and target are the same group.");
+    }
+    // Alias/Neutral is fixed: it always uses Brand/Gray, whatever line was typed.
+    if (low(clean(dst.collectionName)) === "alias" && low(dst.group) === "neutral" && low(src.group) !== "gray") {
+      throw new Error('Alias/Neutral always uses Brand/Gray, so "' + bridge.from + '" was not written. Use "Brand/Gray -> Alias/Neutral" or choose another role name.');
     }
 
     const srcGroupName = srcVars[0].name.slice(0, src.group.length);

@@ -51,7 +51,7 @@ variable references the matching Brand variable.
 - **Trigger:** an arrow line, source left, target right:
   `Brand/Purple -> Alias/Primary (Purple)`. The arrow can be `->`, the arrow
   glyph, `=>`, or the word "to". `-default` runs six bridges: Gray to
-  Neutral, Red to Error, Green to Success, Orange to Warning, Blue to
+  Neutral (Alias/Neutral always uses Brand/Gray; other sources are refused), Red to Error, Green to Success, Orange to Warning, Blue to
   Information, Foundation to Foundation (Mapped needs Alias/Foundation). Primary and other brand roles are never included; the user
   types those lines.
 - **Notes:** the part in parentheses is a reminder of which brand color feeds
