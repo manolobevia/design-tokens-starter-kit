@@ -52,7 +52,7 @@ const TEXT = [
   ["warning", "Warning/700", null, "Warning message on neutral surfaces"],
   ["information", "Information/600", "Information/300", "Information message on neutral surfaces"],
   ["on-action", WHITE, KEEP, "On surface/action, all states"],
-  ["on-action-secondary", P + 700, null, "On surface/action-secondary"],
+  ["on-action-secondary", P + 700, P + 200, "On surface/action-secondary"],
   ["on-selected", P + 700, null, "On surface/selected"],
   ["on-disabled", N + 400, null, "On surface/disabled"],
   ["on-inverse", WHITE, null, "On surface/inverse"],

@@ -43,7 +43,7 @@ A message in this form is the whole request and the go-ahead. Run it without ask
 | 2 | Brand colors | Every color group, 950 to 50, with hex |
 | 3 | Alias roles | Every role, with the Brand group it points to |
 | 4 | Mapped usage | Surface, Border, Text and Icon, Light and Dark side by side |
-| 5 | Contrast checks | Text and border pairs against WCAG AA, Light and Dark |
+| 5 | Contrast checks | A "Does not pass" list up front, then every text and border pair against WCAG AA in Light and Dark, with failing rows highlighted |
 | 6 | Typography | Every text style, Desktop and Mobile, with font, size, line height, paragraph spacing |
 | 7 | Font families and weights | Heading and Body specimens in every weight |
 | 8 | Spacing | Vertical bars on a shared baseline, whose height is the variable |

@@ -353,6 +353,14 @@ SECTION_FN.contrast = async () => {
   const lt = tally("light"), dk = tally("dark");
   const sum = "Light: " + lt.filter((r) => pass(r, "light")).length + " of " + lt.length + " pairs pass.   Dark: " + dk.filter((r) => pass(r, "dark")).length + " of " + dk.length + " pairs pass.";
   await T(c, sum, "Body/Large", { color: tHead, w: CONTENT });
+  // What does not pass, listed on its own so it cannot be missed.
+  const fails = [];
+  for (const r of rows) for (const k of ["light", "dark"]) if (pass(r, k) === false) fails.push({ mode: k === "light" ? "Light" : "Dark", pair: r.fg.replace("Text/", "").replace("Border/", "border ") + " on " + r.bg.replace("Surface/", ""), ratio: r[k], min: r.min });
+  const box = F(c, "Does not pass", { dir: "VERTICAL", gap: 12, pad: 24, w: CONTENT, fill: fails.length ? mv("Surface/error-secondary") : mv("Surface/success-secondary"), radius: rad3 });
+  await T(box, fails.length ? "Does not pass (" + fails.length + ")" : "Does not pass (0)", "Heading/H5", { color: tHead });
+  if (!fails.length) await T(box, "Every checked pair passes in every mode.", "Body/Default", { color: tBody, w: CONTENT - 48 });
+  for (const f of fails) await T(box, f.mode + " · " + f.pair + " · " + f.ratio.toFixed(2) + ":1, needs " + f.min + ":1", "Body/Default", { color: tBody, w: CONTENT - 48 });
+  built.failures = fails.length;
   if (skipped.size) await T(c, "Not checked, variable missing in Mapped: " + Array.from(skipped).join(", ") + ".", "Body/Small", { color: tMuted, w: CONTENT });
   const half = Math.ceil(rows.length / 2);
   const cols = F(c, "Tables", { dir: "HORIZONTAL", gap: 40, w: CONTENT });
@@ -363,7 +371,8 @@ SECTION_FN.contrast = async () => {
     await T(hd, "Light", "Label/Small", { color: tMuted, w: 150 });
     await T(hd, "Dark", "Label/Small", { color: tMuted, w: 150 });
     for (const r of chunk) {
-      const line = F(tbl, r.fg + " on " + r.bg, { dir: "HORIZONTAL", gap: 8, py: 8, w: 620, align: "CENTER" });
+      const failing = pass(r, "light") === false || pass(r, "dark") === false;
+      const line = F(tbl, r.fg + " on " + r.bg, { dir: "HORIZONTAL", gap: 8, py: 8, w: 620, align: "CENTER", fill: failing ? mv("Surface/error-secondary") : null });
       line.strokes = [paint(softLine)]; line.strokeAlign = "INSIDE";
       for (const k of ["strokeTopWeight", "strokeLeftWeight", "strokeRightWeight"]) line.setBoundVariable(k, bv("Border width/0"));
       line.setBoundVariable("strokeBottomWeight", hair);
