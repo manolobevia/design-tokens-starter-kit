@@ -16,13 +16,13 @@
 
 // ---- CONFIG ----
 const PAGE = "Design Tokens";
-const SECTIONS = ["all"]; // "all", or any of: header, guide, names, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border
+const SECTIONS = ["all"]; // "all", or any of: header, contents, guide, names, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border
 const DRY_RUN = false;    // true = report what would be built, write nothing
 const EXPECT_FILE = "";   // optional file name guard, e.g. "Design System MB"
 // ---- END CONFIG ----
 
 const TAG = "figma-token-docs";
-const ORDER = ["header", "guide", "names", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border"];
+const ORDER = ["header", "contents", "guide", "names", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border"];
 const W = 1440, PAD = 80, CONTENT = W - PAD * 2; // 1280
 
 const low = (s) => String(s).trim().toLowerCase();
@@ -171,20 +171,19 @@ const lightMode = mapped ? modeId(mapped, "Light") : null;
 const GAP = 120; // space between section frames on the canvas (horizontal)
 const mine = () => page.children.filter((n) => n.type === "FRAME" && n.getPluginData(TAG).startsWith("section:"));
 // Lay the section frames out left to right in ORDER, top aligned at the origin of the page.
-// The "How to use" guide is the exception: it sits directly under the header frame, in the empty
-// space below it, so it is the first thing people see after the title.
+// "Contents" and "How to use" are the exception: they stack in a column directly under the header
+// frame, in the empty space below it, so they are the first things people see.
+const COLUMN = ["contents", "guide"];
 function restack() {
   const all = mine().sort((a, b) => ORDER.indexOf(a.getPluginData(TAG).slice(8)) - ORDER.indexOf(b.getPluginData(TAG).slice(8)));
-  const guide = all.find((f) => f.getPluginData(TAG) === "section:guide");
-  const row = all.filter((f) => f !== guide);
+  const idOf = (f) => f.getPluginData(TAG).slice(8);
+  const col = all.filter((f) => COLUMN.includes(idOf(f)));
+  const row = all.filter((f) => !COLUMN.includes(idOf(f)));
   let x = 0;
   for (const f of row) { f.primaryAxisSizingMode = "AUTO"; f.x = x; f.y = 0; x += f.width + GAP; }
-  if (guide) {
-    guide.primaryAxisSizingMode = "AUTO";
-    const head = row[0];
-    guide.x = head ? head.x : 0;
-    guide.y = head ? head.y + head.height + GAP : 0;
-  }
+  const head = row[0];
+  let y = head ? head.y + head.height + GAP : 0;
+  for (const f of col) { f.primaryAxisSizingMode = "AUTO"; f.x = head ? head.x : 0; f.y = y; y += f.height + GAP; }
   return all.length;
 }
 
@@ -279,6 +278,80 @@ SECTION_FN.header = async () => {
     await T(chip, v, "Body/Small", { color: tMuted });
   }
   built.header = 1;
+};
+
+// ===================== contents =====================
+const TOC = {
+  guide: ["How to use these skills", "How to run a skill, the build order, and the lines to type for each one."],
+  names: ["How names work", "The three tiers, the naming rules and a short Do and Don't."],
+  health: ["Token health", "What needs attention in this file, with the fix to run."],
+  brand: ["Brand colors", "Raw color scales, 950 to 50, with the hex of every step."],
+  alias: ["Alias roles", "Roles that point at Brand colors, and which color feeds each."],
+  mapped: ["Mapped usage", "What each color is for, in Light and Dark side by side."],
+  contrast: ["Contrast checks", "Every text and border pair against WCAG AA, with what fails listed first."],
+  typography: ["Typography", "Every text style in Desktop and Mobile, with the exact sizes."],
+  fonts: ["Font families and weights", "The heading and body fonts in every weight."],
+  spacing: ["Spacing", "The spacing scale as bars that match the real values."],
+  radius: ["Border radius", "Corner radius scale, from square to pill."],
+  border: ["Border width", "Stroke weights from none to heavy."]
+};
+SECTION_FN.contents = async () => {
+  const c = await section("contents", "Contents", "Click a title to jump to that frame. Each frame has a link back here. In Present mode, click a card.");
+  const frames = {};
+  for (const f of mine()) frames[f.getPluginData(TAG).slice(8)] = f;
+  const count = (prefix) => (brand ? varsOf(brand).filter((v) => low(v.name).startsWith(prefix)).length : 0);
+  const stat = (id) => {
+    if (id === "guide") return GUIDE.length + " skills";
+    if (id === "names") return NAME_RULES.length + " rules";
+    if (id === "health") return (frames.health && frames.health.getPluginData("stat")) || "Checks run on every build";
+    if (id === "brand") return (brand ? groupsOf(brand, (v) => v.resolvedType === "COLOR").size : 0) + " color scales";
+    if (id === "alias") return (alias ? groupsOf(alias, (v) => v.resolvedType === "COLOR").size : 0) + " roles";
+    if (id === "mapped") return (mapped ? varsOf(mapped).length : 0) + " tokens · " + (mapped ? mapped.modes.map((m) => m.name).join(" and ") : "");
+    if (id === "contrast") {
+      const { rows, pass } = contrastData();
+      const t = (k) => rows.filter((r) => pass(r, k) !== null);
+      return "Light " + t("light").filter((r) => pass(r, "light")).length + " of " + t("light").length + " · Dark " + t("dark").filter((r) => pass(r, "dark")).length + " of " + t("dark").length + " pass";
+    }
+    if (id === "typography") return textStyles.length + " text styles";
+    if (id === "fonts") return count("font family/") + " families · " + count("font weight/") + " weights";
+    if (id === "spacing") return count("spacing/") + " steps";
+    if (id === "radius") return count("radius/") + " steps";
+    if (id === "border") return count("border width/") + " steps";
+    return "";
+  };
+  const grid = F(c, "Cards", { dir: "HORIZONTAL", gap: 24, gapY: 24, wrap: true, w: CONTENT });
+  let n = 0;
+  for (const id of ORDER) {
+    if (!TOC[id] || !frames[id]) continue;
+    n++;
+    const [title, what] = TOC[id];
+    const card = F(grid, title, { dir: "VERTICAL", gap: 10, pad: 24, w: 408, fill: mv("Surface/default"), radius: rad3, stroke: { color: lineColor, weight: hair } });
+    const top = F(card, "Top", { dir: "HORIZONTAL", gap: 12, align: "CENTER" });
+    const num = F(top, "Number", { dir: "HORIZONTAL", px: 10, py: 4, fill: mv("Surface/action-secondary"), radius: rad1 });
+    await T(num, String(n).padStart(2, "0"), "Label/Small", { color: mv("Text/on-action-secondary") });
+    const t = await T(top, title, "Heading/H5", { color: mv("Text/action") });
+    try { t.setRangeHyperlink(0, t.characters.length, { type: "NODE", value: frames[id].id }); } catch (e) { out.notes.push("Could not link " + title + ": " + msg(e)); }
+    await T(card, what, "Body/Small", { color: tBody, w: 360 });
+    await T(card, stat(id), "Label/Small", { color: tMuted, w: 360 });
+    // Present mode: clicking the card navigates to the frame.
+    try { await card.setReactionsAsync([{ trigger: { type: "ON_CLICK" }, actions: [{ type: "NODE", destinationId: frames[id].id, navigation: "NAVIGATE", transition: null, resetVideoPosition: false }] }]); } catch (e) { /* prototype links are a nicety */ }
+  }
+  // Equal card heights, so the grid reads as a grid.
+  const hmax = Math.max(...grid.children.map((k) => k.height));
+  for (const k of grid.children) { k.primaryAxisSizingMode = "FIXED"; k.resize(408, hmax); }
+  // A link back to the contents on every other frame, so a long page never gets people lost.
+  const me = frames.contents;
+  for (const id of Object.keys(frames)) {
+    if (id === "contents" || id === "header") continue;
+    const f = frames[id];
+    let back = f.findOne((x) => x.type === "TEXT" && x.name === "Back to contents");
+    if (!back) {
+      back = await T(f.children[0], "↑ Contents", "Label/Default", { color: mv("Text/action") });
+      back.name = "Back to contents";
+    }
+    try { back.setRangeHyperlink(0, back.characters.length, { type: "NODE", value: me.id }); } catch (e) { /* ignore */ }
+  }
+  built.contents = n;
 };
 
 // ===================== guide =====================
@@ -523,6 +596,7 @@ SECTION_FN.health = async () => {
   const good = F(c, "Passing", { dir: "VERTICAL", gap: 12, pad: 24, w: CONTENT, fill: mv("Surface/success-secondary"), radius: rad3 });
   await T(good, "Passing (" + oks.length + ")", "Heading/H5", { color: tHead });
   for (const k of oks) await T(good, "✓ " + k.title, "Body/Small", { color: tBody, w: CONTENT - 48 });
+  c.parent.setPluginData("stat", issues.length + " issue" + (issues.length === 1 ? "" : "s") + " · " + notes.length + " note" + (notes.length === 1 ? "" : "s"));
   built.health = issues.length + notes.length;
   built.healthSummary = issues.length + " issues, " + notes.length + " notes";
 };
@@ -794,7 +868,12 @@ SECTION_FN.border = async () => {
 };
 
 // ---------- run ----------
-for (const id of todo) {
+// The Contents frame links to the other frames by id, so it is built last, and rebuilt after any run
+// that replaced a frame (a replaced frame has a new id).
+const runList = todo.filter((id) => id !== "contents");
+if (runList.length && (todo.includes("contents") || mine().some((f) => f.getPluginData(TAG) === "section:contents"))) runList.push("contents");
+else if (!runList.length && todo.includes("contents")) runList.push("contents");
+for (const id of runList) {
   const row = { id, action: "built" };
   out.sections.push(row);
   try {

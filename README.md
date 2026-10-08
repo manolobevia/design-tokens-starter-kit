@@ -152,7 +152,7 @@ Steps: `0`, `0-25` (1px), `0-5` (2px), `1` (4px).
 |---|---|
 | `Design Tokens` | Build or refresh the whole page |
 
-The page opens with a short How to use guide (a card per skill, like this README) a How names work frame (the naming rules and a short Do and Don't), and a Token health frame (what needs attention, with the fix to run), then shows Brand color scales, Alias roles, Mapped usage in Light and Dark, contrast checks, every text style in Desktop and Mobile, font families and weights, spacing, border radius and border width. Each section is its own frame on the page, so you can find, link to or copy one at a time. Everything is bound to your variables and styles, so rerun it after a token changes. Sections whose tokens don't exist yet show a one-line note.
+The page opens with a clickable Contents (a card per frame with a live stat, and a link back from every frame), a short How to use guide (a card per skill, like this README) a How names work frame (the naming rules and a short Do and Don't), and a Token health frame (what needs attention, with the fix to run), then shows Brand color scales, Alias roles, Mapped usage in Light and Dark, contrast checks, every text style in Desktop and Mobile, font families and weights, spacing, border radius and border width. Each section is its own frame on the page, so you can find, link to or copy one at a time. Everything is bound to your variables and styles, so rerun it after a token changes. Sections whose tokens don't exist yet show a one-line note.
 
 ### `figma-type-scale`
 
