@@ -107,6 +107,7 @@ async function T(parent, str, styleName, o = {}) {
   }
   t.characters = String(str);
   t.fills = [paint(o.color === undefined ? mv("Text/body") : o.color)];
+  if (o.align) t.textAlignHorizontal = o.align;
   parent.appendChild(t);
   if (o.w) { t.textAutoResize = "HEIGHT"; t.resize(o.w, t.height); }
   if (o.fillW) { t.textAutoResize = "HEIGHT"; t.layoutSizingHorizontal = "FILL"; }
@@ -479,8 +480,8 @@ SECTION_FN.spacing = async () => {
     well.primaryAxisSizingMode = "FIXED"; well.resize(72, MAXH);
     const bar = R(well, "Bar", 40, Math.max(px(v), 1), { fill: mv("Surface/action"), radius: rad1 });
     if (px(v) > 0) bar.setBoundVariable("height", v); else bar.visible = false;
-    await T(cell, leaf, "Label/Default", { color: tHead, w: 72 });
-    await T(cell, px(v) + " px", "Caption/Default", { color: tMuted, w: 72 });
+    await T(cell, leaf, "Label/Default", { color: tHead, w: 72, align: "CENTER" });
+    await T(cell, px(v) + " px", "Caption/Default", { color: tMuted, w: 72, align: "CENTER" });
   }
   built.spacing = vars.length;
 };
