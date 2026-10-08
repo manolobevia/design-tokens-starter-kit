@@ -111,6 +111,14 @@ in Brand under a Border width group (token x 4 = px).
   handles reset and dry-run.
 - **Writes to:** Brand, under Border width.
 
+### figma-sizing
+Writes component sizes as number variables in Brand under `Size/<Group>/<Token>`:
+Icon (XSmall 12 to XLarge 32), Control (Small 32, Default 40, Large 48, Touch 44)
+and Avatar (XSmall 24 to XLarge 72). Names follow the text styles.
+- **Trigger:** `Sizing` (all), `Sizing/Icon`, `Sizing/Control`, `Sizing/Avatar`.
+  Also handles reset and dry-run.
+- **Writes to:** Brand, under Size.
+
 ### figma-elevation
 Builds shadows as tokens: Brand black-opacity colors (`Shadow/Soft` to
 `Heavy`) and numbers (`Elevation/<n>/Key Y`, `Key Blur`, `Ambient Y`,

@@ -16,13 +16,13 @@
 
 // ---- CONFIG ----
 const PAGE = "Design Tokens";
-const SECTIONS = ["all"]; // "all", or any of: header, contents, guide, names, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border, elevation
+const SECTIONS = ["all"]; // "all", or any of: header, contents, guide, names, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border, sizing, elevation
 const DRY_RUN = false;    // true = report what would be built, write nothing
 const EXPECT_FILE = "";   // optional file name guard, e.g. "Design System MB"
 // ---- END CONFIG ----
 
 const TAG = "figma-token-docs";
-const ORDER = ["header", "contents", "guide", "names", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border", "elevation"];
+const ORDER = ["header", "contents", "guide", "names", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border", "sizing", "elevation"];
 const W = 1440, PAD = 80, CONTENT = W - PAD * 2; // 1280
 
 const low = (s) => String(s).trim().toLowerCase();
@@ -294,6 +294,7 @@ const TOC = {
   spacing: ["Spacing", "The spacing scale as bars that match the real values."],
   radius: ["Border radius", "Corner radius scale, from square to pill."],
   border: ["Border width", "Stroke weights from none to heavy."],
+  sizing: ["Sizing", "Icon sizes, control heights and avatars, drawn at their real size."],
   elevation: ["Elevation", "Five shadow levels, in Light and Dark, applied to real cards."]
 };
 SECTION_FN.contents = async () => {
@@ -318,6 +319,7 @@ SECTION_FN.contents = async () => {
     if (id === "spacing") return count("spacing/") + " steps";
     if (id === "radius") return count("radius/") + " steps";
     if (id === "border") return count("border width/") + " steps";
+    if (id === "sizing") return count("size/") + " sizes · icons, controls, avatars";
     if (id === "elevation") return count("elevation/") / 4 + " levels · 2 shadows each";
     return "";
   };
@@ -385,6 +387,8 @@ const GUIDE = [
     ["Radius", "The whole scale"], ["Radius/2", "One step (8px)"] ] },
   { name: "figma-border-width", does: "Writes the border-weight scale to Brand.", rows: [
     ["Border width", "The whole scale"], ["Border width/0-5", "One step (2px)"] ] },
+  { name: "figma-sizing", does: "Writes icon, control and avatar sizes to Brand as numbers.", rows: [
+    ["Sizing", "All three groups: Icon, Control, Avatar"], ["Sizing/Icon", "One group"] ] },
   { name: "figma-elevation", does: "Builds shadows as tokens and 5 effect styles that follow Light and Dark.", rows: [
     ["Elevation", "Shadow colors, offsets and blurs, plus Elevation/1 to 5"], ["Elevation/3", "One level"] ] },
   { name: "figma-token-docs", does: "Builds or refreshes this page from the live variables and styles.", rows: [
@@ -397,7 +401,7 @@ const BUILD_ORDER = [
   ["1", "figma-color-scale", "Brand colors"],
   ["2", "figma-alias-bridge", "Roles"],
   ["3", "figma-mapped-roles", "Usage"],
-  ["4", "spacing, radius, border width, elevation, type scale", "Primitives"],
+  ["4", "spacing, radius, border width, sizing, elevation, type scale", "Primitives"],
   ["5", "figma-token-docs", "This page"],
   ["6", "figma-export-tokens", "Code for developers"]
 ];
@@ -581,6 +585,7 @@ SECTION_FN.health = async () => {
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("spacing/")))) missingPrims.push("Spacing (/figma-spacing)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("radius/")))) missingPrims.push("Radius (/figma-radius)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("border width/")))) missingPrims.push("Border width (/figma-border-width)");
+  if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("size/")))) missingPrims.push("Sizing (/figma-sizing)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("elevation/")))) missingPrims.push("Elevation (/figma-elevation)");
   if (!(responsive && responsive.modes.length >= 2)) missingPrims.push("Responsive with Desktop and Mobile (/figma-type-scale Typography)");
   if (missingPrims.length) add("note", "Not built yet: " + missingPrims.join(", "), "", "");
@@ -874,6 +879,45 @@ SECTION_FN.border = async () => {
     await T(cell, px + " px", "Caption/Default", { color: tMuted, w: 200 });
   }
   built.border = vars.length;
+};
+
+// ===================== sizing =====================
+SECTION_FN.sizing = async () => {
+  const c = await section("sizing", "Sizing", "Icon sizes, control heights and avatars, drawn at their real size. Width and height are bound to the variables.");
+  const vars = brand ? varsOf(brand).filter((v) => low(v.name).startsWith("size/") && v.resolvedType === "FLOAT") : [];
+  if (!vars.length) { await sectionNote(c, "No Sizing variables in Brand. Run /figma-sizing."); built.sizing = 0; return; }
+  const px = (v) => v.valuesByMode[brand.defaultModeId];
+  const groups = new Map();
+  for (const v of vars) { const g = v.name.split("/")[1]; if (!groups.has(g)) groups.set(g, []); groups.get(g).push(v); }
+  for (const [g, list] of groups) {
+    list.sort((a, b) => px(a) - px(b));
+    const block = F(c, g, { dir: "VERTICAL", gap: 16 });
+    await T(block, g, "Heading/H4", { color: tHead });
+    const maxH = Math.max(...list.map(px));
+    const row = F(block, "Sizes", { dir: "HORIZONTAL", gap: 32 });
+    for (const v of list) {
+      const leaf = v.name.split("/").slice(2).join("/");
+      const cell = F(row, v.name, { dir: "VERTICAL", gap: 12, w: g === "Control" ? 120 : 96 });
+      const well = F(cell, "Shape area", { dir: "VERTICAL", justify: "MAX", align: "CENTER", w: g === "Control" ? 120 : 96 });
+      well.primaryAxisSizingMode = "FIXED"; well.resize(g === "Control" ? 120 : 96, maxH);
+      let shape;
+      if (g === "Avatar") {
+        shape = figma.createEllipse(); shape.resize(px(v), px(v));
+        shape.fills = [paint(mv("Surface/secondary"))]; strokeOf(shape, mv("Border/default"), thin);
+        well.appendChild(shape);
+        shape.setBoundVariable("width", v); shape.setBoundVariable("height", v);
+      } else if (g === "Control") {
+        shape = R(well, "Control", 112, px(v), { fill: mv("Surface/action"), radius: rad2 });
+        shape.setBoundVariable("height", v);
+      } else {
+        shape = R(well, "Icon", px(v), px(v), { fill: mv("Surface/action-secondary"), radius: rad1, stroke: { color: mv("Border/action"), weight: thin } });
+        shape.setBoundVariable("width", v); shape.setBoundVariable("height", v);
+      }
+      await T(cell, leaf, "Label/Default", { color: tHead, w: g === "Control" ? 120 : 96, align: "CENTER" });
+      await T(cell, px(v) + " px", "Caption/Default", { color: tMuted, w: g === "Control" ? 120 : 96, align: "CENTER" });
+    }
+  }
+  built.sizing = vars.length;
 };
 
 // ===================== elevation =====================
