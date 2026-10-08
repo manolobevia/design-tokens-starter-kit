@@ -1,6 +1,6 @@
 # Figma Design Tokens Starter Kit
 
-Type one short line, get real **Figma variables and text styles** written to your open file. Five Claude Code skills build a complete token system: color, aliases, usage roles, spacing and typography.
+Type one short line, get real **Figma variables and text styles** written to your open file. Eight Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width and typography) and a visual **Design Tokens** page that documents it.
 
 ## How the tokens fit together
 
@@ -21,6 +21,9 @@ Every Alias variable references a Brand variable. Every Mapped variable referenc
 | `figma-mapped-roles` | `Mapped` | **Mapped** Surface, Border, Text and Icon variables referencing Alias |
 | `figma-spacing` | `Spacing` | 4px-unit spacing scale in **Brand** |
 | `figma-type-scale` | `Typography` | Font and weight variables in **Brand**, **Responsive** size variables, text styles |
+| `figma-radius` | `Radius` | Border-radius scale in **Brand** |
+| `figma-border-width` | `Border width` | Border-weight scale in **Brand** |
+| `figma-token-docs` | `Design Tokens` | A **Design Tokens** page in Figma showing the whole system |
 
 Add `dry run` to any line to preview without writing.
 
@@ -31,7 +34,8 @@ Run the skills in this order, because each tier references the one before it:
 1. **`figma-color-scale`**: your brand and neutral colors, or `-default` for the system colors. Fills Brand.
 2. **`figma-alias-bridge`**: map Brand groups into Alias roles.
 3. **`figma-mapped-roles`**: build the usage tier on top of Alias.
-4. **`figma-spacing`** and **`figma-type-scale`**: the non-color primitives. These don't depend on the color steps, so run them any time after step 1.
+4. **`figma-spacing`**, **`figma-radius`**, **`figma-border-width`** and **`figma-type-scale`**: the non-color primitives. These don't depend on the color steps, so run them any time after step 1.
+5. **`figma-token-docs`**: builds the Design Tokens page. Run it last, and again whenever tokens change.
 
 ## Parameters
 
@@ -87,6 +91,34 @@ Hand-tuned values are kept on later runs unless you `reset` or use an arrow line
 | `reset Spacing`, `regenerate the spacing scale` | Overwrite hand-changed values |
 
 Token = number of 4px units: `Spacing/4` is 16px. Steps: `0` (0px), `0-25` (1px), `0-5` (2px), `1` (4), `2` (8), `3` (12), `4` (16), `5` (20), `6` (24), `8` (32), `10` (40), `12` (48), `16` (64), `20` (80), `24` (96).
+
+### `figma-radius`
+
+| Type | Result |
+|---|---|
+| `Radius` | The whole scale |
+| `Radius/2` | One step. Several can share a message |
+| `reset Radius` | Overwrite hand-changed values |
+
+Token = number of 4px units: `Radius/2` is 8px. Steps: `0`, `0-5` (2px), `1` (4), `2` (8), `3` (12), `4` (16), `6` (24), `full` (9999, a pill or circle).
+
+### `figma-border-width`
+
+| Type | Result |
+|---|---|
+| `Border width` | The whole scale |
+| `Border width/0-5` | One step. Several can share a message |
+| `reset Border width` | Overwrite hand-changed values |
+
+Steps: `0`, `0-25` (1px), `0-5` (2px), `1` (4px).
+
+### `figma-token-docs`
+
+| Type | Result |
+|---|---|
+| `Design Tokens` | Build or refresh the whole page |
+
+The page shows Brand color scales, Alias roles, Mapped usage in Light and Dark, contrast checks, every text style in Desktop and Mobile, font families and weights, spacing, border radius and border width. Everything is bound to your variables and styles, so rerun it after a token changes. Sections whose tokens don't exist yet show a one-line note.
 
 ### `figma-type-scale`
 

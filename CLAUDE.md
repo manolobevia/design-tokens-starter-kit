@@ -97,6 +97,29 @@ Spacing group. The scale is the same every run.
   (one or a few steps). Also handles reset, regenerate, and dry-run.
 - **Writes to:** Brand, under Spacing.
 
+### figma-radius
+Writes a fixed-preset border-radius scale as number variables in Brand under a
+Radius group (token x 4 = px, plus `full` at 9999).
+- **Trigger:** `Radius` (whole group), `Radius/<token>`. Also handles reset and
+  dry-run.
+- **Writes to:** Brand, under Radius.
+
+### figma-border-width
+Writes a fixed-preset border-weight scale (0, 1, 2, 4 px) as number variables
+in Brand under a Border width group (token x 4 = px).
+- **Trigger:** `Border width` (whole group), `Border width/<token>`. Also
+  handles reset and dry-run.
+- **Writes to:** Brand, under Border width.
+
+### figma-token-docs
+Builds a page named Design Tokens that documents the whole system visually:
+Brand scales, Alias roles, Mapped Light vs Dark, contrast checks, text styles
+in Desktop and Mobile, fonts and weights, spacing, radius and border width.
+- **Trigger:** `Design Tokens`. Also handles dry-run.
+- **How:** generated from the live variables and styles, and bound to them, so
+  rerunning refreshes the page. It only rebuilds frames it made itself.
+- **Writes to:** the Design Tokens page. It never edits variables or styles.
+
 ## Conventions
 
 - Variable group and role names are used exactly as typed, apart from stripped
@@ -113,7 +136,9 @@ Spacing group. The scale is the same every run.
 1. `figma-color-scale` for each brand and neutral color (fills Brand).
 2. `figma-alias-bridge` to map Brand groups into Alias roles.
 3. `figma-mapped-roles` to build the usage tier on top of Alias.
-4. `figma-spacing` and `figma-type-scale` for the non-color primitives.
+4. `figma-spacing`, `figma-radius`, `figma-border-width` and `figma-type-scale`
+   for the non-color primitives.
+5. `figma-token-docs` to build the Design Tokens page (rerun when tokens change).
 
 ## Requirements
 
