@@ -5,7 +5,7 @@ description: Build a Design Tokens reference page in Figma from your live variab
 
 # Figma token docs
 
-Build a page named **Design Tokens** in the open Figma file: a visual reference for the whole system. Each section is its own frame (1440 wide, with its own background), stacked top to bottom with space between, so people can find, link to or copy one section at a time. It is generated from the live variables and text styles, so rerunning it refreshes the page after any token change.
+Build a page named **Design Tokens** in the open Figma file: a visual reference for the whole system. Each section is its own frame (1440 wide, with its own background), laid out left to right with space between, so people can find, link to or copy one section at a time. It is generated from the live variables and text styles, so rerunning it refreshes the page after any token change.
 
 **The deliverable is the page in Figma.** A list in chat is only the receipt. The task is finished when the page exists, you have looked at it (see Step 3), and you have said what it shows.
 
@@ -83,7 +83,7 @@ The script puts each section in its fixed place, so any order or subset works. A
 
 ### What the script guarantees
 
-- **Rebuilds only its own frames.** Every section frame it makes carries plugin data. A run replaces those frames, restacks them in order, and never touches anything else on the page, so rerunning never duplicates.
+- **Rebuilds only its own frames.** Every section frame it makes carries plugin data. A run replaces those frames, re-lays them out in order, and never touches anything else on the page, so rerunning never duplicates.
 - **Never edits variables or styles.** It only reads them.
 - **Bound, not copied.** Fills, widths, corners, strokes and modes are bindings to the variables. Text uses the file's own text styles.
 - **Skips what is missing.** A section whose variables do not exist (no Radius yet, say) shows one line saying which skill to run. Contrast pairs whose variables are missing are listed under the summary.

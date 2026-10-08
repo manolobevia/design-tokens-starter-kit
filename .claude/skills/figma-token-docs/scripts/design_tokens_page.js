@@ -8,7 +8,7 @@
 // type samples use the real text styles, and the Light/Dark and Desktop/Mobile
 // columns are frames set to those variable modes.
 //
-// Each section is its own frame on the page (1440 wide, stacked top to bottom).
+// Each section is its own frame on the page (1440 wide, laid out left to right).
 // Only frames this script made are rebuilt (they carry plugin data). Anything
 // else on the page is never touched. Running it again replaces its own sections.
 //
@@ -167,17 +167,17 @@ let page = figma.root.children.find((p) => p.name === PAGE);
 if (!page) { page = figma.createPage(); page.name = PAGE; out.pageCreated = true; }
 await figma.setCurrentPageAsync(page);
 const lightMode = mapped ? modeId(mapped, "Light") : null;
-const GAP = 120; // space between section frames on the canvas
+const GAP = 120; // space between section frames on the canvas (horizontal)
 const mine = () => page.children.filter((n) => n.type === "FRAME" && n.getPluginData(TAG).startsWith("section:"));
-// Stack the section frames top to bottom in ORDER, from the top left of the page.
+// Lay the section frames out left to right in ORDER, top aligned at the origin of the page.
 function restack() {
   const frames = mine().sort((a, b) => ORDER.indexOf(a.getPluginData(TAG).slice(8)) - ORDER.indexOf(b.getPluginData(TAG).slice(8)));
-  let y = 0;
-  for (const f of frames) { f.primaryAxisSizingMode = "AUTO"; f.x = 0; f.y = y; y += f.height + GAP; }
+  let x = 0;
+  for (const f of frames) { f.primaryAxisSizingMode = "AUTO"; f.x = x; f.y = 0; x += f.width + GAP; }
   return frames.length;
 }
 
-// A section: titled frame, replaced on every run, stacked in ORDER on the page.
+// A section: titled frame, replaced on every run, placed in ORDER, left to right, on the page.
 async function section(id, title, subtitle) {
   for (const n of mine()) if (n.getPluginData(TAG) === "section:" + id) n.remove();
   const f = F(page, title, { dir: "VERTICAL", gap: 40, pad: PAD, fill: mv("Surface/page"), w: W });
