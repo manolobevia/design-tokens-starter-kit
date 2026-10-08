@@ -42,7 +42,7 @@ A message in this form is the whole request and the go-ahead. Run it without ask
 | 1 | Header | File name, date, variable counts per collection |
 | 1d | How names work | One screen: the three tiers, the naming rules (default, secondary, tertiary, action, -secondary, on-[surface], bare role names, 950 to 50) and a short Do and Don't |
 | 1c | Token health | What needs attention, from checks on the live file: failing contrast, missing Mapped variables or Alias roles, a Neutral that is not Gray or has no visible steps, Dark surfaces that look alike, fonts missing a weight, Brand colors no role uses, duplicate colors. Issues and notes come first, each with the fix to run; passing checks are listed at the bottom |
-| 1a | Contents | A clickable index: one card per frame with a number, the title (a link that jumps to the frame), a one-line description and a live stat from the file, such as "11 color scales" or "Light 51 of 54 · Dark 53 of 54 pass". Every other frame gets a "↑ Contents" link back. Cards also navigate in Present mode. Sits under the header, with the guide below it |
+| 1a | Contents | A clickable index: one card per frame with a number, the title (a link that jumps to the frame), a one-line description, a live stat from the file and a "Go to section →" link, such as "11 color scales" or "Light 51 of 54 · Dark 53 of 54 pass". Every other frame gets a "↑ Contents" link back. Cards also navigate in Present mode. Sits under the header, with the guide below it |
 | 1b | How to use | How to run a skill, the build order, and a card per skill with the lines you type. Sits directly under the header frame |
 | 2 | Brand colors | Every color group, 950 to 50, with hex |
 | 3 | Alias roles | Every role, with the Brand group it points to |

@@ -333,6 +333,10 @@ SECTION_FN.contents = async () => {
     try { t.setRangeHyperlink(0, t.characters.length, { type: "NODE", value: frames[id].id }); } catch (e) { out.notes.push("Could not link " + title + ": " + msg(e)); }
     await T(card, what, "Body/Small", { color: tBody, w: 360 });
     await T(card, stat(id), "Label/Small", { color: tMuted, w: 360 });
+    // An explicit link to click. Figma stores a link to a frame in the same file as a node link.
+    const go = await T(card, "Go to section →", "Label/Small", { color: mv("Text/action") });
+    go.name = "Go to section";
+    try { go.setRangeHyperlink(0, go.characters.length, { type: "NODE", value: frames[id].id }); } catch (e) { /* ignore */ }
     // Present mode: clicking the card navigates to the frame.
     try { await card.setReactionsAsync([{ trigger: { type: "ON_CLICK" }, actions: [{ type: "NODE", destinationId: frames[id].id, navigation: "NAVIGATE", transition: null, resetVideoPosition: false }] }]); } catch (e) { /* prototype links are a nicety */ }
   }
