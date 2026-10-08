@@ -46,11 +46,11 @@ A message in this form is the whole request and the go-ahead. Run it without ask
 | 5 | Contrast checks | Text and border pairs against WCAG AA, Light and Dark |
 | 6 | Typography | Every text style, Desktop and Mobile, with font, size, line height, paragraph spacing |
 | 7 | Font families and weights | Heading and Body specimens in every weight |
-| 8 | Spacing | Bars whose width is the variable |
+| 8 | Spacing | Vertical bars on a shared baseline, whose height is the variable |
 | 9 | Border radius | Squares with the variable as corner radius |
 | 10 | Border width | Boxes with the variable as stroke weight |
 
-Everything is bound to the real system: swatch fills, bar widths, corners and strokes are variable bindings, type samples use the real text styles, and the Light/Dark and Desktop/Mobile columns are frames set to those variable modes. Nothing is a copied value.
+Everything is bound to the real system: swatch fills, bar heights, corners and strokes are variable bindings, type samples use the real text styles, and the Light/Dark and Desktop/Mobile columns are frames set to those variable modes. Nothing is a copied value.
 
 ## Step 1: Get the tools
 

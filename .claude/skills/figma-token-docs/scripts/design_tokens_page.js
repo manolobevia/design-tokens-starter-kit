@@ -465,16 +465,22 @@ SECTION_FN.fonts = async () => {
 
 // ===================== spacing =====================
 SECTION_FN.spacing = async () => {
-  const c = await section("spacing", "Spacing", "Spacing scale in 4px units: token × 4 = px. Bar widths are bound to the variables.");
+  const c = await section("spacing", "Spacing", "Spacing scale in 4px units: token × 4 = px. Bar heights are bound to the variables.");
   const vars = brand ? varsOf(brand).filter((v) => low(v.name).startsWith("spacing/") && v.resolvedType === "FLOAT") : [];
   if (!vars.length) { await sectionNote(c, "No Spacing variables in Brand. Run Spacing first."); built.spacing = 0; return; }
+  const px = (v) => v.valuesByMode[brand.defaultModeId];
+  const MAXH = Math.max(...vars.map(px));
+  const row = F(c, "Spacing", { dir: "HORIZONTAL", gap: 8 });
   for (const v of vars) {
-    const px = v.valuesByMode[brand.defaultModeId];
-    const row = F(c, v.name, { dir: "HORIZONTAL", gap: 24, align: "CENTER" });
-    await T(row, v.name, "Label/Default", { color: tHead, w: 160 });
-    await T(row, px + " px", "Caption/Default", { color: tMuted, w: 80 });
-    const bar = R(row, "Bar", Math.max(px, 1), 20, { fill: mv("Surface/action"), radius: rad1 });
-    if (px > 0) bar.setBoundVariable("width", v); else bar.visible = false;
+    const leaf = v.name.slice(v.name.indexOf("/") + 1);
+    const cell = F(row, v.name, { dir: "VERTICAL", gap: 12, w: 72 });
+    // The bar area is as tall as the largest step and anchors every bar to the same baseline.
+    const well = F(cell, "Bar area", { dir: "VERTICAL", justify: "MAX", align: "CENTER", w: 72 });
+    well.primaryAxisSizingMode = "FIXED"; well.resize(72, MAXH);
+    const bar = R(well, "Bar", 40, Math.max(px(v), 1), { fill: mv("Surface/action"), radius: rad1 });
+    if (px(v) > 0) bar.setBoundVariable("height", v); else bar.visible = false;
+    await T(cell, leaf, "Label/Default", { color: tHead, w: 72 });
+    await T(cell, px(v) + " px", "Caption/Default", { color: tMuted, w: 72 });
   }
   built.spacing = vars.length;
 };
