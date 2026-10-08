@@ -19,6 +19,7 @@ const PAGE = "Design Tokens";
 const SECTIONS = ["all"]; // "all", or any of: header, contents, guide, names, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border, motion
 const DRY_RUN = false;    // true = report what would be built, write nothing
 const EXPECT_FILE = "";   // optional file name guard, e.g. "Design System MB"
+const REFRESH_CONTENTS = true; // false = leave the Contents frame alone in this run (set true on the last call of a rebuild)
 // ---- END CONFIG ----
 
 const TAG = "figma-token-docs";
@@ -389,7 +390,7 @@ const GUIDE = [
     ["Radius", "The whole scale"], ["Radius/2", "One step (8px)"] ] },
   { name: "figma-border-width", does: "Writes the border-weight scale to Brand.", rows: [
     ["Border width", "The whole scale"], ["Border width/0-5", "One step (2px)"] ] },
-  { name: "figma-motion", does: "Writes animation durations and easing curves to Brand, for code.", rows: [
+  { name: "figma-motion", does: "Writes durations and easing curves to Brand as native TIMING and EASING variables.", rows: [
     ["Motion", "Durations (ms) and easing curves"], ["Motion/Easing", "One group"] ] },
   { name: "figma-token-docs", does: "Builds or refreshes this page from the live variables and styles.", rows: [
     ["Design Tokens", "The whole page. Rerun it after a token changes"] ] },
@@ -939,8 +940,8 @@ SECTION_FN.motion = async () => {
 // The Contents frame links to the other frames by id, so it is built last, and rebuilt after any run
 // that replaced a frame (a replaced frame has a new id).
 const runList = todo.filter((id) => id !== "contents");
-if (runList.length && (todo.includes("contents") || mine().some((f) => f.getPluginData(TAG) === "section:contents"))) runList.push("contents");
-else if (!runList.length && todo.includes("contents")) runList.push("contents");
+const contentsExists = mine().some((f) => f.getPluginData(TAG) === "section:contents");
+if (todo.includes("contents") || (REFRESH_CONTENTS && runList.length && contentsExists)) runList.push("contents");
 for (const id of runList) {
   const row = { id, action: "built" };
   out.sections.push(row);

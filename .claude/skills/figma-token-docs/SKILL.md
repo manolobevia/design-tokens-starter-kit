@@ -87,7 +87,7 @@ One call cannot build everything inside the 30 second limit, so build in groups 
 | 7 | `["motion"]` |
 | 8 | `["contents"]` |
 
-The Contents frame links to the other frames by id, so the script rebuilds it automatically at the end of any run that replaced a frame; call 8 builds it the first time. The script puts each section in its fixed place, so any order or subset works. A subset is also how one section is refreshed on its own. `dry run` sets `DRY_RUN = true` and needs one call.
+The Contents frame links to the other frames by id, so the script rebuilds it automatically at the end of any run that replaced a frame (`REFRESH_CONTENTS = true`); call 8 builds it the first time. On a full rebuild split across calls, set `REFRESH_CONTENTS = false` on all but the last call to save time. The script puts each section in its fixed place, so any order or subset works. A subset is also how one section is refreshed on its own. `dry run` sets `DRY_RUN = true` and needs one call.
 
 ### What the script guarantees
 
