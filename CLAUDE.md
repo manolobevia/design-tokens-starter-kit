@@ -111,6 +111,16 @@ in Brand under a Border width group (token x 4 = px).
   handles reset and dry-run.
 - **Writes to:** Brand, under Border width.
 
+### figma-elevation
+Builds shadows as tokens: Brand black-opacity colors (`Shadow/Soft` to
+`Heavy`) and numbers (`Elevation/<n>/Key Y`, `Key Blur`, `Ambient Y`,
+`Ambient Blur`), Alias references, Mapped `Shadow/key` and `Shadow/ambient`
+with Light and Dark values, and effect styles `Elevation/1` to `Elevation/5`
+(two drop shadows each, every value bound to a variable).
+- **Trigger:** `Elevation` or `Shadows` (everything), `Elevation/<n>` (one
+  level). Also handles reset and dry-run.
+- **Writes to:** Brand, Alias, Mapped and effect styles.
+
 ### figma-token-docs
 Builds a page named Design Tokens that documents the whole system visually:
 a clickable Contents (card per frame with a live stat, links to each frame and

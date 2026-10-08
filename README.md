@@ -1,6 +1,6 @@
 # Figma Design Tokens Starter Kit
 
-Type one short line, get real **Figma variables and text styles** written to your open file. Ten Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width and typography) a visual **Design Tokens** page that documents it, and code exports for developers.
+Type one short line, get real **Figma variables and text styles** written to your open file. Eleven Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width, elevation and typography) a visual **Design Tokens** page that documents it, and code exports for developers.
 
 ## Quick start
 
@@ -33,6 +33,7 @@ Every Alias variable references a Brand variable. Every Mapped variable referenc
 | `figma-type-scale` | `Typography` | Font and weight variables in **Brand**, **Responsive** size variables, text styles |
 | `figma-radius` | `Radius` | Border-radius scale in **Brand** |
 | `figma-border-width` | `Border width` | Border-weight scale in **Brand** |
+| `figma-elevation` | `Elevation` | Shadow tokens and 5 elevation effect styles that follow Light and Dark |
 | `figma-token-docs` | `Design Tokens` | A **Design Tokens** page in Figma showing the whole system |
 | `figma-export-tokens` | `Export tokens` | `tokens.css`, `tokens.tokens.json` and `tailwind.theme.css` for developers |
 | `figma-starter` | `/figma-starter Plum:#3B1A53 ...` | Runs all of the above in order from your brand colors and fonts |
@@ -46,7 +47,7 @@ Run the skills in this order, because each tier references the one before it:
 1. **`figma-color-scale`**: your brand and neutral colors, or `-default` for the system colors. Fills Brand.
 2. **`figma-alias-bridge`**: map Brand groups into Alias roles.
 3. **`figma-mapped-roles`**: build the usage tier on top of Alias.
-4. **`figma-spacing`**, **`figma-radius`**, **`figma-border-width`** and **`figma-type-scale`**: the non-color primitives. These don't depend on the color steps, so run them any time after step 1.
+4. **`figma-spacing`**, **`figma-radius`**, **`figma-border-width`**, **`figma-elevation`** and **`figma-type-scale`**: the non-color primitives. Elevation needs the Mapped tier, so run it after step 3. These don't depend on the color steps, so run them any time after step 1.
 5. **`figma-token-docs`**: builds the Design Tokens page. Run it last, and again whenever tokens change.
 6. **`figma-export-tokens`**: writes the tokens as code files for developers. Run it whenever tokens change.
 
@@ -145,6 +146,16 @@ Token = number of 4px units: `Radius/2` is 8px. Steps: `0`, `0-5` (2px), `1` (4)
 | `reset Border width` | Overwrite hand-changed values |
 
 Steps: `0`, `0-25` (1px), `0-5` (2px), `1` (4px).
+
+### `figma-elevation`
+
+| Type | Result |
+|---|---|
+| `Elevation` or `Shadows` | Shadow colors, offsets and blurs, plus `Elevation/1` to `Elevation/5` |
+| `Elevation/3` | One level. Several can share a message |
+| `reset Elevation` | Put hand-changed values and styles back on the preset |
+
+Each level is two layered drop shadows with every value bound to a variable (levels: 1 cards, 2 dropdowns, 3 popovers, 4 modals, 5 toasts). Shadow colors have a Light and a Dark value in Mapped (`Shadow/key`, `Shadow/ambient`), stronger in Dark.
 
 ### `figma-token-docs`
 

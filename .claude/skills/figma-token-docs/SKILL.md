@@ -22,7 +22,7 @@ Builds the Design Tokens page from the variables and text styles in the open fil
 
 Sections, in order: header, Contents, How to use, How names work, Token health, Brand colors, Alias roles, Mapped Light vs Dark,
 contrast checks, typography (Desktop and Mobile), font families and weights,
-spacing, border radius, border width.
+spacing, border radius, border width, elevation.
 Missing pieces get a one-line note on the page, never an error.
 ```
 
@@ -53,6 +53,7 @@ A message in this form is the whole request and the go-ahead. Run it without ask
 | 8 | Spacing | Vertical bars on a shared baseline, whose height is the variable |
 | 9 | Border radius | Squares with the variable as corner radius |
 | 10 | Border width | Boxes with the variable as stroke weight |
+| 11 | Elevation | The five shadow levels on real cards, in Light and Dark side by side |
 
 Everything is bound to the real system: swatch fills, bar heights, corners and strokes are variable bindings, type samples use the real text styles, and the Light/Dark and Desktop/Mobile columns are frames set to those variable modes. Nothing is a copied value.
 
@@ -82,7 +83,7 @@ One call cannot build everything inside the 30 second limit, so build in groups 
 | 3 | `["mapped"]` |
 | 4 | `["contrast"]` |
 | 5 | `["typography", "fonts"]` |
-| 6 | `["spacing", "radius", "border"]` |
+| 6 | `["spacing", "radius", "border", "elevation"]` |
 | 7 | `["contents"]` |
 
 The Contents frame links to the other frames by id, so the script rebuilds it automatically at the end of any run that replaced a frame; call 7 builds it the first time. The script puts each section in its fixed place, so any order or subset works. A subset is also how one section is refreshed on its own. `dry run` sets `DRY_RUN = true` and needs one call.

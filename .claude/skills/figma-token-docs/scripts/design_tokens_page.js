@@ -16,13 +16,13 @@
 
 // ---- CONFIG ----
 const PAGE = "Design Tokens";
-const SECTIONS = ["all"]; // "all", or any of: header, contents, guide, names, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border
+const SECTIONS = ["all"]; // "all", or any of: header, contents, guide, names, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border, elevation
 const DRY_RUN = false;    // true = report what would be built, write nothing
 const EXPECT_FILE = "";   // optional file name guard, e.g. "Design System MB"
 // ---- END CONFIG ----
 
 const TAG = "figma-token-docs";
-const ORDER = ["header", "contents", "guide", "names", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border"];
+const ORDER = ["header", "contents", "guide", "names", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border", "elevation"];
 const W = 1440, PAD = 80, CONTENT = W - PAD * 2; // 1280
 
 const low = (s) => String(s).trim().toLowerCase();
@@ -293,7 +293,8 @@ const TOC = {
   fonts: ["Font families and weights", "The heading and body fonts in every weight."],
   spacing: ["Spacing", "The spacing scale as bars that match the real values."],
   radius: ["Border radius", "Corner radius scale, from square to pill."],
-  border: ["Border width", "Stroke weights from none to heavy."]
+  border: ["Border width", "Stroke weights from none to heavy."],
+  elevation: ["Elevation", "Five shadow levels, in Light and Dark, applied to real cards."]
 };
 SECTION_FN.contents = async () => {
   const c = await section("contents", "Contents", "Click a title to jump to that frame. Each frame has a link back here. In Present mode, click a card.");
@@ -317,6 +318,7 @@ SECTION_FN.contents = async () => {
     if (id === "spacing") return count("spacing/") + " steps";
     if (id === "radius") return count("radius/") + " steps";
     if (id === "border") return count("border width/") + " steps";
+    if (id === "elevation") return count("elevation/") / 4 + " levels · 2 shadows each";
     return "";
   };
   const grid = F(c, "Cards", { dir: "HORIZONTAL", gap: 24, gapY: 24, wrap: true, w: CONTENT });
@@ -383,6 +385,8 @@ const GUIDE = [
     ["Radius", "The whole scale"], ["Radius/2", "One step (8px)"] ] },
   { name: "figma-border-width", does: "Writes the border-weight scale to Brand.", rows: [
     ["Border width", "The whole scale"], ["Border width/0-5", "One step (2px)"] ] },
+  { name: "figma-elevation", does: "Builds shadows as tokens and 5 effect styles that follow Light and Dark.", rows: [
+    ["Elevation", "Shadow colors, offsets and blurs, plus Elevation/1 to 5"], ["Elevation/3", "One level"] ] },
   { name: "figma-token-docs", does: "Builds or refreshes this page from the live variables and styles.", rows: [
     ["Design Tokens", "The whole page. Rerun it after a token changes"] ] },
   { name: "figma-export-tokens", does: "Writes the tokens as code for developers: CSS, JSON and a Tailwind v4 theme.", rows: [
@@ -393,7 +397,7 @@ const BUILD_ORDER = [
   ["1", "figma-color-scale", "Brand colors"],
   ["2", "figma-alias-bridge", "Roles"],
   ["3", "figma-mapped-roles", "Usage"],
-  ["4", "spacing, radius, border width, type scale", "Primitives"],
+  ["4", "spacing, radius, border width, elevation, type scale", "Primitives"],
   ["5", "figma-token-docs", "This page"],
   ["6", "figma-export-tokens", "Code for developers"]
 ];
@@ -577,6 +581,7 @@ SECTION_FN.health = async () => {
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("spacing/")))) missingPrims.push("Spacing (/figma-spacing)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("radius/")))) missingPrims.push("Radius (/figma-radius)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("border width/")))) missingPrims.push("Border width (/figma-border-width)");
+  if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("elevation/")))) missingPrims.push("Elevation (/figma-elevation)");
   if (!(responsive && responsive.modes.length >= 2)) missingPrims.push("Responsive with Desktop and Mobile (/figma-type-scale Typography)");
   if (missingPrims.length) add("note", "Not built yet: " + missingPrims.join(", "), "", "");
   else add("ok", "Spacing, radius, border width and the Responsive modes all exist");
@@ -638,7 +643,7 @@ async function chipFor(parent, group, v) {
   const leaf = v.name.slice(v.name.indexOf("/") + 1);
   const slot = F(parent, "Chip", { dir: "HORIZONTAL", align: "CENTER", justify: "CENTER", w: 44 });
   slot.counterAxisSizingMode = "FIXED"; slot.resize(44, 44);
-  if (group === "Surface") {
+  if (group === "Surface" || group === "Shadow") {
     slot.fills = [paint(v)];
     for (const k of ["topLeftRadius", "topRightRadius", "bottomLeftRadius", "bottomRightRadius"]) slot.setBoundVariable(k, rad2);
     strokeOf(slot, mv("Border/secondary"), hair);
@@ -869,6 +874,33 @@ SECTION_FN.border = async () => {
     await T(cell, px + " px", "Caption/Default", { color: tMuted, w: 200 });
   }
   built.border = vars.length;
+};
+
+// ===================== elevation =====================
+SECTION_FN.elevation = async () => {
+  const c = await section("elevation", "Elevation", "Five shadow levels, each two layered shadows bound to variables. Shadows are lighter in Light and stronger in Dark, because the Mapped shadow colors have a value per mode.");
+  const levels = new Set();
+  if (brand) for (const v of varsOf(brand)) { const m = low(v.name).match(/^elevation\/(\d+)\//); if (m) levels.add(m[1]); }
+  const fx = await figma.getLocalEffectStylesAsync();
+  const styles = Array.from(levels).sort().map((n) => fx.find((e) => e.name === "Elevation/" + n)).filter(Boolean);
+  if (!styles.length) { await sectionNote(c, "No Elevation styles yet. Run /figma-elevation."); built.elevation = 0; return; }
+  const dark = mapped ? modeId(mapped, "Dark") : null, light = mapped ? modeId(mapped, "Light") : null;
+  const panels = F(c, "Modes", { dir: "HORIZONTAL", gap: 24, w: CONTENT });
+  for (const [label, id] of [["Light", light], ["Dark", dark]]) {
+    if (!id) continue;
+    const panel = F(panels, label, { dir: "VERTICAL", gap: 24, pad: 40, w: 628, fill: mv("Surface/page"), radius: rad3, stroke: { color: lineColor, weight: hair } });
+    panel.setExplicitVariableModeForCollection(mapped, id);
+    await T(panel, label, "Label/Default", { color: tMuted });
+    const grid = F(panel, "Levels", { dir: "HORIZONTAL", gap: 48, gapY: 56, wrap: true, w: 548 });
+    for (const st of styles) {
+      const card = F(grid, st.name, { dir: "VERTICAL", gap: 4, pad: 16, w: 240, fill: mv("Surface/default"), radius: rad3 });
+      await card.setEffectStyleIdAsync(st.id);
+      await T(card, st.name, "Label/Default", { color: tHead, w: 208 });
+      await T(card, (st.description || "").split(".")[0], "Caption/Default", { color: tMuted, w: 208 });
+      card.resize(240, 96); card.primaryAxisSizingMode = "FIXED";
+    }
+  }
+  built.elevation = styles.length;
 };
 
 // ---------- run ----------
