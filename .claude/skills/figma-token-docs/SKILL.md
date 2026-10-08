@@ -5,7 +5,7 @@ description: Build a Design Tokens reference page in Figma from your live variab
 
 # Figma token docs
 
-Build a page named **Design Tokens** in the open Figma file: a visual reference for the whole system. Each section is its own frame (1440 wide, with its own background), laid out left to right with space between, so people can find, link to or copy one section at a time. It is generated from the live variables and text styles, so rerunning it refreshes the page after any token change.
+Build a page named **Design Tokens** in the open Figma file: a visual reference for the whole system. Each section is its own frame (1440 wide, with its own background), laid out left to right with space between (the How to use guide sits under the header frame), so people can find, link to or copy one section at a time. It is generated from the live variables and text styles, so rerunning it refreshes the page after any token change.
 
 **The deliverable is the page in Figma.** A list in chat is only the receipt. The task is finished when the page exists, you have looked at it (see Step 3), and you have said what it shows.
 
@@ -20,7 +20,7 @@ Builds the Design Tokens page from the variables and text styles in the open fil
   Design Tokens        Build or refresh the whole page
   dry run              Report what would be built, writes nothing
 
-Sections, in order: header, Brand colors, Alias roles, Mapped Light vs Dark,
+Sections, in order: header, How to use, Brand colors, Alias roles, Mapped Light vs Dark,
 contrast checks, typography (Desktop and Mobile), font families and weights,
 spacing, border radius, border width.
 Missing pieces get a one-line note on the page, never an error.
@@ -40,6 +40,7 @@ A message in this form is the whole request and the go-ahead. Run it without ask
 | # | Section | Shows |
 |---|---|---|
 | 1 | Header | File name, date, variable counts per collection |
+| 1b | How to use | How to run a skill, the build order, and a card per skill with the lines you type. Sits directly under the header frame |
 | 2 | Brand colors | Every color group, 950 to 50, with hex |
 | 3 | Alias roles | Every role, with the Brand group it points to |
 | 4 | Mapped usage | Surface, Border, Text and Icon, Light and Dark side by side |
@@ -73,7 +74,7 @@ One call cannot build everything inside the 30 second limit, so build in groups 
 
 | Call | `SECTIONS` |
 |---|---|
-| 1 | `["header", "brand", "alias"]` |
+| 1 | `["header", "guide", "brand", "alias"]` |
 | 2 | `["mapped"]` |
 | 3 | `["contrast"]` |
 | 4 | `["typography", "fonts"]` |

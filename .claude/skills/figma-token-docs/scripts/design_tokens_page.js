@@ -16,13 +16,13 @@
 
 // ---- CONFIG ----
 const PAGE = "Design Tokens";
-const SECTIONS = ["all"]; // "all", or any of: header, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border
+const SECTIONS = ["all"]; // "all", or any of: header, guide, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border
 const DRY_RUN = false;    // true = report what would be built, write nothing
 const EXPECT_FILE = "";   // optional file name guard, e.g. "Design System MB"
 // ---- END CONFIG ----
 
 const TAG = "figma-token-docs";
-const ORDER = ["header", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border"];
+const ORDER = ["header", "guide", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border"];
 const W = 1440, PAD = 80, CONTENT = W - PAD * 2; // 1280
 
 const low = (s) => String(s).trim().toLowerCase();
@@ -171,11 +171,21 @@ const lightMode = mapped ? modeId(mapped, "Light") : null;
 const GAP = 120; // space between section frames on the canvas (horizontal)
 const mine = () => page.children.filter((n) => n.type === "FRAME" && n.getPluginData(TAG).startsWith("section:"));
 // Lay the section frames out left to right in ORDER, top aligned at the origin of the page.
+// The "How to use" guide is the exception: it sits directly under the header frame, in the empty
+// space below it, so it is the first thing people see after the title.
 function restack() {
-  const frames = mine().sort((a, b) => ORDER.indexOf(a.getPluginData(TAG).slice(8)) - ORDER.indexOf(b.getPluginData(TAG).slice(8)));
+  const all = mine().sort((a, b) => ORDER.indexOf(a.getPluginData(TAG).slice(8)) - ORDER.indexOf(b.getPluginData(TAG).slice(8)));
+  const guide = all.find((f) => f.getPluginData(TAG) === "section:guide");
+  const row = all.filter((f) => f !== guide);
   let x = 0;
-  for (const f of frames) { f.primaryAxisSizingMode = "AUTO"; f.x = x; f.y = 0; x += f.width + GAP; }
-  return frames.length;
+  for (const f of row) { f.primaryAxisSizingMode = "AUTO"; f.x = x; f.y = 0; x += f.width + GAP; }
+  if (guide) {
+    guide.primaryAxisSizingMode = "AUTO";
+    const head = row[0];
+    guide.x = head ? head.x : 0;
+    guide.y = head ? head.y + head.height + GAP : 0;
+  }
+  return all.length;
 }
 
 // A section: titled frame, replaced on every run, placed in ORDER, left to right, on the page.
@@ -240,6 +250,72 @@ SECTION_FN.header = async () => {
     await T(chip, v, "Body/Small", { color: tMuted });
   }
   built.header = 1;
+};
+
+// ===================== guide =====================
+const GUIDE = [
+  { name: "figma-color-scale", does: "Turns one base color into an 11-step scale (950 to 50) in Brand.", rows: [
+    ["Purple:#5C3FC4", "Scale Purple/950 to 50. Your hex is the 500 Default"],
+    ["-default", "Red, Blue, Orange, Green, Gray and Foundation"],
+    ["Foundation", "Only Foundation/White and Foundation/Black"] ] },
+  { name: "figma-alias-bridge", does: "Links a Brand color group to an Alias role, step for step, as references.", rows: [
+    ["Brand/Purple -> Alias/Primary", "Every Purple step becomes a reference in Primary"],
+    ["-default", "Neutral, Error, Success, Warning, Information and Foundation. Neutral is always Gray"] ] },
+  { name: "figma-mapped-roles", does: "Builds the usage tier: Surface, Border, Text and Icon, in Light and Dark.", rows: [
+    ["Mapped", "The full preset in Light"],
+    ["Mapped dark", "Adds the Dark mode and fills it"],
+    ["Mapped/Text", "One group only"],
+    ["Alias/Neutral/900 -> Mapped/Text/heading", "Point one variable at one alias"] ] },
+  { name: "figma-type-scale", does: "Builds fonts, the Responsive type scale (Desktop and Mobile) and text styles.", rows: [
+    ["Typography", "Everything, with Inter for headings and Roboto for body"],
+    ["Typography heading Playfair body Lato", "Your own fonts"],
+    ["Typography base 18 ratio 1.333", "Scale settings"],
+    ["reset Responsive", "Recalculate the size variables"] ] },
+  { name: "figma-spacing", does: "Writes the spacing scale in 4px units to Brand.", rows: [
+    ["Spacing", "The whole scale"], ["Spacing/4", "One step. Token x 4 = px, so Spacing/4 is 16px"] ] },
+  { name: "figma-radius", does: "Writes the border-radius scale to Brand, plus full for pills and circles.", rows: [
+    ["Radius", "The whole scale"], ["Radius/2", "One step (8px)"] ] },
+  { name: "figma-border-width", does: "Writes the border-weight scale to Brand.", rows: [
+    ["Border width", "The whole scale"], ["Border width/0-5", "One step (2px)"] ] },
+  { name: "figma-token-docs", does: "Builds or refreshes this page from the live variables and styles.", rows: [
+    ["Design Tokens", "The whole page. Rerun it after a token changes"] ] }
+];
+const BUILD_ORDER = [
+  ["1", "figma-color-scale", "Brand colors"],
+  ["2", "figma-alias-bridge", "Roles"],
+  ["3", "figma-mapped-roles", "Usage"],
+  ["4", "spacing, radius, border width, type scale", "Primitives"],
+  ["5", "figma-token-docs", "This page"]
+];
+SECTION_FN.guide = async () => {
+  const c = await section("guide", "How to use these skills", "Type a short line in Claude Code and the skill writes real variables and styles to this file. Everything on this page is generated from them.");
+  const run = F(c, "Running a skill", { dir: "VERTICAL", gap: 12 });
+  await T(run, "Running a skill", "Heading/H4", { color: tHead });
+  await T(run, "Type the line, for example Spacing, or call the skill by name: /figma-spacing. Parameters go after the name, as in /figma-type-scale Typography base 18.", "Body/Default", { color: tBody, w: CONTENT });
+  await T(run, "Add dry run to any line to preview without writing. Type -h (for example /figma-radius -h) to print a skill's usage.", "Body/Default", { color: tBody, w: CONTENT });
+  const ord = F(c, "Build order", { dir: "VERTICAL", gap: 16 });
+  await T(ord, "Build order", "Heading/H4", { color: tHead });
+  await T(ord, "Each tier references the one before it, so run the skills in this order.", "Body/Default", { color: tMuted, w: CONTENT });
+  const steps = F(ord, "Steps", { dir: "HORIZONTAL", gap: 12, wrap: true, w: CONTENT });
+  for (const [n, who, what] of BUILD_ORDER) {
+    const chip = F(steps, "Step " + n, { dir: "VERTICAL", gap: 4, pad: 16, w: 244, fill: mv("Surface/secondary"), radius: rad3 });
+    await T(chip, n + " · " + what, "Label/Default", { color: tHead, w: 212 });
+    await T(chip, who, "Caption/Default", { color: tMuted, w: 212 });
+  }
+  const sk = F(c, "Skills", { dir: "VERTICAL", gap: 16 });
+  await T(sk, "The skills", "Heading/H4", { color: tHead });
+  const grid = F(sk, "Cards", { dir: "HORIZONTAL", gap: 24, wrap: true, w: CONTENT });
+  for (const g of GUIDE) {
+    const card = F(grid, g.name, { dir: "VERTICAL", gap: 12, pad: 24, w: 628, fill: mv("Surface/default"), radius: rad3, stroke: { color: lineColor, weight: hair } });
+    await T(card, g.name, "Heading/H5", { color: tHead });
+    await T(card, g.does, "Body/Small", { color: tMuted, w: 580 });
+    for (const [cmd, res] of g.rows) {
+      const row = F(card, cmd, { dir: "HORIZONTAL", gap: 16, w: 580 });
+      await T(row, cmd, "Label/Default", { color: mv("Text/action"), w: 270 });
+      await T(row, res, "Body/Small", { color: tBody, w: 294 });
+    }
+  }
+  built.guide = GUIDE.length;
 };
 
 // ===================== brand =====================
