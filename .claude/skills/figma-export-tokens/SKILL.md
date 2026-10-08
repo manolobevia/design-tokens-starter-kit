@@ -70,7 +70,7 @@ python3 scripts/build_tokens.py "<saved file path>" "<output folder>" --formats=
 - **References kept.** `--alias-primary-500: var(--brand-plum-500);` in CSS and `{brand.plum.500}` in JSON.
 - **Modes.** The first mode is the default. A mode named Dark is written under `:root[data-theme="dark"]` and `@media (prefers-color-scheme: dark)`; a mode named Mobile under `@media (max-width: 767px)`. Only values that differ are repeated. Any other mode goes under `[data-mode="<name>"]`.
 - **Order.** Scales run from 950 to 50 and groups stay together, whatever order Figma returned them in.
-- **Motion.** `TIMING` variables become `200ms` and `EASING` variables become `cubic-bezier(...)` (and DTCG `duration` and `cubicBezier` types); in Tailwind the easings become `ease-*` theme values.
+- **Motion.** `TIMING` variables (stored in seconds) become milliseconds, such as `1000ms` and `EASING` variables become `cubic-bezier(...)` (and DTCG `duration` and `cubicBezier` types); in Tailwind the easings become `ease-*` theme values.
 - **Tailwind.** Alias and Mapped colors become `--color-<role>-<step>` and `--color-<group>-<name>` (for example `bg-surface-page`), and spacing, radius, fonts and weights are mapped to the matching theme namespaces. Brand scales are left out because Alias already carries them.
 
 ## Step 4: Report

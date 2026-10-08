@@ -882,10 +882,11 @@ SECTION_FN.border = async () => {
 
 // ===================== motion =====================
 SECTION_FN.motion = async () => {
-  const c = await section("motion", "Motion", "Duration (TIMING) and easing (EASING) variables, Figma's native motion types. A bar is 1px per millisecond.");
+  const c = await section("motion", "Motion", "Duration (TIMING) and easing (EASING) variables, Figma's native motion types. A bar is 1px per 4 milliseconds.");
   const vars = brand ? varsOf(brand).filter((v) => low(v.name).startsWith("motion/")) : [];
   if (!vars.length) { await sectionNote(c, "No Motion variables in Brand. Run /figma-motion."); built.motion = 0; return; }
   const val = (v) => v.valuesByMode[brand.defaultModeId];
+  const ms = (v) => Math.round(val(v) * 1000); // a TIMING variable is stored in seconds
   // Descriptions read "NAME = VALUE. USE. [figma-motion]". Split on dot-space so a dot inside a number (0.2) is safe.
   const useOf = (v) => ((v.description || "").split(". ")[1] || "").replace(/\.$/, "");
   const bez = (v) => { const e = val(v) && val(v).easingFunctionCubicBezier; return e ? [e.x1, e.y1, e.x2, e.y2].map((n) => Math.round(n * 1000) / 1000) : null; };
@@ -899,8 +900,8 @@ SECTION_FN.motion = async () => {
     for (const v of dur) {
       const row = F(list, v.name, { dir: "HORIZONTAL", gap: 24, align: "CENTER" });
       await T(row, v.name.split("/").pop(), "Label/Default", { color: tHead, w: 100 });
-      await T(row, val(v) + " ms", "Caption/Default", { color: tMuted, w: 70 });
-      R(row, "Bar", Math.max(val(v), 1), 16, { fill: mv("Surface/action"), radius: rad1 });
+      await T(row, ms(v) + " ms", "Caption/Default", { color: tMuted, w: 70 });
+      R(row, "Bar", Math.max(ms(v) / 4, 1), 16, { fill: mv("Surface/action"), radius: rad1 });
       await T(row, useOf(v), "Body/Small", { color: tBody, w: 420 });
     }
   }

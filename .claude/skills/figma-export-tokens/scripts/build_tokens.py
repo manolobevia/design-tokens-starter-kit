@@ -108,7 +108,7 @@ def css_value(c, v, val, cols):
     if v["t"] == "COLOR":
         return val.lower()
     if v["t"] == "TIMING":
-        return "%sms" % num(val)
+        return "%sms" % num(round(val * 1000, 4))  # Figma stores a TIMING variable in seconds
     if v["t"] == "EASING":
         b = bezier(val)
         return "linear" if b == [0, 0, 1, 1] else "cubic-bezier(%s)" % ", ".join(str(num(x)) for x in b)
@@ -185,7 +185,7 @@ def dtcg_value(v, val, cols):
     if v["t"] == "COLOR":
         return val.lower()
     if v["t"] == "TIMING":
-        return "%sms" % num(val)
+        return "%sms" % num(round(val * 1000, 4))
     if v["t"] == "EASING":
         return bezier(val)
     if v["t"] == "FLOAT":

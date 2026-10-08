@@ -112,8 +112,8 @@ in Brand under a Border width group (token x 4 = px).
 - **Writes to:** Brand, under Border width.
 
 ### figma-motion
-Writes animation durations (`Motion/Duration/XFast` 50ms to `XSlow` 500ms) as
-Figma's native `TIMING` variables and easing curves (`Motion/Easing/Standard`,
+Writes animation durations (`Motion/Duration/XFast` 250ms to `XSlow` 2500ms, Default 1000ms) as
+Figma's native `TIMING` variables (stored in seconds, shown in ms) and easing curves (`Motion/Easing/Standard`,
 `Enter`, `Exit`, `Linear`) as native `EASING` variables to Brand. These types
 cannot have scopes. Older number and text versions made by this skill are
 replaced.

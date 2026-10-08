@@ -1,6 +1,6 @@
 ---
 name: figma-motion
-description: Write animation durations and easing curves to Figma Brand as native TIMING and EASING variables (Motion/Duration/Default = 200ms). Use for Motion, Motion/Easing, or reset.
+description: Write animation durations and easing curves to Figma Brand as native TIMING and EASING variables (Motion/Duration/Default = 1000ms). Use for Motion, Motion/Easing, or reset.
 ---
 
 # Figma motion
@@ -24,11 +24,11 @@ Writes animation durations and easing curves to Brand, for code.
   reset Motion                Overwrite values changed by hand
   dry run                     Preview only, writes nothing
 
-Duration  XFast 50ms, Fast 100ms, Default 200ms, Slow 300ms, XSlow 500ms
+Duration  XFast 250ms, Fast 500ms, Default 1000ms, Slow 1500ms, XSlow 2500ms
 Easing    Standard, Enter, Exit, Linear (CSS timing functions)
 
 Durations are TIMING variables and easings are EASING variables, Figma's native
-motion types. figma-export-tokens writes them as 200ms and cubic-bezier(...).
+motion types. figma-export-tokens writes them as 1000ms and cubic-bezier(...).
 ```
 
 ## The input
@@ -44,11 +44,11 @@ motion types. figma-export-tokens writes them as 200ms and cubic-bezier(...).
 
 | Token | Value | Use |
 |---|---|---|
-| `Motion/Duration/XFast` | 50 ms | Micro feedback: a pressed state, a color change |
-| `Motion/Duration/Fast` | 100 ms | Small elements: toggles, checkboxes, hover |
-| `Motion/Duration/Default` | 200 ms | Most transitions: menus, tooltips, expanding rows |
-| `Motion/Duration/Slow` | 300 ms | Larger elements: panels, drawers, modals |
-| `Motion/Duration/XSlow` | 500 ms | Full-screen and page transitions |
+| `Motion/Duration/XFast` | 250 ms | Micro feedback: a pressed state, a color change |
+| `Motion/Duration/Fast` | 500 ms | Small elements: toggles, checkboxes, hover |
+| `Motion/Duration/Default` | 1000 ms | Most transitions: menus, tooltips, expanding rows |
+| `Motion/Duration/Slow` | 1500 ms | Larger elements: panels, drawers, modals |
+| `Motion/Duration/XSlow` | 2500 ms | Full-screen and page transitions |
 | `Motion/Easing/Standard` | `cubic-bezier(0.2, 0, 0, 1)` | Elements that move within the screen |
 | `Motion/Easing/Enter` | `cubic-bezier(0, 0, 0, 1)` | Elements arriving: they start fast and settle |
 | `Motion/Easing/Exit` | `cubic-bezier(0.3, 0, 1, 1)` | Elements leaving: they speed up and go |
@@ -59,7 +59,8 @@ The full definition is the PRESET block at the top of `scripts/motion_scale.js`.
 ## The naming system
 
 - **Variables are `Motion/<Group>/<Token>`**, in the `Brand` collection like every other primitive.
-- **Native types.** Durations are `TIMING` variables (milliseconds) and easings are `EASING` variables (a custom cubic bezier), the types Figma added for motion. Linear is the bezier `0, 0, 1, 1`. `Default` is the one to use unless there is a reason not to; `XFast` and `XSlow` sit beyond Fast and Slow.
+- **Units.** The scale is in proportion to `Default` (1000 ms): XFast is a quarter, Fast a half, Slow one and a half, XSlow two and a half. **A TIMING variable is stored in seconds**, so Default is the number `1`, and Figma's Variables panel shows it as 1000 ms. The script takes the preset in milliseconds and converts it, so never write `200` meaning 200 ms: Figma would show 200000 ms.
+- **Native types.** Durations are `TIMING` variables and easings are `EASING` variables (a custom cubic bezier), the types Figma added for motion. Linear is the bezier `0, 0, 1, 1`. `Default` is the one to use unless there is a reason not to; `XFast` and `XSlow` sit beyond Fast and Slow.
 - **Enter and Exit** are named for what the element does, not for the curve: arriving things decelerate, leaving things accelerate.
 - **No scopes.** Figma does not let TIMING and EASING variables have scopes, so none are set.
 - **Upgrading.** An earlier version of this skill wrote durations as numbers and easings as text. A run replaces those, and only those (the description carries this skill's mark), with the native types. A `Motion/...` variable made by hand is never touched.
@@ -116,7 +117,7 @@ Reply briefly:
 - A table of the tokens that were written (durations in ms, easings as curves).
 - Anything `kept`, with its current value, so the user can decide whether to reset it. `others` in one line.
 - Anything that `failed`, with the reason.
-- That the values use Figma's native types. In the Variables panel a Duration should read 200 ms; if it does not, say so, because the unit is what Figma shows. `Export tokens` writes them as CSS (`--brand-motion-duration-default: 200ms`).
+- That the values use Figma's native types. In the Variables panel Motion/Duration/Default should read 1000 ms; if it does not, say so, because the unit is what Figma shows. `Export tokens` writes them as CSS (`--brand-motion-duration-default: 1000ms`).
 
 Do not add animation advice unless asked.
 

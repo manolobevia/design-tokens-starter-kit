@@ -155,7 +155,7 @@ Steps: `0`, `0-25` (1px), `0-5` (2px), `1` (4px).
 | `Motion/Duration`, `Motion/Easing` | One group |
 | `reset Motion` | Overwrite hand-changed values |
 
-Durations are Figma's native `TIMING` variables (XFast 50, Fast 100, Default 200, Slow 300, XSlow 500 ms) and easings are native `EASING` variables (Standard, Enter, Exit, Linear). `Export tokens` writes them as `200ms` and `cubic-bezier(...)`.
+Durations are Figma's native `TIMING` variables (XFast 250, Fast 500, Default 1000, Slow 1500, XSlow 2500 ms, stored in seconds as Figma requires) and easings are native `EASING` variables (Standard, Enter, Exit, Linear). `Export tokens` writes them as `1000ms` and `cubic-bezier(...)`.
 
 ### `figma-token-docs`
 
