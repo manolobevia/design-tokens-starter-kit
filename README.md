@@ -20,7 +20,7 @@ Every Alias variable references a Brand variable. Every Mapped variable referenc
 | `figma-alias-bridge` | `Brand/Purple -> Alias/Primary (Purple)` | **Alias** group referencing Brand, with Light and Dark |
 | `figma-mapped-roles` | `Mapped` | **Mapped** Surface, Border, Text and Icon variables referencing Alias |
 | `figma-spacing` | `Spacing` | 4px-unit spacing scale in **Brand** |
-| `figma-type-scale` | `Typography` | **Responsive** size variables plus text styles |
+| `figma-type-scale` | `Typography` | Font and weight variables in **Brand**, **Responsive** size variables, text styles |
 
 Add `dry run` to any line to preview without writing.
 
@@ -92,12 +92,12 @@ Token = number of 4px units: `Spacing/4` is 16px. Steps: `0` (0px), `0-25` (1px)
 
 | Type | Result |
 |---|---|
-| `Typography` | Variables, then text styles |
-| `Responsive` or `Type scale` | Variables only (Desktop and Mobile modes) |
-| `Responsive/Heading` | One variable group |
-| `Type styles`, `Type styles/Body` | Text styles only, or one group |
-| `Brand/Font family/Body = Roboto` | Set the body font (`Heading` works too) |
-| `reset Responsive`, `reset type styles` | Recalculate or rebind to the preset |
+| `Typography` | Fonts, Responsive collection (Desktop and Mobile), variables and text styles, in one run |
+| `Typography heading Playfair body Lato` | Same, with your own fonts. Either one can be given alone |
+| `reset Responsive` | Recalculate the size variables |
+| `reset type styles` | Rebind hand-changed styles to the preset |
+
+`Typography` creates what is missing under **Brand**: `Font family/Heading` (Inter) and `Font family/Body` (Roboto), and `Font weight/Light`, `Regular`, `Medium`, `Bold`. A font variable that already exists is left alone unless you name a font.
 
 Settings can follow `Typography` in any order. Anything omitted keeps its default:
 

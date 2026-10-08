@@ -1,14 +1,16 @@
 ---
 name: "figma-type-scale"
-description: Build Figma typography: a modular type scale in Responsive (Desktop/Mobile) plus text styles bound to it. Use for Typography, Type scale, Responsive, Type styles, or Brand/Font family/Body = Roboto.
+description: Build Figma typography in one run: font family and weight variables, a Desktop/Mobile type scale in Responsive, and text styles. Use for Typography, with optional fonts, or reset Responsive.
 ---
 
 # Figma type scale
 
-Build the typography of the user's design system in two steps:
+Build the typography of the user's design system with one command, `Typography`. It does four things in order:
 
-1. **Variables.** A modular type scale, written as number variables in the `Responsive` collection, with a `Desktop` and a `Mobile` mode.
-2. **Text styles.** One text style per role, bound to those variables and to the font variables in `Brand`.
+1. **Fonts.** Font family and font weight variables in the `Brand` collection (see "Font variables live in Brand").
+2. **Responsive collection.** Created if missing, with a `Desktop` and a `Mobile` mode.
+3. **Variables.** A modular type scale, written as number variables in `Responsive`.
+4. **Text styles.** One text style per role, bound to those variables and to the font variables in `Brand`.
 
 **The deliverable is the variables and the text styles in Figma.** A table in chat is only the receipt. The task is finished when they exist in the user's file and are bound to each other.
 
@@ -16,16 +18,14 @@ Build the typography of the user's design system in two steps:
 
 | The user types | What it means |
 |---|---|
-| `Typography` | Both steps: the variables, then the text styles |
-| `Responsive` or `Type scale` | Step 1 only: the variables |
-| `Responsive/Heading` | Step 1 for one group. Several can come in one message |
-| `Type styles` | Step 2 only: the text styles |
-| `Type styles/Body` | Step 2 for one group |
+| `Typography` | Everything above, with Inter for headings and Roboto for body when no font is set yet |
+| `Typography heading Playfair body Lato` | Same, with the fonts the user names. Either one can be given alone |
 | `Typography base 18 ratio 1.333 mobile 1.25` | Same, with other scale settings (see "Settings") |
-| `Brand/Font family/Body = Roboto` | Set or create one font variable in Brand |
 | "reset Responsive", "regenerate the scale" | Recalculate values that were changed by hand |
 | "reset type styles" | Put hand-changed bindings of the styles back on the preset |
 | "dry run" or "preview" with any of the above | Report what would happen and write nothing |
+
+There are no separate commands for the variables alone, the styles alone, one group or one font. `Typography` is the entry point, and it is safe to repeat.
 
 A message in one of these forms is the whole request and the go-ahead. Run it without asking for confirmation first, because the user designed these as one-line actions and the script is safe to repeat. The only reasons to stop are listed under "When to ask".
 
@@ -78,7 +78,7 @@ Settings can follow the trigger in the same message, in any order. Map them to t
 | `body spacing 1` | `bodyParagraphSpacing` (Body and Caption only) |
 | `grid 4` | `grid` |
 
-Anything the user does not mention keeps its default. The settings are not stored in the file, so a later run needs them again to produce the same numbers; a plain `Typography` always calculates with the defaults.
+`heading <font>` and `body <font>` name the two font families (a font name with spaces goes in quotes). Anything the user does not mention keeps its default. The settings are not stored in the file, so a later run needs them again to produce the same numbers; a plain `Typography` always calculates with the defaults.
 
 ## The naming system
 
@@ -148,6 +148,7 @@ const REQUEST = {
   styles: true,
   groups: ["all"],
   overwrite: { variables: false, styles: false },
+  fontDefaults: true,
   fonts: []
 };
 const SCALE = {
@@ -164,17 +165,13 @@ How each request maps to the CONFIG:
 
 | Request | CONFIG |
 |---|---|
-| `Typography` | `variables: true, styles: true` |
-| `Responsive` or `Type scale` | `variables: true, styles: false` |
-| `Responsive/Heading` and `Responsive/Body` | `variables: true, styles: false, groups: ["Heading", "Body"]` |
-| `Type styles` | `variables: false, styles: true` |
-| `Type styles/Body` | `variables: false, styles: true, groups: ["Body"]` |
-| `Typography ratio 1.333` | both steps, `SCALE.ratio = 1.333`, `overwrite.variables: true` |
-| reset Responsive, regenerate the scale | `variables: true, styles: false, overwrite.variables: true` |
-| reset type styles | `variables: false, styles: true, overwrite.styles: true` |
-| `Brand/Font family/Body = Roboto` | `variables: false, styles: false, fonts: [{ path: "Brand/Font family/Body", value: "Roboto" }]` |
+| `Typography` | `variables: true, styles: true, fontDefaults: true` |
+| `Typography heading Playfair body Lato` | the same, plus `fonts: [{ path: "Brand/Font family/Heading", value: "Playfair" }, { path: "Brand/Font family/Body", value: "Lato" }]` |
+| `Typography ratio 1.333` | the same, `SCALE.ratio = 1.333`, `overwrite.variables: true` |
+| reset Responsive, regenerate the scale | `variables: true, styles: false, fontDefaults: false, overwrite.variables: true` |
+| reset type styles | `variables: false, styles: true, fontDefaults: false, overwrite.styles: true` |
 
-A message that names scale settings is a request to calculate with them, so set `overwrite.variables: true`; without it, existing values that differ would be reported as kept and nothing would change. Font lines can be combined with any other request in one run. They are applied first, so `Brand/Font family/Body = Roboto` followed by `Type styles` works in a single message.
+A message that names scale settings is a request to calculate with them, so set `overwrite.variables: true`; without it, existing values that differ would be reported as kept and nothing would change. Fonts are written first, so the styles in the same run already see them. A font the user names always wins, even when the variable already exists. With `fontDefaults: true` the script only creates the font variables that are missing (Inter, Roboto, and the four weights) and never changes one that exists, so a rerun cannot overwrite a font the user chose.
 
 Set `EXPECT_FILE` to the name of the user's design system file when you know it (from this conversation or from memory), and pass the file key to the tool when you have it. Figma's active file can change without notice, and this guard stops the script before it writes into the wrong one. Set `DRY_RUN = true` only when the user asks for a preview or a dry run.
 
@@ -230,7 +227,7 @@ Reply briefly:
 - For the styles, which were created or updated and the font each resolved to. A short table or one line per group is enough.
 - Every `note` about a fallback weight, grouped: "Labels use Regular because Brand/Font weight/Medium is not a style of Roboto." Say how to get the first choice: fix or add the variable with a font line, then send "reset type styles".
 - `unusedFamilies`, in one line, if it is not empty: those variables exist but no style uses them.
-- Everything in `blocked`, one line per cause, with the fix. The usual cause is a font variable whose value is not a real font name. Quote the closest name the script found and offer the line that fixes it, for example `Brand/Font family/Body = Roboto`. Do not apply the fix yourself: the user may have meant a different font.
+- Everything in `blocked`, one line per cause, with the fix. The usual cause is a font variable whose value is not a real font name. Quote the closest name the script found and offer the command that fixes it, for example `Typography body Roboto`. Do not apply the fix yourself: the user may have meant a different font.
 - Anything `kept`, in one line per group, so the user can decide whether to reset it. If almost every variable is `kept`, the file was probably built with other settings; say that, and that sending the line with those settings will match it.
 - `others`, in one line. Do not delete them yourself.
 - If `mobileError` is set, say that Desktop was written and Mobile could not be added, and quote the reason. The number of modes a collection may have depends on the Figma plan.
@@ -242,15 +239,17 @@ Keep to what the report contains. Do not add type advice or suggestions for new 
 Font family and font weight are primitives: raw values such as "Inter" and "Bold", the same kind of thing as a hex color or a spacing number. So they live in the `Brand` collection with the other primitives, not in Alias:
 
 - `Brand/Font family/Heading` and `Brand/Font family/Body` (see "Two font roles, never more")
-- `Brand/Font weight/Regular`, `Medium` and `Bold`
+- `Brand/Font weight/Light`, `Regular`, `Medium` and `Bold`, each holding the font style of the same name (Light = "Light")
+
+The defaults are Inter for `Heading` and Roboto for `Body`. `Typography` creates any of these six variables that is missing and leaves existing ones alone.
 
 The text styles bind to these directly. There is no font tier in Alias, and the script never reads or writes font variables there. The user moved them out of Alias on purpose, so do not recreate them there.
 
 If the report lists `fontsElsewhere`, a file still has font variables in another collection, usually Alias from an older setup. Nothing uses them. When styles are blocked because Brand has no font variables, say that the fonts were found in the other collection and offer the font lines that create them in Brand with the same values. Do not delete the old ones yourself: say they are unused and let the user remove them.
 
-A font line sets one variable: `Brand/Font family/Body = Roboto` or `Brand/Font weight/Medium = Medium`. It creates the variable if it is new and changes it if it exists. A family that is not available in the Figma account is refused, with the closest name. Only the `Font family` and `Font weight` groups can be set this way, and the path has to start with `Brand/`.
+A font the user names (`Typography heading Playfair`) sets one variable. It creates the variable if it is new and changes it if it exists. A family that is not available in the Figma account is refused, with the closest name. Only `Font family` variables can be set from the command; the weights keep their default values.
 
-The weight variables are shared by both fonts, so a weight only works cleanly when the heading font and the body font both have it under the same name. That is why the preset sticks to Regular, Medium and Bold. In-between weights are where fonts disagree: Inter calls it "Semi Bold", others "SemiBold", and some fonts have no such weight at all. The script checks every style against its own family, so if a weight exists in one font and not the other, the style that cannot use it gets the fallback and the report says so. Recommend against adding a weight that only one of the two fonts has.
+The weight variables are shared by both fonts, so a weight only works cleanly when the heading font and the body font both have it under the same name. That is why the preset sticks to Light, Regular, Medium and Bold. Light is created for the user's own use; no preset style binds to it. In-between weights are where fonts disagree: Inter calls it "Semi Bold", others "SemiBold", and some fonts have no such weight at all. The script checks every style against its own family, so if a weight exists in one font and not the other, the style that cannot use it gets the fallback and the report says so. Recommend against adding a weight that only one of the two fonts has.
 
 ## Changing the preset
 

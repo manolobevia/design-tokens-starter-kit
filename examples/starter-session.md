@@ -29,15 +29,15 @@ Alias/Neutral/900 -> Mapped/Text/heading
 ```
 Spacing
 Typography
+Typography heading Playfair body Lato
 Typography base 18 ratio 1.333 mobile 1.2
-Brand/Font family/Body = Roboto
 ```
 
 ## Variations
 ```
 Mapped/Text dry run
 Spacing/4
-Type styles
+reset type styles
 reset Spacing
 ```
 

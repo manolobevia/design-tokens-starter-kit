@@ -74,20 +74,20 @@ variable referencing an Alias variable.
 - **Writes to:** Mapped, as references into Alias.
 
 ### figma-type-scale
-Builds typography in two steps: a modular type scale as number variables, then
-one text style per role bound to those variables.
-- **Trigger:** `Typography` (both steps), `Responsive` or `Type scale`
-  (variables only), `Type styles` (styles only), optionally with settings like
-  `Typography base 18 ratio 1.333 mobile 1.2`. A line like
-  `Brand/Font family/Body = Roboto` sets a font variable. Also handles reset,
-  regenerate, and dry-run.
+Builds typography with one command: font variables, a responsive type scale
+as number variables, then one text style per role bound to those variables.
+- **Trigger:** `Typography` does everything. Optional fonts and settings follow
+  it: `Typography heading Playfair body Lato`, `Typography base 18 ratio 1.333
+  mobile 1.2`. Missing font variables are created with defaults (Inter for
+  heading, Roboto for body, weights Light, Regular, Medium, Bold); existing ones
+  are left alone. `reset Responsive` and `reset type styles` recalculate or
+  rebind, and `dry run` previews.
 - **Calculation:** base 16px, ratio 1.25 on Desktop and 1.2 on Mobile. Font
   size is base x ratio^step rounded to the nearest 4, floor of 12. Line height
   is the rounded size x 1.2 rounded to 4. Paragraph spacing is the rounded size
   x 0.5, or 0 for single-line styles.
-- **Writes to:** Responsive (number variables, Desktop and Mobile modes) and
-  text styles bound to Responsive plus the Font family and Font weight
-  variables in Brand.
+- **Writes to:** Brand (Font family and Font weight), Responsive (number
+  variables, Desktop and Mobile modes) and text styles bound to both.
 
 ### figma-spacing
 Writes a fixed-preset spacing scale as number variables in Brand under a

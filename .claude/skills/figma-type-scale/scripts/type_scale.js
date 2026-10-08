@@ -19,7 +19,8 @@ const REQUEST = {
   overwrite: { variables: false, styles: false },
                      // variables: true = recalculate values that were changed or built with other settings
                      // styles: true    = rebind styles whose bindings were changed by hand
-  fonts: []          // optional, e.g. [{ path: "Brand/Font family/Body", value: "Roboto" }]
+  fontDefaults: false, // true = create the font variables that are missing (see FONT_DEFAULTS). Existing ones are left alone
+  fonts: []          // fonts the user named, e.g. [{ path: "Brand/Font family/Body", value: "Roboto" }]. These always win
 };
 const SCALE = {
   base: 16,                   // px. Body/Default is always exactly this
@@ -71,6 +72,16 @@ const PROPS = [
   { key: "size",  name: "Font size",         scope: "FONT_SIZE",         field: "fontSize" },
   { key: "line",  name: "Line height",       scope: "LINE_HEIGHT",       field: "lineHeight" },
   { key: "space", name: "Paragraph spacing", scope: "PARAGRAPH_SPACING", field: "paragraphSpacing" }
+];
+// Font variables created when they are missing and REQUEST.fontDefaults is true.
+// A variable that already exists is never changed by these; a font the user names is.
+const FONT_DEFAULTS = [
+  { path: "Brand/Font family/Heading", value: "Inter" },
+  { path: "Brand/Font family/Body", value: "Roboto" },
+  { path: "Brand/Font weight/Light", value: "Light" },
+  { path: "Brand/Font weight/Regular", value: "Regular" },
+  { path: "Brand/Font weight/Medium", value: "Medium" },
+  { path: "Brand/Font weight/Bold", value: "Bold" }
 ];
 const WEIGHT_NAMES = {
   100: ["Thin", "Hairline"], 200: ["Extra Light", "ExtraLight", "Ultra Light"], 300: ["Light"],
@@ -178,7 +189,7 @@ function resolveValue(v, depth = 0) {
 
 // ---------- fonts available in this Figma account ----------
 let fontIndex = null; // lower family -> { family, styles:Set }
-const needFonts = REQUEST.styles || (REQUEST.fonts && REQUEST.fonts.length);
+const needFonts = REQUEST.styles || REQUEST.fontDefaults || (REQUEST.fonts && REQUEST.fonts.length);
 if (needFonts) {
   try {
     const list = await figma.listAvailableFontsAsync();
@@ -241,8 +252,16 @@ function fontGroup(group) { // normalized last segment -> variable
   return map;
 }
 
-// ---------- optional: set font variables ("Brand/Font family/Body = Roboto") ----------
-for (const line of REQUEST.fonts || []) {
+// ---------- font variables: the ones the user named, then the defaults for any that are missing ----------
+const fontLines = (REQUEST.fonts || []).slice();
+if (REQUEST.fontDefaults) {
+  const key = (p) => low(String(p).replace(/\s*\/\s*/g, "/"));
+  const typed = new Set(fontLines.map((l) => key(l.path)));
+  const have = new Set();
+  if (fontCol) for (const id of fontCol.variableIds) { const v = varById.get(id); if (v) have.add(key(NAMES.fonts + "/" + v.name)); }
+  for (const d of FONT_DEFAULTS) if (!typed.has(key(d.path)) && !have.has(key(d.path))) fontLines.push(d);
+}
+for (const line of fontLines) {
   const row = { path: line.path, value: line.value, action: "created" };
   out.fonts.push(row);
   try {
