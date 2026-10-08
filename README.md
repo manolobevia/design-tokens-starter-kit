@@ -1,4 +1,4 @@
-# Design Tokens Starter Kit
+# Figma Design Tokens Starter Kit
 
 Type one short line, get real **Figma variables and text styles** written to your open file. Five Claude Code skills build a complete token system: color, aliases, usage roles, spacing and typography.
 
