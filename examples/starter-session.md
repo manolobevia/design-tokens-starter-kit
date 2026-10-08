@@ -46,6 +46,11 @@ Border width
 Design Tokens
 ```
 
+## 6. Export for developers
+```
+Export tokens
+```
+
 ## Variations
 ```
 Mapped/Text dry run

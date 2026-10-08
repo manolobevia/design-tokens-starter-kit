@@ -122,6 +122,18 @@ in Desktop and Mobile, fonts and weights, spacing, radius and border width.
   page. It only rebuilds frames it made itself.
 - **Writes to:** the Design Tokens page. It never edits variables or styles.
 
+### figma-export-tokens
+Exports the live variables as code: `tokens.css` (CSS custom properties, Dark
+under `data-theme` and `prefers-color-scheme`, mobile type under a media query),
+`tokens.tokens.json` (W3C DTCG, aliases kept as references) and
+`tailwind.theme.css` (Tailwind v4 `@theme inline`).
+- **Trigger:** `Export tokens`, optionally `css`/`json`/`tailwind` and
+  `to <folder>` (default `./tokens`).
+- **How:** `read_tokens.js` reads the variables in Figma and its padded result is
+  saved to a file by the host; `build_tokens.py` converts that file. It does not
+  use the server's `figma_export_tokens` tool, whose snapshot can be stale.
+- **Writes to:** files in the project folder, never to Figma.
+
 ### figma-starter
 Runs the whole build in one line by calling the other skills in order: color
 scales (brand colors plus `-default`), alias bridges (brand colors become

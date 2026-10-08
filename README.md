@@ -1,6 +1,6 @@
 # Figma Design Tokens Starter Kit
 
-Type one short line, get real **Figma variables and text styles** written to your open file. Nine Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width and typography) and a visual **Design Tokens** page that documents it.
+Type one short line, get real **Figma variables and text styles** written to your open file. Ten Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width and typography) a visual **Design Tokens** page that documents it, and code exports for developers.
 
 ## Quick start
 
@@ -34,6 +34,7 @@ Every Alias variable references a Brand variable. Every Mapped variable referenc
 | `figma-radius` | `Radius` | Border-radius scale in **Brand** |
 | `figma-border-width` | `Border width` | Border-weight scale in **Brand** |
 | `figma-token-docs` | `Design Tokens` | A **Design Tokens** page in Figma showing the whole system |
+| `figma-export-tokens` | `Export tokens` | `tokens.css`, `tokens.tokens.json` and `tailwind.theme.css` for developers |
 | `figma-starter` | `/figma-starter Plum:#3B1A53 ...` | Runs all of the above in order from your brand colors and fonts |
 
 Add `dry run` to any line to preview without writing.
@@ -47,6 +48,7 @@ Run the skills in this order, because each tier references the one before it:
 3. **`figma-mapped-roles`**: build the usage tier on top of Alias.
 4. **`figma-spacing`**, **`figma-radius`**, **`figma-border-width`** and **`figma-type-scale`**: the non-color primitives. These don't depend on the color steps, so run them any time after step 1.
 5. **`figma-token-docs`**: builds the Design Tokens page. Run it last, and again whenever tokens change.
+6. **`figma-export-tokens`**: writes the tokens as code files for developers. Run it whenever tokens change.
 
 ## Parameters
 
@@ -102,6 +104,16 @@ Hand-tuned values are kept on later runs unless you `reset` or use an arrow line
 | `reset Spacing`, `regenerate the spacing scale` | Overwrite hand-changed values |
 
 Token = number of 4px units: `Spacing/4` is 16px. Steps: `0` (0px), `0-25` (1px), `0-5` (2px), `1` (4), `2` (8), `3` (12), `4` (16), `5` (20), `6` (24), `8` (32), `10` (40), `12` (48), `16` (64), `20` (80), `24` (96).
+
+### `figma-export-tokens`
+
+| Type | Result |
+|---|---|
+| `Export tokens` | `tokens.css`, `tokens.tokens.json` and `tailwind.theme.css` in `./tokens` |
+| `Export tokens css`, `json`, `tailwind` | Only those files. Several can be combined |
+| `Export tokens to src/styles` | Write to another folder |
+
+Use them in code: `@import "./tokens/tokens.css";`, then set `data-theme="dark"` on `<html>` for Dark mode. For Tailwind v4, import `tailwindcss`, then `tokens.css`, then `tailwind.theme.css`. References stay references (`--alias-primary-500: var(--brand-plum-500)`), and the files are generated, so rebuild them instead of editing by hand.
 
 ### `figma-starter`
 

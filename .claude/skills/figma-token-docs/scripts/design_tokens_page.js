@@ -307,14 +307,18 @@ const GUIDE = [
   { name: "figma-border-width", does: "Writes the border-weight scale to Brand.", rows: [
     ["Border width", "The whole scale"], ["Border width/0-5", "One step (2px)"] ] },
   { name: "figma-token-docs", does: "Builds or refreshes this page from the live variables and styles.", rows: [
-    ["Design Tokens", "The whole page. Rerun it after a token changes"] ] }
+    ["Design Tokens", "The whole page. Rerun it after a token changes"] ] },
+  { name: "figma-export-tokens", does: "Writes the tokens as code for developers: CSS, JSON and a Tailwind v4 theme.", rows: [
+    ["Export tokens", "tokens.css, tokens.tokens.json and tailwind.theme.css in ./tokens"],
+    ["Export tokens css", "Only the CSS file"] ] }
 ];
 const BUILD_ORDER = [
   ["1", "figma-color-scale", "Brand colors"],
   ["2", "figma-alias-bridge", "Roles"],
   ["3", "figma-mapped-roles", "Usage"],
   ["4", "spacing, radius, border width, type scale", "Primitives"],
-  ["5", "figma-token-docs", "This page"]
+  ["5", "figma-token-docs", "This page"],
+  ["6", "figma-export-tokens", "Code for developers"]
 ];
 SECTION_FN.guide = async () => {
   const c = await section("guide", "How to use these skills", "Type a short line in Claude Code and the skill writes real variables and styles to this file. Everything on this page is generated from them.");
@@ -327,9 +331,9 @@ SECTION_FN.guide = async () => {
   await T(ord, "Each tier references the one before it, so run the skills in this order.", "Body/Default", { color: tMuted, w: CONTENT });
   const steps = F(ord, "Steps", { dir: "HORIZONTAL", gap: 12, wrap: true, w: CONTENT });
   for (const [n, who, what] of BUILD_ORDER) {
-    const chip = F(steps, "Step " + n, { dir: "VERTICAL", gap: 4, pad: 16, w: 244, fill: mv("Surface/secondary"), radius: rad3 });
-    await T(chip, n + " · " + what, "Label/Default", { color: tHead, w: 212 });
-    await T(chip, who, "Caption/Default", { color: tMuted, w: 212 });
+    const chip = F(steps, "Step " + n, { dir: "VERTICAL", gap: 4, pad: 16, w: 200, fill: mv("Surface/secondary"), radius: rad3 });
+    await T(chip, n + " · " + what, "Label/Default", { color: tHead, w: 168 });
+    await T(chip, who, "Caption/Default", { color: tMuted, w: 168 });
   }
   const sk = F(c, "Skills", { dir: "VERTICAL", gap: 16 });
   await T(sk, "The skills", "Heading/H4", { color: tHead });
