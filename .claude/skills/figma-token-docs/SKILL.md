@@ -20,7 +20,7 @@ Builds the Design Tokens page from the variables and text styles in the open fil
   Design Tokens        Build or refresh the whole page
   dry run              Report what would be built, writes nothing
 
-Sections, in order: header, How to use, Token health, Brand colors, Alias roles, Mapped Light vs Dark,
+Sections, in order: header, How to use, How names work, Token health, Brand colors, Alias roles, Mapped Light vs Dark,
 contrast checks, typography (Desktop and Mobile), font families and weights,
 spacing, border radius, border width.
 Missing pieces get a one-line note on the page, never an error.
@@ -40,6 +40,7 @@ A message in this form is the whole request and the go-ahead. Run it without ask
 | # | Section | Shows |
 |---|---|---|
 | 1 | Header | File name, date, variable counts per collection |
+| 1d | How names work | One screen: the three tiers, the naming rules (default, secondary, tertiary, action, -secondary, on-[surface], bare role names, 950 to 50) and a short Do and Don't |
 | 1c | Token health | What needs attention, from checks on the live file: failing contrast, missing Mapped variables or Alias roles, a Neutral that is not Gray or has no visible steps, Dark surfaces that look alike, fonts missing a weight, Brand colors no role uses, duplicate colors. Issues and notes come first, each with the fix to run; passing checks are listed at the bottom |
 | 1b | How to use | How to run a skill, the build order, and a card per skill with the lines you type. Sits directly under the header frame |
 | 2 | Brand colors | Every color group, 950 to 50, with hex |
@@ -75,11 +76,12 @@ One call cannot build everything inside the 30 second limit, so build in groups 
 
 | Call | `SECTIONS` |
 |---|---|
-| 1 | `["header", "guide", "health", "brand", "alias"]` |
-| 2 | `["mapped"]` |
-| 3 | `["contrast"]` |
-| 4 | `["typography", "fonts"]` |
-| 5 | `["spacing", "radius", "border"]` |
+| 1 | `["header", "guide", "names"]` |
+| 2 | `["health", "brand", "alias"]` |
+| 3 | `["mapped"]` |
+| 4 | `["contrast"]` |
+| 5 | `["typography", "fonts"]` |
+| 6 | `["spacing", "radius", "border"]` |
 
 The script puts each section in its fixed place, so any order or subset works. A subset is also how one section is refreshed on its own. `dry run` sets `DRY_RUN = true` and needs one call.
 

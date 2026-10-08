@@ -16,13 +16,13 @@
 
 // ---- CONFIG ----
 const PAGE = "Design Tokens";
-const SECTIONS = ["all"]; // "all", or any of: header, guide, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border
+const SECTIONS = ["all"]; // "all", or any of: header, guide, names, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border
 const DRY_RUN = false;    // true = report what would be built, write nothing
 const EXPECT_FILE = "";   // optional file name guard, e.g. "Design System MB"
 // ---- END CONFIG ----
 
 const TAG = "figma-token-docs";
-const ORDER = ["header", "guide", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border"];
+const ORDER = ["header", "guide", "names", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border"];
 const W = 1440, PAD = 80, CONTENT = W - PAD * 2; // 1280
 
 const low = (s) => String(s).trim().toLowerCase();
@@ -349,6 +349,60 @@ SECTION_FN.guide = async () => {
     }
   }
   built.guide = GUIDE.length;
+};
+
+// ===================== names =====================
+const TIERS = [
+  ["Brand", "Raw colors, spacing and fonts. Nothing points anywhere else.", "Plum/500"],
+  ["Alias", "Roles that point at Brand colors, so a role survives a change of color.", "Primary/500"],
+  ["Mapped", "What a color is for. This is the tier you apply to layers.", "Surface/action"]
+];
+const NAME_RULES = [
+  ["default, secondary, tertiary", "Step down in prominence: Surface/default, Surface/secondary, Border/tertiary."],
+  ["action", "The solid version: Surface/action is a filled button. Status names (error, success, warning, information) work the same way."],
+  ["-secondary", "The tinted version: Surface/action-secondary is a secondary button, Surface/error-secondary an error banner."],
+  ["on-[surface]", "What sits on that surface: Text/on-action is the label on Surface/action."],
+  ["A bare role name", "Colored with that role: Text/action is a link, Text/error an error message. Icon mirrors Text."],
+  ["950 to 50", "Scales run dark to light, 500 Default is the base color. Spacing, radius and border tokens count 4px units: Spacing/4 is 16px."]
+];
+const DOS = [
+  "Apply Mapped tokens to layers: Surface for fills, Text for type, Border for strokes, Icon for icons.",
+  "Choose by purpose: an error banner uses Surface/error-secondary, not a red you like.",
+  "Change a color once, in Brand or at the role in Alias, and everything follows.",
+  "Use the text styles. For mobile, switch the frame to the Mobile mode."
+];
+const DONTS = [
+  "Don't apply Brand or Alias variables to layers. They skip the usage tier and Dark mode will not follow.",
+  "Don't type a hex or pick a color by hand.",
+  "Don't make separate mobile text styles. One style per role, the mode sets the size.",
+  "Don't name a role after a color. It is Primary, not Purple."
+];
+SECTION_FN.names = async () => {
+  const c = await section("names", "How names work", "The naming rules behind the variables, and what to do and not to do. Read this once and the rest of the page makes sense.");
+  const tiers = F(c, "Tiers", { dir: "HORIZONTAL", gap: 16, align: "CENTER", w: CONTENT });
+  for (let i = 0; i < TIERS.length; i++) {
+    const [name, what, ex] = TIERS[i];
+    const box = F(tiers, name, { dir: "VERTICAL", gap: 6, pad: 20, w: 400, fill: mv("Surface/secondary"), radius: rad3 });
+    await T(box, name, "Heading/H5", { color: tHead });
+    await T(box, what, "Body/Small", { color: tBody, w: 360 });
+    await T(box, "e.g. " + ex, "Caption/Default", { color: tMuted, w: 360 });
+    if (i < TIERS.length - 1) await T(tiers, "→", "Heading/H4", { color: tMuted });
+  }
+  const cols = F(c, "Rules and guidance", { dir: "HORIZONTAL", gap: 24, w: CONTENT });
+  const rules = F(cols, "Naming rules", { dir: "VERTICAL", gap: 16, pad: 24, w: 628, fill: mv("Surface/default"), radius: rad3, stroke: { color: lineColor, weight: hair } });
+  await T(rules, "Naming rules", "Heading/H5", { color: tHead });
+  for (const [k, v] of NAME_RULES) {
+    const row = F(rules, k, { dir: "VERTICAL", gap: 2 });
+    await T(row, k, "Label/Default", { color: mv("Text/action"), w: 580 });
+    await T(row, v, "Body/Small", { color: tBody, w: 580 });
+  }
+  const side = F(cols, "Do and Don't", { dir: "VERTICAL", gap: 24, w: 628 });
+  for (const [title, items, surface, mark] of [["Do", DOS, "Surface/success-secondary", "✓"], ["Don't", DONTS, "Surface/error-secondary", "✕"]]) {
+    const box = F(side, title, { dir: "VERTICAL", gap: 12, pad: 24, w: 628, fill: mv(surface), radius: rad3 });
+    await T(box, title, "Heading/H5", { color: tHead });
+    for (const t of items) await T(box, mark + "  " + t, "Body/Small", { color: tBody, w: 580 });
+  }
+  built.names = NAME_RULES.length;
 };
 
 // ===================== health =====================
