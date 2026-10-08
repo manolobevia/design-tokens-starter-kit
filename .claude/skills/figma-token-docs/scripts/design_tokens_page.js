@@ -16,13 +16,13 @@
 
 // ---- CONFIG ----
 const PAGE = "Design Tokens";
-const SECTIONS = ["all"]; // "all", or any of: header, guide, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border
+const SECTIONS = ["all"]; // "all", or any of: header, guide, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border
 const DRY_RUN = false;    // true = report what would be built, write nothing
 const EXPECT_FILE = "";   // optional file name guard, e.g. "Design System MB"
 // ---- END CONFIG ----
 
 const TAG = "figma-token-docs";
-const ORDER = ["header", "guide", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border"];
+const ORDER = ["header", "guide", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border"];
 const W = 1440, PAD = 80, CONTENT = W - PAD * 2; // 1280
 
 const low = (s) => String(s).trim().toLowerCase();
@@ -228,6 +228,35 @@ async function swatchRow(parent, groupName, caption, vars) {
   }
 }
 
+// Every text and border pair that is meant to be used together, with its ratio in Light and Dark.
+// Shared by the Contrast checks frame and the Token health frame.
+function contrastData() {
+  const rows = [], skipped = new Set();
+  const pass = (r, k) => (r[k] === undefined || r[k] === null ? null : r[k] >= r.min);
+  if (!mapped) return { rows, skipped, pass };
+  const lightId = modeId(mapped, "Light"), darkId = modeId(mapped, "Dark");
+  const ROLES = ["error", "success", "warning", "information"];
+  const content = ["heading", "subheading", "body", "body-secondary", "caption", "label", "helper", "action", "action-hover", "action-pressed", ...ROLES];
+  const pairs = [];
+  for (const bg of ["default", "page"]) for (const t of content) pairs.push(["Text/" + t, "Surface/" + bg, 4.5]);
+  const onMap = { "on-action": ["action", "action-hover", "action-pressed"], "on-action-secondary": ["action-secondary", "action-secondary-hover"], "on-selected": ["selected"], "on-inverse": ["inverse"], "on-inverse-secondary": ["inverse"] };
+  for (const r of ROLES) { onMap["on-" + r] = [r]; onMap["on-" + r + "-secondary"] = [r + "-secondary"]; }
+  for (const fg of Object.keys(onMap)) for (const bg of onMap[fg]) pairs.push(["Text/" + fg, "Surface/" + bg, 4.5]);
+  for (const b of ["default", "action", "action-hover", "action-pressed", "focus", "selected", ...ROLES]) pairs.push(["Border/" + b, "Surface/default", 3]);
+  for (const [fg, bg, min] of pairs) {
+    const a = mv(fg), b = mv(bg);
+    if (!a || !b) { skipped.add(!a ? fg : bg); continue; }
+    const row = { fg, bg, min };
+    for (const [k, id] of [["light", lightId], ["dark", darkId]]) {
+      if (!id) continue;
+      const ca = colorOf(a, id), cb = colorOf(b, id);
+      row[k] = ca && cb ? ratioOf(ca, cb) : null;
+    }
+    rows.push(row);
+  }
+  return { rows, skipped, pass };
+}
+
 const built = {};
 const SECTION_FN = {};
 
@@ -318,6 +347,128 @@ SECTION_FN.guide = async () => {
   built.guide = GUIDE.length;
 };
 
+// ===================== health =====================
+SECTION_FN.health = async () => {
+  const c = await section("health", "Token health", "Checks run on the live variables every time this page is built. Issues need a fix, notes are worth a look.");
+  const checks = []; // { status: "issue" | "note" | "ok", title, detail, fix }
+  const add = (status, title, detail, fix) => checks.push({ status, title, detail: detail || "", fix: fix || "" });
+  const list = (a, n = 6) => a.slice(0, n).join("; ") + (a.length > n ? "; and " + (a.length - n) + " more" : "");
+  const darkId = mapped ? modeId(mapped, "Dark") : null;
+  const groupOf = (v) => v.name.slice(0, v.name.indexOf("/"));
+
+  // 1. Contrast
+  const { rows, skipped, pass } = contrastData();
+  const fails = [];
+  for (const r of rows) for (const k of ["light", "dark"]) if (pass(r, k) === false) fails.push((k === "light" ? "Light" : "Dark") + " " + r.fg.replace("Text/", "").replace("Border/", "border ") + " on " + r.bg.replace("Surface/", "") + " " + r[k].toFixed(2) + ":1 (needs " + r.min + ")");
+  if (!rows.length) add("issue", "Contrast could not be checked", "The Mapped collection has no pairs to check.", "Run /figma-mapped-roles Mapped.");
+  else if (fails.length) add("issue", fails.length + " contrast pair" + (fails.length === 1 ? "" : "s") + " do not pass WCAG AA", list(fails), "Retarget one variable with an arrow line, for example Alias/Success/700 -> Mapped/Text/success. The Contrast frame lists every pair.");
+  else add("ok", "Every checked contrast pair passes in Light and Dark");
+
+  // 2. Missing Mapped variables
+  if (skipped.size) add("issue", "Mapped variables are missing", Array.from(skipped).join(", "), "Run /figma-alias-bridge -default, then /figma-mapped-roles Mapped.");
+  else add("ok", "No Mapped variables are missing");
+
+  // 3. Alias roles
+  const aliasGroups = alias ? Array.from(groupsOf(alias, (v) => v.resolvedType === "COLOR").keys()) : [];
+  const expected = ["Primary", "Neutral", "Error", "Success", "Warning", "Information", "Foundation"];
+  const lacking = expected.filter((g) => !aliasGroups.map(low).includes(low(g)));
+  if (lacking.length) add("issue", "Alias roles are missing: " + lacking.join(", "), "", lacking.includes("Primary") ? "Primary needs your color: Brand/<color> -> Alias/Primary. For the rest run /figma-alias-bridge -default." : "Run /figma-alias-bridge -default.");
+  else add("ok", "All core Alias roles exist");
+
+  // 4. Neutral is Gray, and has visible steps
+  const neutral = alias ? vget(alias, "Neutral/500 Default") || vget(alias, "Neutral/500") : null;
+  if (neutral) {
+    const val = neutral.valuesByMode[alias.defaultModeId];
+    const src = val && val.type === "VARIABLE_ALIAS" ? varById.get(val.id) : null;
+    const from = src ? groupOf(src) : null;
+    if (from && low(from) !== "gray") add("issue", "Alias/Neutral points to Brand/" + from + ", not Gray", "", "Brand/Gray -> Alias/Neutral");
+    else add("ok", "Alias/Neutral uses Brand/Gray");
+    const n950 = vget(alias, "Neutral/950"), n700 = vget(alias, "Neutral/700");
+    const c950 = n950 && colorOf(n950), c700 = n700 && colorOf(n700);
+    if (c950 && c700 && ratioOf(c950, c700) < 1.5) add("issue", "Neutral 950 to 700 are almost the same color", "Dark surfaces will blend into one black.", "Use a neutral scale with visible steps (Brand/Gray).");
+    else add("ok", "Neutral has visible steps between 950 and 700");
+  }
+
+  // 5. Dark surface layers
+  if (darkId) {
+    const layers = ["page", "default", "secondary", "tertiary"].map((n) => mv("Surface/" + n));
+    if (layers.every(Boolean)) {
+      const cs = layers.map((v) => colorOf(v, darkId));
+      const names = ["page", "default", "secondary", "tertiary"];
+      const alike = [];
+      for (let i = 0; i < cs.length - 1; i++) if (cs[i] && cs[i + 1] && ratioOf(cs[i], cs[i + 1]) < 1.08) alike.push(names[i] + " and " + names[i + 1]);
+      if (alike.length) add("issue", "Dark surfaces look alike: " + alike.join(", "), "", "Run reset on Mapped/Surface so the preset's dark steps apply, or choose steps with an arrow line.");
+      else add("ok", "Dark surface layers are distinguishable");
+    }
+  }
+
+  // 6. Fonts
+  let fonts = null;
+  try { fonts = new Map(); for (const f of await figma.listAvailableFontsAsync()) { const k = low(f.fontName.family); if (!fonts.has(k)) fonts.set(k, new Set()); fonts.get(k).add(f.fontName.style); } } catch (e) { fonts = null; }
+  const fam = brand ? varsOf(brand).filter((v) => low(v.name).startsWith("font family/")) : [];
+  const wts = brand ? varsOf(brand).filter((v) => low(v.name).startsWith("font weight/")) : [];
+  const sv = (v) => (typeof v.valuesByMode[brand.defaultModeId] === "string" ? v.valuesByMode[brand.defaultModeId] : null);
+  if (!fam.length) add("note", "No font family variables yet", "", "Run /figma-type-scale Typography.");
+  else if (fonts) {
+    const gaps = [], missingFamily = [];
+    for (const fv of fam) {
+      const family = sv(fv); if (!family) continue;
+      const styles = fonts.get(low(family));
+      if (!styles) { missingFamily.push(family); continue; }
+      for (const wv of wts) { const st = sv(wv); if (st && !styles.has(st)) gaps.push(family + " has no " + st + " style"); }
+    }
+    if (missingFamily.length) add("issue", "Font not available in this Figma account: " + missingFamily.join(", "), "Text styles that use it cannot be built.", "Choose another font: /figma-type-scale Typography heading <font> body <font>.");
+    if (gaps.length) add("note", gaps.join(", "), "Styles that use that weight fall back to another weight.", "Pick another font, or accept the fallback.");
+    if (!missingFamily.length && !gaps.length) add("ok", "Both fonts have every weight in the scale");
+  }
+
+  // 7. Brand colors nothing uses, and duplicates
+  if (brand) {
+    const brandGroups = groupsOf(brand, (v) => v.resolvedType === "COLOR");
+    const used = new Set();
+    if (alias) for (const v of varsOf(alias)) { const val = v.valuesByMode[alias.defaultModeId]; const t = val && val.type === "VARIABLE_ALIAS" ? varById.get(val.id) : null; if (t && t.variableCollectionId === brand.id) used.add(low(groupOf(t))); }
+    const unused = Array.from(brandGroups.keys()).filter((g) => !used.has(low(g)));
+    if (unused.length) add("note", "Brand colors no Alias role uses: " + unused.join(", "), "", "Keep them as spares, or bridge one: Brand/<name> -> Alias/<Role>.");
+    else add("ok", "Every Brand color feeds an Alias role");
+    const bases = new Map();
+    for (const [g, vs] of brandGroups) { const b = vs.find((v) => /500/.test(v.name)); const col = b && colorOf(b); if (col) { const h = hexOf(col); if (!bases.has(h)) bases.set(h, []); bases.get(h).push(g); } }
+    const dups = Array.from(bases.values()).filter((a) => a.length > 1).map((a) => a.join(" and "));
+    if (dups.length) add("note", "Same base color under two names: " + dups.join("; "), "", "Delete the extra group in Brand, or keep both if that is intended.");
+    else add("ok", "No duplicate Brand colors");
+  }
+
+  // 8. Other tokens present
+  const missingPrims = [];
+  if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("spacing/")))) missingPrims.push("Spacing (/figma-spacing)");
+  if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("radius/")))) missingPrims.push("Radius (/figma-radius)");
+  if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("border width/")))) missingPrims.push("Border width (/figma-border-width)");
+  if (!(responsive && responsive.modes.length >= 2)) missingPrims.push("Responsive with Desktop and Mobile (/figma-type-scale Typography)");
+  if (missingPrims.length) add("note", "Not built yet: " + missingPrims.join(", "), "", "");
+  else add("ok", "Spacing, radius, border width and the Responsive modes all exist");
+
+  // ---- render ----
+  const issues = checks.filter((k) => k.status === "issue"), notes = checks.filter((k) => k.status === "note"), oks = checks.filter((k) => k.status === "ok");
+  await T(c, issues.length + " issue" + (issues.length === 1 ? "" : "s") + ", " + notes.length + " note" + (notes.length === 1 ? "" : "s") + ", " + oks.length + " check" + (oks.length === 1 ? "" : "s") + " passing.", "Body/Large", { color: tHead, w: CONTENT });
+  const card = async (parent, k) => {
+    const isIssue = k.status === "issue";
+    const box = F(parent, k.title, { dir: "VERTICAL", gap: 8, pad: 24, w: CONTENT, fill: mv(isIssue ? "Surface/error-secondary" : "Surface/warning-secondary"), radius: rad3 });
+    const head = F(box, "Title", { dir: "HORIZONTAL", gap: 12, align: "CENTER" });
+    const chip = F(head, "Status", { dir: "HORIZONTAL", px: 10, py: 4, fill: mv(isIssue ? "Surface/error" : "Surface/warning"), radius: rad1 });
+    await T(chip, isIssue ? "Issue" : "Note", "Label/Small", { color: mv(isIssue ? "Text/on-error" : "Text/on-warning") });
+    await T(head, k.title, "Heading/H5", { color: tHead });
+    if (k.detail) await T(box, k.detail, "Body/Small", { color: tBody, w: CONTENT - 48 });
+    if (k.fix) await T(box, "Fix: " + k.fix, "Body/Small", { color: mv("Text/action"), w: CONTENT - 48 });
+  };
+  const todoList = F(c, "Needs attention", { dir: "VERTICAL", gap: 16, w: CONTENT });
+  for (const k of issues) await card(todoList, k);
+  for (const k of notes) await card(todoList, k);
+  const good = F(c, "Passing", { dir: "VERTICAL", gap: 12, pad: 24, w: CONTENT, fill: mv("Surface/success-secondary"), radius: rad3 });
+  await T(good, "Passing (" + oks.length + ")", "Heading/H5", { color: tHead });
+  for (const k of oks) await T(good, "✓ " + k.title, "Body/Small", { color: tBody, w: CONTENT - 48 });
+  built.health = issues.length + notes.length;
+  built.healthSummary = issues.length + " issues, " + notes.length + " notes";
+};
+
 // ===================== brand =====================
 SECTION_FN.brand = async () => {
   const c = await section("brand", "Brand colors", "Raw color scales in the Brand collection. Each scale runs from 950 (darkest) to 50 (lightest); 500 Default is the base color.");
@@ -402,29 +553,7 @@ SECTION_FN.mapped = async () => {
 SECTION_FN.contrast = async () => {
   const c = await section("contrast", "Contrast checks", "Text and border pairs that are meant to be used together, checked against WCAG AA (4.5:1 for text, 3:1 for control borders).");
   if (!mapped) { await sectionNote(c, "No Mapped collection found."); built.contrast = 0; return; }
-  const lightId = modeId(mapped, "Light"), darkId = modeId(mapped, "Dark");
-  const ROLES = ["error", "success", "warning", "information"];
-  const content = ["heading", "subheading", "body", "body-secondary", "caption", "label", "helper", "action", "action-hover", "action-pressed", ...ROLES];
-  const pairs = [];
-  for (const bg of ["default", "page"]) for (const t of content) pairs.push(["Text/" + t, "Surface/" + bg, 4.5]);
-  const onMap = { "on-action": ["action", "action-hover", "action-pressed"], "on-action-secondary": ["action-secondary", "action-secondary-hover"], "on-selected": ["selected"], "on-inverse": ["inverse"], "on-inverse-secondary": ["inverse"] };
-  for (const r of ROLES) { onMap["on-" + r] = [r]; onMap["on-" + r + "-secondary"] = [r + "-secondary"]; }
-  for (const fg of Object.keys(onMap)) for (const bg of onMap[fg]) pairs.push(["Text/" + fg, "Surface/" + bg, 4.5]);
-  for (const b of ["default", "action", "action-hover", "action-pressed", "focus", "selected", ...ROLES]) pairs.push(["Border/" + b, "Surface/default", 3]);
-  const rows = [];
-  const skipped = new Set();
-  for (const [fg, bg, min] of pairs) {
-    const a = mv(fg), b = mv(bg);
-    if (!a || !b) { skipped.add(!a ? fg : bg); continue; }
-    const row = { fg, bg, min };
-    for (const [k, id] of [["light", lightId], ["dark", darkId]]) {
-      if (!id) continue;
-      const ca = colorOf(a, id), cb = colorOf(b, id);
-      row[k] = ca && cb ? ratioOf(ca, cb) : null;
-    }
-    rows.push(row);
-  }
-  const pass = (r, k) => r[k] === undefined || r[k] === null ? null : r[k] >= r.min;
+  const { rows, skipped, pass } = contrastData();
   const tally = (k) => rows.filter((r) => pass(r, k) !== null);
   const lt = tally("light"), dk = tally("dark");
   const sum = "Light: " + lt.filter((r) => pass(r, "light")).length + " of " + lt.length + " pairs pass.   Dark: " + dk.filter((r) => pass(r, "dark")).length + " of " + dk.length + " pairs pass.";
@@ -613,6 +742,7 @@ for (const id of todo) {
   try {
     await SECTION_FN[id]();
     row.items = built[id];
+    if (id === "health") row.summary = built.healthSummary;
   } catch (e) {
     row.action = "failed";
     row.error = msg(e);
