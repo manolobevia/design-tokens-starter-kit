@@ -80,17 +80,6 @@ def ordered(variables):
     return out
 
 
-def elevation_levels(cols):
-    """Levels n for which Brand has Elevation/<n>/Key Y, Key Blur, Ambient Y and Ambient Blur, plus Mapped shadow colors."""
-    names = {v["n"] for c in cols if c["name"].lower() == "brand" for v in c["variables"]}
-    mapped = {v["n"] for c in cols if c["name"].lower() == "mapped" for v in c["variables"]}
-    if not {"Shadow/key", "Shadow/ambient"} <= mapped:
-        return []
-    levels = sorted({n.split("/")[1] for n in names if n.startswith("Elevation/") and n.count("/") == 2}, key=lambda x: int(x) if x.isdigit() else 99)
-    need = ["Key Y", "Key Blur", "Ambient Y", "Ambient Blur"]
-    return [n for n in levels if all("Elevation/%s/%s" % (n, k) in names for k in need)]
-
-
 def mode_kind(name):
     n = name.lower()
     if n == "dark":
@@ -100,18 +89,32 @@ def mode_kind(name):
     return "other"
 
 
+def bezier(val):
+    """An EASING value {type, easingFunctionCubicBezier: {x1..y2}} -> [x1, y1, x2, y2] rounded to 4 places."""
+    e = val.get("easingFunctionCubicBezier") if isinstance(val, dict) else None
+    if not e:
+        return [0, 0, 1, 1]
+    return [round(e[k], 4) + 0 for k in ("x1", "y1", "x2", "y2")]
+
+
+def num(n):
+    return int(n) if float(n).is_integer() else round(n, 4)
+
+
 def css_value(c, v, val, cols):
     if isinstance(val, dict) and "$" in val:
         ac, av = find_alias(val["$"], cols)
         return "var(--%s)" % tok_slug(ac["name"], av["n"]) if ac and av else "initial"
     if v["t"] == "COLOR":
         return val.lower()
+    if v["t"] == "TIMING":
+        return "%sms" % num(val)
+    if v["t"] == "EASING":
+        b = bezier(val)
+        return "linear" if b == [0, 0, 1, 1] else "cubic-bezier(%s)" % ", ".join(str(num(x)) for x in b)
     if v["t"] == "FLOAT":
-        num = int(val) if float(val).is_integer() else round(val, 4)
-        return "%sms" % num if v["n"].lower().startswith("motion/duration/") else "%spx" % num
+        return "%spx" % num(val)
     if v["t"] == "STRING":
-        if v["n"].lower().startswith("motion/easing/"):
-            return str(val)
         if v["n"].lower().startswith("font weight/"):
             return str(WEIGHTS.get(str(val).lower(), val))
         if v["n"].lower().startswith("font family/"):
@@ -142,14 +145,6 @@ def build_css(data):
                     mobile.append(line)
                 else:
                     other.setdefault(c["modes"][i], []).append(line)
-    # Elevation levels as ready-to-use box-shadow values built from the variables.
-    levels = elevation_levels(cols)
-    if levels:
-        root.append("  /* Elevation (box-shadow values composed from the variables above) */")
-        for n in levels:
-            b = "--brand-elevation-%s" % n
-            root.append("  --elevation-%s: 0 var(%s-key-y) var(%s-key-blur) var(--mapped-shadow-key), "
-                        "0 var(%s-ambient-y) var(%s-ambient-blur) var(--mapped-shadow-ambient);" % (n, b, b, b, b))
     lines.append(":root {")
     lines += root
     lines.append("}")
@@ -166,22 +161,16 @@ def build_css(data):
     return "\n".join(lines) + "\n"
 
 
-def easing_points(val):
-    """'cubic-bezier(0.2, 0, 0, 1)' -> [0.2, 0, 0, 1] (DTCG cubicBezier). 'linear' -> [0, 0, 1, 1]."""
-    m = re.match(r"cubic-bezier\(([^)]+)\)", str(val).strip())
-    if m:
-        return [float(x) for x in m.group(1).split(",")]
-    return [0, 0, 1, 1]
-
-
 def dtcg_type(v):
     n = v["n"].lower()
     if v["t"] == "COLOR":
         return "color"
-    if v["t"] == "FLOAT":
-        return "duration" if n.startswith("motion/duration/") else "dimension"
-    if n.startswith("motion/easing/"):
+    if v["t"] == "TIMING":
+        return "duration"
+    if v["t"] == "EASING":
         return "cubicBezier"
+    if v["t"] == "FLOAT":
+        return "dimension"
     if n.startswith("font family/"):
         return "fontFamily"
     if n.startswith("font weight/"):
@@ -195,11 +184,12 @@ def dtcg_value(v, val, cols):
         return "{%s}" % dotted(ac["name"], av["n"]) if ac and av else None
     if v["t"] == "COLOR":
         return val.lower()
+    if v["t"] == "TIMING":
+        return "%sms" % num(val)
+    if v["t"] == "EASING":
+        return bezier(val)
     if v["t"] == "FLOAT":
-        num = int(val) if float(val).is_integer() else round(val, 4)
-        return "%sms" % num if v["n"].lower().startswith("motion/duration/") else "%spx" % num
-    if v["n"].lower().startswith("motion/easing/"):
-        return easing_points(val)
+        return "%spx" % num(val)
     if v["n"].lower().startswith("font weight/"):
         return WEIGHTS.get(str(val).lower(), val)
     return val
@@ -259,11 +249,6 @@ def build_tailwind(data):
                 if ns == "ease":
                     key = key.split("/", 1)[1]
                 lines.append("  --%s-%s: %s;" % (ns, slug(key), ref(b, v)))
-    levels = elevation_levels(cols)
-    if levels:
-        lines.append("  /* shadow */")
-        for n in levels:
-            lines.append("  --shadow-elevation-%s: var(--elevation-%s);" % (n, n))
     lines.append("}")
     return "\n".join(lines) + "\n"
 

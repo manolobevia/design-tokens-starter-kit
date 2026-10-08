@@ -111,32 +111,15 @@ in Brand under a Border width group (token x 4 = px).
   handles reset and dry-run.
 - **Writes to:** Brand, under Border width.
 
-### figma-sizing
-Writes component sizes as number variables in Brand under `Size/<Group>/<Token>`:
-Icon (XSmall 12 to XLarge 32), Control (Small 32, Default 40, Large 48, Touch 44)
-and Avatar (XSmall 24 to XLarge 72). Names follow the text styles.
-- **Trigger:** `Sizing` (all), `Sizing/Icon`, `Sizing/Control`, `Sizing/Avatar`.
-  Also handles reset and dry-run.
-- **Writes to:** Brand, under Size.
-
 ### figma-motion
-Writes animation durations (`Motion/Duration/XFast` 50ms to `XSlow` 500ms,
-numbers) and easing curves (`Motion/Easing/Standard`, `Enter`, `Exit`,
-`Linear`, text holding CSS timing functions) to Brand. Scopes are empty because
-nothing in Figma can use them; they are for code and the Design Tokens page.
+Writes animation durations (`Motion/Duration/XFast` 50ms to `XSlow` 500ms) as
+Figma's native `TIMING` variables and easing curves (`Motion/Easing/Standard`,
+`Enter`, `Exit`, `Linear`) as native `EASING` variables to Brand. These types
+cannot have scopes. Older number and text versions made by this skill are
+replaced.
 - **Trigger:** `Motion`, `Motion/Duration`, `Motion/Easing`. Also handles reset
   and dry-run.
 - **Writes to:** Brand, under Motion.
-
-### figma-elevation
-Builds shadows as tokens: Brand black-opacity colors (`Shadow/Soft` to
-`Heavy`) and numbers (`Elevation/<n>/Key Y`, `Key Blur`, `Ambient Y`,
-`Ambient Blur`), Alias references, Mapped `Shadow/key` and `Shadow/ambient`
-with Light and Dark values, and effect styles `Elevation/1` to `Elevation/5`
-(two drop shadows each, every value bound to a variable).
-- **Trigger:** `Elevation` or `Shadows` (everything), `Elevation/<n>` (one
-  level). Also handles reset and dry-run.
-- **Writes to:** Brand, Alias, Mapped and effect styles.
 
 ### figma-token-docs
 Builds a page named Design Tokens that documents the whole system visually:

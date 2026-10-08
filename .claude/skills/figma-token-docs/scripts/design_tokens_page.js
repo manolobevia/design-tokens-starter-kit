@@ -16,13 +16,13 @@
 
 // ---- CONFIG ----
 const PAGE = "Design Tokens";
-const SECTIONS = ["all"]; // "all", or any of: header, contents, guide, names, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border, sizing, elevation, motion
+const SECTIONS = ["all"]; // "all", or any of: header, contents, guide, names, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border, motion
 const DRY_RUN = false;    // true = report what would be built, write nothing
 const EXPECT_FILE = "";   // optional file name guard, e.g. "Design System MB"
 // ---- END CONFIG ----
 
 const TAG = "figma-token-docs";
-const ORDER = ["header", "contents", "guide", "names", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border", "sizing", "elevation", "motion"];
+const ORDER = ["header", "contents", "guide", "names", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border", "motion"];
 const W = 1440, PAD = 80, CONTENT = W - PAD * 2; // 1280
 
 const low = (s) => String(s).trim().toLowerCase();
@@ -294,9 +294,7 @@ const TOC = {
   spacing: ["Spacing", "The spacing scale as bars that match the real values."],
   radius: ["Border radius", "Corner radius scale, from square to pill."],
   border: ["Border width", "Stroke weights from none to heavy."],
-  sizing: ["Sizing", "Icon sizes, control heights and avatars, drawn at their real size."],
-  elevation: ["Elevation", "Five shadow levels, in Light and Dark, applied to real cards."],
-  motion: ["Motion", "Durations as bars and easing curves as drawn curves, for code."]
+  motion: ["Motion", "Duration and easing variables, drawn as bars and curves."]
 };
 SECTION_FN.contents = async () => {
   const c = await section("contents", "Contents", "Click a title to jump to that frame. Each frame has a link back here. In Present mode, click a card.");
@@ -320,9 +318,11 @@ SECTION_FN.contents = async () => {
     if (id === "spacing") return count("spacing/") + " steps";
     if (id === "radius") return count("radius/") + " steps";
     if (id === "border") return count("border width/") + " steps";
-    if (id === "sizing") return count("size/") + " sizes · icons, controls, avatars";
-    if (id === "motion") return count("motion/duration/") + " durations · " + count("motion/easing/") + " easings";
-    if (id === "elevation") return count("elevation/") / 4 + " levels · 2 shadows each";
+    if (id === "motion") {
+      const m = brand ? varsOf(brand).filter((v) => low(v.name).startsWith("motion/")) : [];
+      const d = m.filter((v) => v.resolvedType === "TIMING" && typeof v.valuesByMode[brand.defaultModeId] === "number" && v.valuesByMode[brand.defaultModeId] > 0).length;
+      return d + " durations · " + m.filter((v) => v.resolvedType === "EASING").length + " easings";
+    }
     return "";
   };
   const grid = F(c, "Cards", { dir: "HORIZONTAL", gap: 24, gapY: 24, wrap: true, w: CONTENT });
@@ -389,12 +389,8 @@ const GUIDE = [
     ["Radius", "The whole scale"], ["Radius/2", "One step (8px)"] ] },
   { name: "figma-border-width", does: "Writes the border-weight scale to Brand.", rows: [
     ["Border width", "The whole scale"], ["Border width/0-5", "One step (2px)"] ] },
-  { name: "figma-sizing", does: "Writes icon, control and avatar sizes to Brand as numbers.", rows: [
-    ["Sizing", "All three groups: Icon, Control, Avatar"], ["Sizing/Icon", "One group"] ] },
   { name: "figma-motion", does: "Writes animation durations and easing curves to Brand, for code.", rows: [
     ["Motion", "Durations (ms) and easing curves"], ["Motion/Easing", "One group"] ] },
-  { name: "figma-elevation", does: "Builds shadows as tokens and 5 effect styles that follow Light and Dark.", rows: [
-    ["Elevation", "Shadow colors, offsets and blurs, plus Elevation/1 to 5"], ["Elevation/3", "One level"] ] },
   { name: "figma-token-docs", does: "Builds or refreshes this page from the live variables and styles.", rows: [
     ["Design Tokens", "The whole page. Rerun it after a token changes"] ] },
   { name: "figma-export-tokens", does: "Writes the tokens as code for developers: CSS, JSON and a Tailwind v4 theme.", rows: [
@@ -405,7 +401,7 @@ const BUILD_ORDER = [
   ["1", "figma-color-scale", "Brand colors"],
   ["2", "figma-alias-bridge", "Roles"],
   ["3", "figma-mapped-roles", "Usage"],
-  ["4", "spacing, radius, border width, sizing, elevation, motion, type scale", "Primitives"],
+  ["4", "spacing, radius, border width, motion, type scale", "Primitives"],
   ["5", "figma-token-docs", "This page"],
   ["6", "figma-export-tokens", "Code for developers"]
 ];
@@ -589,9 +585,7 @@ SECTION_FN.health = async () => {
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("spacing/")))) missingPrims.push("Spacing (/figma-spacing)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("radius/")))) missingPrims.push("Radius (/figma-radius)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("border width/")))) missingPrims.push("Border width (/figma-border-width)");
-  if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("size/")))) missingPrims.push("Sizing (/figma-sizing)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("motion/")))) missingPrims.push("Motion (/figma-motion)");
-  if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("elevation/")))) missingPrims.push("Elevation (/figma-elevation)");
   if (!(responsive && responsive.modes.length >= 2)) missingPrims.push("Responsive with Desktop and Mobile (/figma-type-scale Typography)");
   if (missingPrims.length) add("note", "Not built yet: " + missingPrims.join(", "), "", "");
   else add("ok", "Spacing, radius, border width and the Responsive modes all exist");
@@ -653,7 +647,7 @@ async function chipFor(parent, group, v) {
   const leaf = v.name.slice(v.name.indexOf("/") + 1);
   const slot = F(parent, "Chip", { dir: "HORIZONTAL", align: "CENTER", justify: "CENTER", w: 44 });
   slot.counterAxisSizingMode = "FIXED"; slot.resize(44, 44);
-  if (group === "Surface" || group === "Shadow") {
+  if (group === "Surface") {
     slot.fills = [paint(v)];
     for (const k of ["topLeftRadius", "topRightRadius", "bottomLeftRadius", "bottomRightRadius"]) slot.setBoundVariable(k, rad2);
     strokeOf(slot, mv("Border/secondary"), hair);
@@ -886,55 +880,18 @@ SECTION_FN.border = async () => {
   built.border = vars.length;
 };
 
-// ===================== sizing =====================
-SECTION_FN.sizing = async () => {
-  const c = await section("sizing", "Sizing", "Icon sizes, control heights and avatars, drawn at their real size. Width and height are bound to the variables.");
-  const vars = brand ? varsOf(brand).filter((v) => low(v.name).startsWith("size/") && v.resolvedType === "FLOAT") : [];
-  if (!vars.length) { await sectionNote(c, "No Sizing variables in Brand. Run /figma-sizing."); built.sizing = 0; return; }
-  const px = (v) => v.valuesByMode[brand.defaultModeId];
-  const groups = new Map();
-  for (const v of vars) { const g = v.name.split("/")[1]; if (!groups.has(g)) groups.set(g, []); groups.get(g).push(v); }
-  for (const [g, list] of groups) {
-    list.sort((a, b) => px(a) - px(b));
-    const block = F(c, g, { dir: "VERTICAL", gap: 16 });
-    await T(block, g, "Heading/H4", { color: tHead });
-    const maxH = Math.max(...list.map(px));
-    const row = F(block, "Sizes", { dir: "HORIZONTAL", gap: 32 });
-    for (const v of list) {
-      const leaf = v.name.split("/").slice(2).join("/");
-      const cell = F(row, v.name, { dir: "VERTICAL", gap: 12, w: g === "Control" ? 120 : 96 });
-      const well = F(cell, "Shape area", { dir: "VERTICAL", justify: "MAX", align: "CENTER", w: g === "Control" ? 120 : 96 });
-      well.primaryAxisSizingMode = "FIXED"; well.resize(g === "Control" ? 120 : 96, maxH);
-      let shape;
-      if (g === "Avatar") {
-        shape = figma.createEllipse(); shape.resize(px(v), px(v));
-        shape.fills = [paint(mv("Surface/secondary"))]; strokeOf(shape, mv("Border/default"), thin);
-        well.appendChild(shape);
-        shape.setBoundVariable("width", v); shape.setBoundVariable("height", v);
-      } else if (g === "Control") {
-        shape = R(well, "Control", 112, px(v), { fill: mv("Surface/action"), radius: rad2 });
-        shape.setBoundVariable("height", v);
-      } else {
-        shape = R(well, "Icon", px(v), px(v), { fill: mv("Surface/action-secondary"), radius: rad1, stroke: { color: mv("Border/action"), weight: thin } });
-        shape.setBoundVariable("width", v); shape.setBoundVariable("height", v);
-      }
-      await T(cell, leaf, "Label/Default", { color: tHead, w: g === "Control" ? 120 : 96, align: "CENTER" });
-      await T(cell, px(v) + " px", "Caption/Default", { color: tMuted, w: g === "Control" ? 120 : 96, align: "CENTER" });
-    }
-  }
-  built.sizing = vars.length;
-};
-
 // ===================== motion =====================
 SECTION_FN.motion = async () => {
-  const c = await section("motion", "Motion", "Durations and easing curves, for code. Figma variables cannot drive prototype animation, so these are exported to CSS. A bar is 1px per millisecond and is bound to its variable.");
+  const c = await section("motion", "Motion", "Duration (TIMING) and easing (EASING) variables, Figma's native motion types. A bar is 1px per millisecond.");
   const vars = brand ? varsOf(brand).filter((v) => low(v.name).startsWith("motion/")) : [];
   if (!vars.length) { await sectionNote(c, "No Motion variables in Brand. Run /figma-motion."); built.motion = 0; return; }
   const val = (v) => v.valuesByMode[brand.defaultModeId];
   // Descriptions read "NAME = VALUE. USE. [figma-motion]". Split on dot-space so a dot inside a number (0.2) is safe.
   const useOf = (v) => ((v.description || "").split(". ")[1] || "").replace(/\.$/, "");
-  const dur = vars.filter((v) => low(v.name).startsWith("motion/duration/") && v.resolvedType === "FLOAT").sort((a, b) => val(a) - val(b));
-  const eas = vars.filter((v) => low(v.name).startsWith("motion/easing/") && v.resolvedType === "STRING");
+  const bez = (v) => { const e = val(v) && val(v).easingFunctionCubicBezier; return e ? [e.x1, e.y1, e.x2, e.y2].map((n) => Math.round(n * 1000) / 1000) : null; };
+  const dur = vars.filter((v) => v.resolvedType === "TIMING" && typeof val(v) === "number" && val(v) > 0).sort((a, b) => val(a) - val(b));
+  const eas = vars.filter((v) => v.resolvedType === "EASING" && bez(v));
+  if (!dur.length && !eas.length) { await sectionNote(c, "The Motion variables are not the TIMING and EASING types. Run /figma-motion to convert them."); built.motion = 0; return; }
   if (dur.length) {
     const block = F(c, "Durations", { dir: "VERTICAL", gap: 16 });
     await T(block, "Duration", "Heading/H4", { color: tHead });
@@ -943,8 +900,7 @@ SECTION_FN.motion = async () => {
       const row = F(list, v.name, { dir: "HORIZONTAL", gap: 24, align: "CENTER" });
       await T(row, v.name.split("/").pop(), "Label/Default", { color: tHead, w: 100 });
       await T(row, val(v) + " ms", "Caption/Default", { color: tMuted, w: 70 });
-      const bar = R(row, "Bar", Math.max(val(v), 1), 16, { fill: mv("Surface/action"), radius: rad1 });
-      bar.setBoundVariable("width", v);
+      R(row, "Bar", Math.max(val(v), 1), 16, { fill: mv("Surface/action"), radius: rad1 });
       await T(row, useOf(v), "Body/Small", { color: tBody, w: 420 });
     }
   }
@@ -954,9 +910,7 @@ SECTION_FN.motion = async () => {
     const wrap = F(block, "Curves", { dir: "HORIZONTAL", gap: 32, gapY: 32, wrap: true, w: CONTENT });
     const S = 160;
     for (const v of eas) {
-      const raw = String(val(v));
-      const m = raw.match(/cubic-bezier\(([^)]+)\)/);
-      const [x1, y1, x2, y2] = m ? m[1].split(",").map((n) => parseFloat(n)) : [0, 0, 1, 1];
+      const [x1, y1, x2, y2] = bez(v);
       const cell = F(wrap, v.name, { dir: "VERTICAL", gap: 10, w: 260 });
       const g = figma.createFrame();
       g.name = "Curve"; g.resize(S, S); g.clipsContent = false; g.layoutMode = "NONE";
@@ -973,38 +927,11 @@ SECTION_FN.motion = async () => {
       g.appendChild(vec);
       vec.x = 0; vec.y = 0;
       await T(cell, v.name.split("/").pop(), "Label/Default", { color: tHead, w: 260 });
-      await T(cell, raw, "Caption/Default", { color: tMuted, w: 260 });
+      await T(cell, "cubic-bezier(" + [x1, y1, x2, y2].join(", ") + ")", "Caption/Default", { color: tMuted, w: 260 });
       await T(cell, useOf(v), "Body/Small", { color: tBody, w: 260 });
     }
   }
   built.motion = dur.length + eas.length;
-};
-
-// ===================== elevation =====================
-SECTION_FN.elevation = async () => {
-  const c = await section("elevation", "Elevation", "Five shadow levels, each two layered shadows bound to variables. Shadows are lighter in Light and stronger in Dark, because the Mapped shadow colors have a value per mode.");
-  const levels = new Set();
-  if (brand) for (const v of varsOf(brand)) { const m = low(v.name).match(/^elevation\/(\d+)\//); if (m) levels.add(m[1]); }
-  const fx = await figma.getLocalEffectStylesAsync();
-  const styles = Array.from(levels).sort().map((n) => fx.find((e) => e.name === "Elevation/" + n)).filter(Boolean);
-  if (!styles.length) { await sectionNote(c, "No Elevation styles yet. Run /figma-elevation."); built.elevation = 0; return; }
-  const dark = mapped ? modeId(mapped, "Dark") : null, light = mapped ? modeId(mapped, "Light") : null;
-  const panels = F(c, "Modes", { dir: "HORIZONTAL", gap: 24, w: CONTENT });
-  for (const [label, id] of [["Light", light], ["Dark", dark]]) {
-    if (!id) continue;
-    const panel = F(panels, label, { dir: "VERTICAL", gap: 24, pad: 40, w: 628, fill: mv("Surface/page"), radius: rad3, stroke: { color: lineColor, weight: hair } });
-    panel.setExplicitVariableModeForCollection(mapped, id);
-    await T(panel, label, "Label/Default", { color: tMuted });
-    const grid = F(panel, "Levels", { dir: "HORIZONTAL", gap: 48, gapY: 56, wrap: true, w: 548 });
-    for (const st of styles) {
-      const card = F(grid, st.name, { dir: "VERTICAL", gap: 4, pad: 16, w: 240, fill: mv("Surface/default"), radius: rad3 });
-      await card.setEffectStyleIdAsync(st.id);
-      await T(card, st.name, "Label/Default", { color: tHead, w: 208 });
-      await T(card, (st.description || "").split(".")[0], "Caption/Default", { color: tMuted, w: 208 });
-      card.resize(240, 96); card.primaryAxisSizingMode = "FIXED";
-    }
-  }
-  built.elevation = styles.length;
 };
 
 // ---------- run ----------

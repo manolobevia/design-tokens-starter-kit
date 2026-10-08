@@ -16,7 +16,7 @@ If the user types `-h`, `-help` or `help` with this skill, print the usage below
 ```
 /figma-starter  usage
 Builds the whole token system in one go: brand colors, system colors, aliases,
-Light and Dark usage, spacing, radius, border width, sizing, elevation, motion, typography and the Design Tokens page.
+Light and Dark usage, spacing, radius, border width, motion, typography and the Design Tokens page.
 
   /figma-starter Plum:#3B1A53 Periwinkle:#8E7FAE heading "Moneta Sans" body Lato
 
@@ -55,9 +55,7 @@ Run these in order with the Skill tool, passing the arguments shown. Fill the pl
 | 4 | `figma-spacing` | `Spacing` |
 | 5 | `figma-radius` | `Radius` |
 | 6 | `figma-border-width` | `Border width` |
-| 6b | `figma-sizing` | `Sizing` |
-| 6c | `figma-elevation` | `Elevation` |
-| 6d | `figma-motion` | `Motion` |
+| 6b | `figma-motion` | `Motion` |
 | 7 | `figma-type-scale` | `Typography heading <heading font> body <body font>` (leave a font out if the user did not name it) |
 | 8 | `figma-token-docs` | `Design Tokens` |
 
