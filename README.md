@@ -1,6 +1,16 @@
 # Figma Design Tokens Starter Kit
 
-Type one short line, get real **Figma variables and text styles** written to your open file. Eight Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width and typography) and a visual **Design Tokens** page that documents it.
+Type one short line, get real **Figma variables and text styles** written to your open file. Nine Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width and typography) and a visual **Design Tokens** page that documents it.
+
+## Quick start
+
+One line builds the whole system: your brand colors, the system colors, aliases, Light and Dark usage, spacing, radius, border width, typography and the Design Tokens page.
+
+```
+/figma-starter Plum:#3B1A53 Periwinkle:#8E7FAE heading "Moneta Sans" body Lato
+```
+
+The first color becomes Primary and the second Secondary (up to four: Tertiary, Accent). Fonts are optional and default to Inter and Roboto. Add `dry run` to see the plan first. Want to understand each step? The skills below do the same work one at a time.
 
 ## How the tokens fit together
 
@@ -24,6 +34,7 @@ Every Alias variable references a Brand variable. Every Mapped variable referenc
 | `figma-radius` | `Radius` | Border-radius scale in **Brand** |
 | `figma-border-width` | `Border width` | Border-weight scale in **Brand** |
 | `figma-token-docs` | `Design Tokens` | A **Design Tokens** page in Figma showing the whole system |
+| `figma-starter` | `/figma-starter Plum:#3B1A53 ...` | Runs all of the above in order from your brand colors and fonts |
 
 Add `dry run` to any line to preview without writing.
 
@@ -91,6 +102,17 @@ Hand-tuned values are kept on later runs unless you `reset` or use an arrow line
 | `reset Spacing`, `regenerate the spacing scale` | Overwrite hand-changed values |
 
 Token = number of 4px units: `Spacing/4` is 16px. Steps: `0` (0px), `0-25` (1px), `0-5` (2px), `1` (4), `2` (8), `3` (12), `4` (16), `5` (20), `6` (24), `8` (32), `10` (40), `12` (48), `16` (64), `20` (80), `24` (96).
+
+### `figma-starter`
+
+| Type | Result |
+|---|---|
+| `/figma-starter Plum:#3B1A53 Periwinkle:#8E7FAE heading "Moneta Sans" body Lato` | The whole system and the page |
+| `Name:#HEX` (1 to 4) | Brand colors, in order: Primary, Secondary, Tertiary, Accent |
+| `heading <font>`, `body <font>` | Font families. Defaults: Inter and Roboto. Quote names with spaces |
+| `dry run` | Show the plan, write nothing |
+
+It calls the other skills in order, so it is safe to repeat: steps that already exist are skipped.
 
 ### `figma-radius`
 

@@ -121,6 +121,17 @@ in Desktop and Mobile, fonts and weights, spacing, radius and border width.
   page. It only rebuilds frames it made itself.
 - **Writes to:** the Design Tokens page. It never edits variables or styles.
 
+### figma-starter
+Runs the whole build in one line by calling the other skills in order: color
+scales (brand colors plus `-default`), alias bridges (brand colors become
+Primary, Secondary, Tertiary, Accent, then `-default`), Mapped and Mapped dark,
+spacing, radius, border width, typography with the font pair, and the Design
+Tokens page.
+- **Trigger:** `/figma-starter Name:#HEX [Name:#HEX ...] [heading <font>] [body <font>]`
+  (one to four brand colors). Also handles dry-run.
+- **How:** it contains no script of its own; it invokes each skill, so it
+  stays in sync with them.
+
 ## Conventions
 
 - Variable group and role names are used exactly as typed, apart from stripped

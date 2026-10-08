@@ -1,6 +1,12 @@
 # Starter session
 
-Paste each line into Claude Code, one at a time or several together.
+The fast way, one line for everything:
+
+```
+/figma-starter Plum:#3B1A53 Periwinkle:#8E7FAE heading "Moneta Sans" body Lato
+```
+
+Or paste each line below into Claude Code, one at a time or several together.
 
 ## 1. Brand colors
 ```
