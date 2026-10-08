@@ -1,10 +1,12 @@
 # Figma Design Tokens Starter Kit
 
-Type one short line, get real **Figma variables and text styles** written to your open file. Eleven Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width, motion and typography) a visual **Design Tokens** page that documents it, and code exports for developers.
+Type one short line, get real **Figma variables and text styles** written to your open file. Eleven Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width, motion and typography), a visual **Design Tokens** page that documents it, and code exports for developers.
+
+![The Design Tokens page the skills build in Figma: a clickable contents frame with a card per section](docs/design-tokens-contents.png)
 
 ## Quick start
 
-One line builds the whole system: your brand colors, the system colors, aliases, Light and Dark usage, spacing, radius, border width, typography and the Design Tokens page.
+One line builds the whole system: your brand colors, the system colors, aliases, Light and Dark usage, spacing, radius, border width, motion, typography and the Design Tokens page.
 
 ```
 /figma-starter Plum:#3B1A53 Periwinkle:#8E7FAE heading "Moneta Sans" body Lato
@@ -199,7 +201,14 @@ You need: [Claude Code](https://claude.com/claude-code), Figma Desktop, and the 
 2. Open your Figma file in Figma Desktop and start the Desktop Bridge plugin.
 3. Run a skill (see below).
 
-To use the skills in other projects, copy the folders in `.claude/skills/` to `~/.claude/skills/`.
+To use the skills in every project, not only this folder, install them globally:
+
+```bash
+./install.sh            # copy the skills to ~/.claude/skills
+./install.sh --check    # show what would change, copy nothing
+```
+
+It only copies and never deletes. Run it again after you change a skill, then restart Claude Code.
 
 ## Running a skill
 
@@ -236,6 +245,20 @@ Typography
 ```
 
 Check the Variables panel in Figma. Each tier should show references, not hex values.
+
+## Development
+
+The color math and the code export have tests (standard library only, no install):
+
+```bash
+python3 -m unittest discover tests
+```
+
+`tests/test_color_scale.py` checks the 11-step scales against the reference values in `figma-color-scale/SKILL.md`, the input forms and the `-default` preset. `tests/test_build_tokens.py` checks the CSS, DTCG and Tailwind output, including references, Dark and Mobile modes and the seconds-to-milliseconds conversion for motion.
+
+## License
+
+[MIT](LICENSE). Use it, change it and share it, including in commercial work. Keep the copyright notice.
 
 ## Good to know
 

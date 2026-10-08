@@ -177,6 +177,14 @@ Tokens page.
    for the non-color primitives.
 5. `figma-token-docs` to build the Design Tokens page (rerun when tokens change).
 
+## Repo tooling
+
+- `install.sh` copies the `figma-*` skills to `~/.claude/skills` (`--check` to
+  preview). It never deletes. Run it after changing a skill so the global copies
+  do not drift from the repo.
+- `python3 -m unittest discover tests` runs the tests for the color math and
+  the code export converter. Run it after editing either script.
+
 ## Requirements
 
 - These skills write through the Figma Plugin API, run in the open file. With
