@@ -9,6 +9,23 @@ Turn one base color into an 11-step scale and add it to Figma as variables.
 
 **The deliverable is the variables in Figma.** A table of hex values in chat is only the receipt. The task is finished when the variables exist in the user's file and you have confirmed it, so always carry on through Step 2 and Step 3 after calculating.
 
+## Help
+
+If the user types `-h`, `-help` or `help` with this skill, print the usage below as a code block and stop. Do not load Figma tools, run the script or write anything.
+
+```
+/figma-color-scale  usage
+Turns one base color into an 11-step scale (950 to 50) in the Brand collection.
+
+  Purple:#5C3FC4          Scale Purple/950 to Purple/50. Your hex is the 500 Default
+  Name=#HEX, Name:HEX     Also accepted (with or without #, 3 or 6 digits)
+  several colors          One per line, or separated by spaces or commas
+  -default                Red, Blue, Orange, Green, Gray, plus Foundation
+  Foundation              Only Foundation/White and Foundation/Black
+  -default Purple:#3B1A53 The default set plus your own color
+  dry run                 Preview only, writes nothing
+```
+
 The user's input is a single line per color:
 
 ```

@@ -16,7 +16,7 @@ Paste each line into Claude Code, one at a time or several together.
 Brand/Purple -> Alias/Primary (Purple)
 ```
 
-`-default` bridges Gray → Neutral, Red → Error, Green → Success, Orange → Warning, Blue → Information. Brand roles such as Primary are yours to add, as in the last line.
+`-default` bridges Gray → Neutral, Red → Error, Green → Success, Orange → Warning, Blue → Information, Foundation → Foundation. Brand roles such as Primary are yours to add, as in the last line.
 
 ## 3. Mapped usage
 ```

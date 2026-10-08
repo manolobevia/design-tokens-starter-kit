@@ -17,7 +17,7 @@ Every Alias variable references a Brand variable. Every Mapped variable referenc
 | Skill | You type | It writes |
 |---|---|---|
 | `figma-color-scale` | `Purple:#5C3FC4` | An 11-step scale (950 to 50) in **Brand** |
-| `figma-alias-bridge` | `Brand/Purple -> Alias/Primary (Purple)` | **Alias** group referencing Brand, with Light and Dark |
+| `figma-alias-bridge` | `Brand/Purple -> Alias/Primary (Purple)` | **Alias** group of references into Brand |
 | `figma-mapped-roles` | `Mapped` | **Mapped** Surface, Border, Text and Icon variables referencing Alias |
 | `figma-spacing` | `Spacing` | 4px-unit spacing scale in **Brand** |
 | `figma-type-scale` | `Typography` | Font and weight variables in **Brand**, **Responsive** size variables, text styles |
@@ -29,7 +29,7 @@ Add `dry run` to any line to preview without writing.
 Run the skills in this order, because each tier references the one before it:
 
 1. **`figma-color-scale`**: your brand and neutral colors, or `-default` for the system colors. Fills Brand.
-2. **`figma-alias-bridge`**: map Brand groups into Alias roles, with Light and Dark values.
+2. **`figma-alias-bridge`**: map Brand groups into Alias roles.
 3. **`figma-mapped-roles`**: build the usage tier on top of Alias.
 4. **`figma-spacing`** and **`figma-type-scale`**: the non-color primitives. These don't depend on the color steps, so run them any time after step 1.
 
@@ -37,7 +37,7 @@ Run the skills in this order, because each tier references the one before it:
 
 Every skill reads one typed line. These are all the forms each one accepts.
 
-**Any skill:** add `dry run` or `preview` to report what would happen and write nothing.
+**Any skill:** add `dry run` or `preview` to report what would happen and write nothing. Type `-h` (for example `/figma-spacing -h`) to print that skill's usage.
 
 ### `figma-color-scale`
 
@@ -59,7 +59,7 @@ Every skill reads one typed line. These are all the forms each one accepts.
 | `... Alias/Primary (Purple)` | Text in parentheses is a note and is dropped from the name |
 | Arrow | `->`, `→`, `=>` or the word `to` |
 | Several lines | One bridge per line. Running again repoints, never duplicates |
-| `-default` | Five bridges: Gray → Neutral, Red → Error, Green → Success, Orange → Warning, Blue → Information |
+| `-default` | Six bridges: Gray → Neutral, Red → Error, Green → Success, Orange → Warning, Blue → Information, Foundation → Foundation |
 
 `-default` does not create Primary, Secondary and so on. Add those yourself, in the same message: `-default` plus `Brand/Purple -> Alias/Primary`. A line you type replaces the default for the same role. If a Brand group is missing, the skill names it and does not guess.
 

@@ -14,6 +14,23 @@ Build the typography of the user's design system with one command, `Typography`.
 
 **The deliverable is the variables and the text styles in Figma.** A table in chat is only the receipt. The task is finished when they exist in the user's file and are bound to each other.
 
+## Help
+
+If the user types `-h`, `-help` or `help` with this skill, print the usage below as a code block and stop. Do not load Figma tools, run the script or write anything.
+
+```
+/figma-type-scale  usage
+Builds fonts, the Responsive type scale (Desktop and Mobile) and text styles in one run.
+
+  Typography                              Everything. Inter for headings, Roboto for body when none is set
+  Typography heading Playfair body Lato  Your own fonts (either one can be given alone)
+  Typography base 18 ratio 1.333 mobile 1.2  Scale settings: base, ratio, mobile, line height,
+                                          body line height, spacing, body spacing, grid
+  reset Responsive                        Recalculate the size variables
+  reset type styles                       Rebind hand-changed styles to the preset
+  dry run                                 Preview only, writes nothing
+```
+
 ## The input
 
 | The user types | What it means |

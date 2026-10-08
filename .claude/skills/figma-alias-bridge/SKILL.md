@@ -1,6 +1,6 @@
 ---
 name: "figma-alias-bridge"
-description: Link Brand groups to Alias roles in Figma as references. Use for arrow lines like Brand/Purple -> Alias/Primary (Purple), or -default for Neutral, Error, Success, Warning, Information.
+description: Link Brand groups to Alias roles in Figma as references. Use for arrow lines like Brand/Purple -> Alias/Primary (Purple), or -default for Neutral, Error, Success, Warning, Information, Foundation.
 ---
 
 # Figma alias bridge
@@ -8,6 +8,25 @@ description: Link Brand groups to Alias roles in Figma as references. Use for ar
 Link one group of Figma variables to another, tier to tier. Each variable in the target group holds an alias (a reference) to the matching variable in the source group.
 
 **The deliverable is the alias variables in Figma.** A table in chat is only the receipt. The task is finished when the variables exist in the user's file and point at the right sources.
+
+## Help
+
+If the user types `-h`, `-help` or `help` with this skill, print the usage below as a code block and stop. Do not load Figma tools, run the script or write anything.
+
+```
+/figma-alias-bridge  usage
+Links a Brand group to an Alias role, step for step, as references.
+
+  Brand/Purple -> Alias/Primary       Every Purple step becomes a reference in Primary
+  ... Alias/Primary (Purple)          Text in parentheses is a note and is dropped
+  arrow                               ->, an arrow glyph, => or the word "to"
+  several lines                       One bridge per line. Running again repoints, never duplicates
+  -default                            Gray to Neutral, Red to Error, Green to Success,
+                                      Orange to Warning, Blue to Information, Foundation to Foundation
+  dry run                             Preview only, writes nothing
+
+-default never creates Primary, Secondary and so on. Type those lines yourself.
+```
 
 ## The input
 
@@ -27,7 +46,7 @@ Read it as "take everything in the Purple group of the Brand collection and mirr
 
 ### Default set
 
-`-default` is shorthand for these five lines. Put them in `BRIDGES` exactly as written:
+`-default` is shorthand for these six lines. Put them in `BRIDGES` exactly as written:
 
 ```
 Brand/Gray -> Alias/Neutral (Gray)
@@ -35,9 +54,10 @@ Brand/Red -> Alias/Error (Red)
 Brand/Green -> Alias/Success (Green)
 Brand/Orange -> Alias/Warning (Orange)
 Brand/Blue -> Alias/Information (Blue)
+Brand/Foundation -> Alias/Foundation
 ```
 
-It does not create Primary or any other brand role (Secondary, Tertiary and so on). Which brand color feeds those is the user's choice, so they type those lines themselves, for example `-default` followed by `Brand/Purple -> Alias/Primary (Purple)`. A typed line replaces the default line for the same target role. If a Brand group in the set does not exist, the script reports it under the usual missing-source rule: bridge the groups that exist, name the ones that do not, and do not guess. Foundation is not part of the set.
+It does not create Primary or any other brand role (Secondary, Tertiary and so on). Which brand color feeds those is the user's choice, so they type those lines themselves, for example `-default` followed by `Brand/Purple -> Alias/Primary (Purple)`. A typed line replaces the default line for the same target role. If a Brand group in the set does not exist, the script reports it under the usual missing-source rule: bridge the groups that exist, name the ones that do not, and do not guess. Foundation holds single White and Black variables, not a scale; it is in the set because the Mapped tier needs `Alias/Foundation/White`.
 
 A message in this format is the whole request and the go-ahead. Run it without asking for confirmation first, because the user designed this to be a one-line action and the operation is safe to repeat (see "What the script guarantees"). The only reasons to stop are listed under "When to ask".
 

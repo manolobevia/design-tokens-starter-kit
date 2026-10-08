@@ -14,13 +14,14 @@ type values.
 - **Brand** (collection): raw values. Color scales, spacing, font family and
   font weight live here. Nothing references anything else at this tier.
 - **Alias** (collection): roles such as Primary, Neutral, Error. Every Alias
-  variable is a reference to a Brand variable, never a copied hex. Dark mode
-  lives here: each Alias variable carries a Light and a Dark value that point
-  at different Brand steps (mirrored symmetrically, so 950 Light equals 50
-  Dark, and the 500 Default stays the same in both).
+  variable is a reference to a Brand variable, never a copied hex. Alias has a
+  single mode.
 - **Mapped** (collection): usage, meaning what a color is for (Surface,
   Border, Text, Icon). This is the tier designers actually apply to layers.
-  Every Mapped variable references an Alias variable, never a hex.
+  Every Mapped variable references an Alias variable, never a hex. Dark mode
+  lives here: Mapped has a Light and a Dark mode, and Dark points at the
+  mirrored Alias step (950 Light equals 50 Dark, and the 500 Default stays the
+  same in both).
 - **Responsive** (collection): type scale number variables (font size, line
   height, paragraph spacing) with a Desktop and a Mobile mode.
 
@@ -49,14 +50,14 @@ Links a whole Brand group to an Alias group, step for step, so each Alias
 variable references the matching Brand variable.
 - **Trigger:** an arrow line, source left, target right:
   `Brand/Purple -> Alias/Primary (Purple)`. The arrow can be `->`, the arrow
-  glyph, `=>`, or the word "to". `-default` runs five bridges: Gray to
+  glyph, `=>`, or the word "to". `-default` runs six bridges: Gray to
   Neutral, Red to Error, Green to Success, Orange to Warning, Blue to
-  Information. Primary and other brand roles are never included; the user
+  Information, Foundation to Foundation (Mapped needs Alias/Foundation). Primary and other brand roles are never included; the user
   types those lines.
 - **Notes:** the part in parentheses is a reminder of which brand color feeds
   the role and is stripped from the name. The group is created as `Primary`,
-  so an alias name survives a change of color later. This skill also sets the
-  Light and Dark values at the Alias tier.
+  so an alias name survives a change of color later. Alias has one mode; Light
+  and Dark are set in Mapped.
 - **Writes to:** Alias, as references into Brand.
 
 ### figma-mapped-roles
@@ -110,8 +111,7 @@ Spacing group. The scale is the same every run.
 ## Typical build order
 
 1. `figma-color-scale` for each brand and neutral color (fills Brand).
-2. `figma-alias-bridge` to map Brand groups into Alias roles, with Light and
-   Dark values.
+2. `figma-alias-bridge` to map Brand groups into Alias roles.
 3. `figma-mapped-roles` to build the usage tier on top of Alias.
 4. `figma-spacing` and `figma-type-scale` for the non-color primitives.
 

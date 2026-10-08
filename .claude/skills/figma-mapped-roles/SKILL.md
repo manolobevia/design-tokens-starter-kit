@@ -9,6 +9,25 @@ Build the third tier of the user's color system. The tiers are Brand (raw values
 
 **The deliverable is the variables in Figma.** A table in chat is only the receipt. The task is finished when the variables exist in the user's file and point at the right Alias variables.
 
+## Help
+
+If the user types `-h`, `-help` or `help` with this skill, print the usage below as a code block and stop. Do not load Figma tools, run the script or write anything.
+
+```
+/figma-mapped-roles  usage
+Builds the Mapped (usage) tier: Surface, Border, Text and Icon, all references to Alias.
+
+  Mapped                                       Full preset (Light mode)
+  Mapped/Text, Mapped/Icon                     Only those groups
+  Mapped dark                                  Add the Dark mode and fill it
+  Mapped/Text dark                             Create the group and add Dark in one run
+  Alias/Neutral/900 -> Mapped/Text/heading     Point one variable at one Alias variable
+  ... -> Mapped/Text/action (dark)             Same, Dark only ((light) also works)
+  rename Surface/sucess to Surface/success     Rename in place
+  reset Mapped/Text                            Put hand-changed variables back on the preset
+  dry run                                      Preview only, writes nothing
+```
+
 ## The input
 
 | The user types | What it means |

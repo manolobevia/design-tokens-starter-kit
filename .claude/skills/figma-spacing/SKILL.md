@@ -11,6 +11,22 @@ Write the spacing scale to Figma as number variables.
 
 The scale is a fixed preset, not a calculation. It is the same every run, so a bare `Spacing` is the whole request and the go-ahead. Build it and write it without asking for confirmation first. The only reasons to stop are listed under "When to ask".
 
+## Help
+
+If the user types `-h`, `-help` or `help` with this skill, print the usage below as a code block and stop. Do not load Figma tools, run the script or write anything.
+
+```
+/figma-spacing  usage
+Writes the 4px-unit spacing scale as number variables in Brand under Spacing.
+
+  Spacing, Spacing scale                       The whole scale
+  Spacing/4                                    One step (several can share a message)
+  reset Spacing, regenerate the spacing scale  Overwrite hand-changed values
+  dry run                                      Preview only, writes nothing
+
+Token = pixels / 4: Spacing/4 is 16px. Steps: 0, 0-25, 0-5, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24.
+```
+
 ## The input
 
 | The user types | What it means |
