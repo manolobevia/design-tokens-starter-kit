@@ -3,7 +3,7 @@
 //
 // Writes the border-radius scale as number (FLOAT) variables in the Brand
 // collection, one group named in 4px units (token x 4 = px value):
-//   Brand / Radius / 0 | 0-5 | 1 | 2 | 3 | 4 | 6 | full
+//   Brand / Border radius / 0 | 0-5 | 1 | 2 | 3 | 4 | 6 | full
 // "full" is 9999px: fully rounded (pills, circles).
 //
 // Radius primitives are mode-agnostic, so the value is written to every mode of
@@ -16,15 +16,15 @@ const REQUEST = {
   overwrite: false,  // true = reset values that were changed by hand back to the preset
   tokens: ["all"]    // "all", or a subset of token names, e.g. ["1", "2"]
 };
-const COLLECTION = "Brand"; // the collection the Radius group lives in. Matched by name
+const COLLECTION = "Brand"; // the collection the Border radius group lives in. Matched by name
                             // (case-insensitive); created if the file has none by that name.
-const GROUP = "Radius";
+const GROUP = "Border radius";
 const DRY_RUN = false;  // true = report what would happen, write nothing
 const EXPECT_FILE = ""; // optional file name guard, e.g. "Design System MB"
 // ---- END CONFIG ----
 
 // ---- PRESET ----
-// token = the name after the group (Radius/2). token x 4 = px, except "full".
+// token = the name after the group (Border radius/2). token x 4 = px, except "full".
 // Figma forbids a dot in a variable name, so 0-5 is 0.5 units (2px).
 const PRESET = [
   { token: "0",    value: 0 },
@@ -45,7 +45,7 @@ const low = (s) => String(s).trim().toLowerCase();
 const norm = (s) => low(s).replace(/[\s_-]+/g, "");
 const msg = (e) => String((e && e.message) || e);
 const same = (a, b) => typeof a === "number" && typeof b === "number" && Math.abs(a - b) < 1e-6;
-const describe = (p) => p.token === "full" ? "Radius/full = 9999px. Fully rounded corners (pills, circles). " + MARK : "Radius/" + p.token + " = " + p.value + "px (" + (p.value / 4) + " x 4px base). Primitive corner radius. " + MARK;
+const describe = (p) => p.token === "full" ? "Border radius/full = 9999px. Fully rounded corners (pills, circles). " + MARK : "Border radius/" + p.token + " = " + p.value + "px (" + (p.value / 4) + " x 4px base). Primitive corner radius. " + MARK;
 
 const out = {
   dryRun: DRY_RUN, file: figma.root.name, status: "ok",

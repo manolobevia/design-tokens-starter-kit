@@ -39,9 +39,9 @@ Typography heading Playfair body Lato
 Typography base 18 ratio 1.333 mobile 1.2
 ```
 
-## 5. Radius, border width, motion and the Design Tokens page
+## 5. Border radius, border width, motion and the Design Tokens page
 ```
-Radius
+Border radius
 Border width
 Motion
 Design Tokens

@@ -33,7 +33,7 @@ Every Alias variable references a Brand variable. Every Mapped variable referenc
 | `figma-mapped-roles` | `Mapped` | **Mapped** Surface, Border, Text and Icon variables referencing Alias |
 | `figma-spacing` | `Spacing` | 4px-unit spacing scale in **Brand** |
 | `figma-type-scale` | `Typography` | Font and weight variables in **Brand**, **Responsive** size variables, text styles |
-| `figma-radius` | `Radius` | Border-radius scale in **Brand** |
+| `figma-radius` | `Border radius` | Border-radius scale in **Brand** |
 | `figma-border-width` | `Border width` | Border-weight scale in **Brand** |
 | `figma-motion` | `Motion` | Duration (TIMING) and easing (EASING) variables in **Brand** |
 | `figma-token-docs` | `Design Tokens` | A **Design Tokens** page in Figma showing the whole system |
@@ -133,11 +133,11 @@ It calls the other skills in order, so it is safe to repeat: steps that already 
 
 | Type | Result |
 |---|---|
-| `Radius` | The whole scale |
-| `Radius/2` | One step. Several can share a message |
-| `reset Radius` | Overwrite hand-changed values |
+| `Border radius` | The whole scale |
+| `Border radius/2` | One step. Several can share a message |
+| `reset Border radius` | Overwrite hand-changed values |
 
-Token = number of 4px units: `Radius/2` is 8px. Steps: `0`, `0-5` (2px), `1` (4), `2` (8), `3` (12), `4` (16), `6` (24), `full` (9999, a pill or circle).
+Token = number of 4px units: `Border radius/2` is 8px. Steps: `0`, `0-5` (2px), `1` (4), `2` (8), `3` (12), `4` (16), `6` (24), `full` (9999, a pill or circle).
 
 ### `figma-border-width`
 

@@ -238,7 +238,7 @@ def build_tailwind(data):
                 lines.append("  --color-%s: %s;" % ("-".join(slug(p) for p in v["n"].split("/")), ref(c, v)))
     b = by.get("brand")
     if b:
-        groups = [("spacing/", "spacing"), ("radius/", "radius"), ("font family/", "font"), ("font weight/", "font-weight"),
+        groups = [("spacing/", "spacing"), ("border radius/", "radius"), ("font family/", "font"), ("font weight/", "font-weight"),
                   ("motion/easing/", "ease")]
         for prefix, ns in groups:
             vs = [v for v in b["variables"] if v["n"].lower().startswith(prefix)]

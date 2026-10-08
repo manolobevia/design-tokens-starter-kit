@@ -99,10 +99,10 @@ Spacing group. The scale is the same every run.
 
 ### figma-radius
 Writes a fixed-preset border-radius scale as number variables in Brand under a
-Radius group (token x 4 = px, plus `full` at 9999).
-- **Trigger:** `Radius` (whole group), `Radius/<token>`. Also handles reset and
+Border radius group (token x 4 = px, plus `full` at 9999).
+- **Trigger:** `Border radius` (whole group), `Border radius/<token>`. Also handles reset and
   dry-run.
-- **Writes to:** Brand, under Radius.
+- **Writes to:** Brand, under Border radius.
 
 ### figma-border-width
 Writes a fixed-preset border-weight scale (0, 1, 2, 4 px) as number variables

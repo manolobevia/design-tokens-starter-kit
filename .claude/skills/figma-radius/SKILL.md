@@ -1,6 +1,6 @@
 ---
 name: figma-radius
-description: Write the border-radius scale as number variables in Figma Brand under Radius (Radius/2 = 8px, plus full). Use for Radius, Radius/2, or asks to reset or regenerate radius tokens.
+description: Write the border-radius scale as number variables in Figma Brand under Border radius (Border radius/2 = 8px, plus full). Use for Border radius or asks to reset the scale.
 ---
 
 # Figma radius
@@ -9,7 +9,7 @@ Write the radius scale to Figma as number variables.
 
 **The deliverable is the variables in Figma.** A table of values in chat is only the receipt. The task is finished when the variables exist in the user's file and you have confirmed it, so always carry on through Step 2 and Step 3.
 
-The scale is a fixed preset, not a calculation. It is the same every run, so a bare `Radius` is the whole request and the go-ahead. Build it and write it without asking for confirmation first. The only reasons to stop are listed under "When to ask".
+The scale is a fixed preset, not a calculation. It is the same every run, so a bare `Border radius` is the whole request and the go-ahead. Build it and write it without asking for confirmation first. The only reasons to stop are listed under "When to ask".
 
 ## Help
 
@@ -17,21 +17,21 @@ If the user types `-h`, `-help` or `help` with this skill, print the usage below
 
 ```
 /figma-radius  usage
-  Radius, Radius scale                 The whole scale
-  Radius/2                             One step (several can share a message)
-  reset Radius, regenerate the scale   Overwrite hand-changed values
+  Border radius, Radius                    The whole scale
+  Border radius/2                             One step (several can share a message)
+  reset Border radius, regenerate the scale   Overwrite hand-changed values
   dry run                              Preview only, writes nothing
 
-Token = pixels / 4: Radius/2 is 8px. Steps: 0, 0-5, 1, 2, 3, 4, 6, full (9999px).
+Token = pixels / 4: Border radius/2 is 8px. Steps: 0, 0-5, 1, 2, 3, 4, 6, full (9999px).
 ```
 
 ## The input
 
 | The user types | What it means |
 |---|---|
-| `Radius` | Write the whole Radius group |
-| `Radius/2` | Write one or a few steps. Several can come in one message |
-| "reset Radius", "regenerate the scale" | Recalculate values that were changed by hand (overwrite) |
+| `Border radius` | Write the whole Border radius group |
+| `Border radius/2` | Write one or a few steps. Several can come in one message |
+| "reset Border radius", "regenerate the scale" | Recalculate values that were changed by hand (overwrite) |
 | "dry run" or "preview" with any of the above | Report what would happen and write nothing |
 
 ## The scale
@@ -53,14 +53,14 @@ The full definition is the PRESET block at the top of `scripts/radius_scale.js`.
 
 ## The naming system
 
-- **Variables are `Radius/Token`**: `Radius/2`, `Radius/full`. The slash makes Figma show them as one group named `Radius`.
-- **The token counts 4px units**, so `Radius/2` is 8px. Same rule as `Spacing`.
+- **Variables are `Border radius/Token`**: `Border radius/2`, `Border radius/full`. The slash makes Figma show them as one group named `Border radius`.
+- **The token counts 4px units**, so `Border radius/2` is 8px. Same rule as `Spacing`.
 - **Dots are illegal in Figma variable names**, so the 2px step is `0-5` (0.5 units).
 - **No step is marked "Default".**
 
 ## Where it goes
 
-- **Collection.** The script writes to the `Brand` collection, grouped as `Radius`. It matches a collection named Brand ignoring case, and creates one if the file has none by that name. Set `COLLECTION` in the CONFIG to point at a different collection.
+- **Collection.** The script writes to the `Brand` collection, grouped as `Border radius`. It matches a collection named Brand ignoring case, and creates one if the file has none by that name. Set `COLLECTION` in the CONFIG to point at a different collection.
 - **Modes.** The value is written to every mode of the collection and no mode is added. A primitive is mode-agnostic.
 - **Scopes.** Each variable is scoped to Corner radius, so it shows up in the corner radius fields and not in gap, padding or sizing.
 
@@ -80,7 +80,7 @@ const REQUEST = {
   tokens: ["all"]    // "all", or a subset like ["1", "2"]
 };
 const COLLECTION = "Brand";
-const GROUP = "Radius";
+const GROUP = "Border radius";
 const DRY_RUN = false;
 const EXPECT_FILE = "";
 ```
@@ -89,8 +89,8 @@ How each request maps to the CONFIG:
 
 | Request | CONFIG |
 |---|---|
-| `Radius` | defaults (`overwrite: false`, `tokens: ["all"]`) |
-| `Radius/2` | `tokens: ["1", "2"]` |
+| `Border radius` | defaults (`overwrite: false`, `tokens: ["all"]`) |
+| `Border radius/2` | `tokens: ["1", "2"]` |
 | reset, regenerate | `overwrite: true` |
 | dry run, preview | `DRY_RUN = true` |
 
@@ -100,7 +100,7 @@ Set `EXPECT_FILE` to the user's design system file name when you know it, so the
 
 - **Checks before it creates.** It finds the `Brand` collection and creates one only if it is missing. Names are matched ignoring case.
 - **Never duplicates.** Running the same request twice changes nothing.
-- **Never deletes.** Any `Radius/...` variable that is not in the preset is left in place and listed under `others`.
+- **Never deletes.** Any `Border radius/...` variable that is not in the preset is left in place and listed under `others`.
 - **Protects hand-tuned values.** A value other than the preset is kept and reported as `kept`. Only `overwrite: true` changes it.
 - **Writes every mode**, so no mode is left on Figma's default.
 - **Sets scopes and a description.** New variables are scoped and described. An existing variable's scopes are tidied only if they are still the Figma default of all-scopes, and its description is only filled if empty or previously written by this skill.

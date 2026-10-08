@@ -94,7 +94,7 @@ The Contents frame links to the other frames by id, so the script rebuilds it au
 - **Rebuilds only its own frames.** Every section frame it makes carries plugin data. A run replaces those frames, re-lays them out in order, and never touches anything else on the page, so rerunning never duplicates.
 - **Never edits variables or styles.** It only reads them.
 - **Bound, not copied.** Fills, widths, corners, strokes and modes are bindings to the variables. Text uses the file's own text styles.
-- **Skips what is missing.** A section whose variables do not exist (no Radius yet, say) shows one line saying which skill to run. Contrast pairs whose variables are missing are listed under the summary.
+- **Skips what is missing.** A section whose variables do not exist (no Border radius yet, say) shows one line saying which skill to run. Contrast pairs whose variables are missing are listed under the summary.
 - **Writes only to the page named `Design Tokens`**, which it creates when needed.
 
 ### Reading the result

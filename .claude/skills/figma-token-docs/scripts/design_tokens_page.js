@@ -159,7 +159,7 @@ function R(parent, name, w, h, o = {}) {
 }
 
 // ---------- common bound tokens used for the page chrome ----------
-const rad1 = bv("Radius/1"), rad2 = bv("Radius/2"), rad3 = bv("Radius/3");
+const rad1 = bv("Border radius/1"), rad2 = bv("Border radius/2"), rad3 = bv("Border radius/3");
 const hair = bv("Border width/0-25"), thin = bv("Border width/0-5");
 const lineColor = mv("Border/secondary"), softLine = mv("Border/tertiary");
 const tHead = mv("Text/heading"), tBody = mv("Text/body"), tMuted = mv("Text/body-secondary");
@@ -317,7 +317,7 @@ SECTION_FN.contents = async () => {
     if (id === "typography") return textStyles.length + " text styles";
     if (id === "fonts") return count("font family/") + " families · " + count("font weight/") + " weights";
     if (id === "spacing") return count("spacing/") + " steps";
-    if (id === "radius") return count("radius/") + " steps";
+    if (id === "radius") return count("border radius/") + " steps";
     if (id === "border") return count("border width/") + " steps";
     if (id === "motion") {
       const m = brand ? varsOf(brand).filter((v) => low(v.name).startsWith("motion/")) : [];
@@ -387,7 +387,7 @@ const GUIDE = [
   { name: "figma-spacing", does: "Writes the spacing scale in 4px units to Brand.", rows: [
     ["Spacing", "The whole scale"], ["Spacing/4", "One step. Token x 4 = px, so Spacing/4 is 16px"] ] },
   { name: "figma-radius", does: "Writes the border-radius scale to Brand, plus full for pills and circles.", rows: [
-    ["Radius", "The whole scale"], ["Radius/2", "One step (8px)"] ] },
+    ["Border radius", "The whole scale"], ["Border radius/2", "One step (8px)"] ] },
   { name: "figma-border-width", does: "Writes the border-weight scale to Brand.", rows: [
     ["Border width", "The whole scale"], ["Border width/0-5", "One step (2px)"] ] },
   { name: "figma-motion", does: "Writes durations and easing curves to Brand as native TIMING and EASING variables.", rows: [
@@ -584,7 +584,7 @@ SECTION_FN.health = async () => {
   // 8. Other tokens present
   const missingPrims = [];
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("spacing/")))) missingPrims.push("Spacing (/figma-spacing)");
-  if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("radius/")))) missingPrims.push("Radius (/figma-radius)");
+  if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("border radius/")))) missingPrims.push("Border radius (/figma-radius)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("border width/")))) missingPrims.push("Border width (/figma-border-width)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("motion/")))) missingPrims.push("Motion (/figma-motion)");
   if (!(responsive && responsive.modes.length >= 2)) missingPrims.push("Responsive with Desktop and Mobile (/figma-type-scale Typography)");
@@ -849,9 +849,9 @@ SECTION_FN.spacing = async () => {
 // ===================== radius =====================
 SECTION_FN.radius = async () => {
   const c = await section("radius", "Border radius", "Corner radius scale in 4px units; full is a pill or circle. Corners are bound to the variables.");
-  const vars = brand ? varsOf(brand).filter((v) => low(v.name).startsWith("radius/") && v.resolvedType === "FLOAT") : [];
-  if (!vars.length) { await sectionNote(c, "No Radius variables in Brand. Run Radius first."); built.radius = 0; return; }
-  const wrap = F(c, "Radius", { dir: "HORIZONTAL", gap: 32, gapY: 32, wrap: true, w: CONTENT });
+  const vars = brand ? varsOf(brand).filter((v) => low(v.name).startsWith("border radius/") && v.resolvedType === "FLOAT") : [];
+  if (!vars.length) { await sectionNote(c, "No Border radius variables in Brand. Run Border radius first."); built.radius = 0; return; }
+  const wrap = F(c, "Border radius", { dir: "HORIZONTAL", gap: 32, gapY: 32, wrap: true, w: CONTENT });
   for (const v of vars) {
     const px = v.valuesByMode[brand.defaultModeId];
     const cell = F(wrap, v.name, { dir: "VERTICAL", gap: 12, w: 140 });

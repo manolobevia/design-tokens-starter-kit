@@ -53,7 +53,7 @@ Run these in order with the Skill tool, passing the arguments shown. Fill the pl
 | 2 | `figma-alias-bridge` | `Brand/<color 1> -> Alias/Primary`, `Brand/<color 2> -> Alias/Secondary`, and so on for colors 3 (Tertiary) and 4 (Accent), then `-default` |
 | 3 | `figma-mapped-roles` | `Mapped`, then `Mapped dark` |
 | 4 | `figma-spacing` | `Spacing` |
-| 5 | `figma-radius` | `Radius` |
+| 5 | `figma-radius` | `Border radius` |
 | 6 | `figma-border-width` | `Border width` |
 | 6b | `figma-motion` | `Motion` |
 | 7 | `figma-type-scale` | `Typography heading <heading font> body <body font>` (leave a font out if the user did not name it) |
