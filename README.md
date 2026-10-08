@@ -1,6 +1,6 @@
 # Figma Design Tokens Starter Kit
 
-Type one short line, get real **Figma variables and text styles** written to your open file. Twelve Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width, sizing, elevation and typography) a visual **Design Tokens** page that documents it, and code exports for developers.
+Type one short line, get real **Figma variables and text styles** written to your open file. Thirteen Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width, sizing, elevation, motion and typography) a visual **Design Tokens** page that documents it, and code exports for developers.
 
 ## Quick start
 
@@ -34,6 +34,7 @@ Every Alias variable references a Brand variable. Every Mapped variable referenc
 | `figma-radius` | `Radius` | Border-radius scale in **Brand** |
 | `figma-border-width` | `Border width` | Border-weight scale in **Brand** |
 | `figma-sizing` | `Sizing` | Icon, control and avatar sizes in **Brand** |
+| `figma-motion` | `Motion` | Animation durations and easing curves in **Brand**, for code |
 | `figma-elevation` | `Elevation` | Shadow tokens and 5 elevation effect styles that follow Light and Dark |
 | `figma-token-docs` | `Design Tokens` | A **Design Tokens** page in Figma showing the whole system |
 | `figma-export-tokens` | `Export tokens` | `tokens.css`, `tokens.tokens.json` and `tailwind.theme.css` for developers |
@@ -48,7 +49,7 @@ Run the skills in this order, because each tier references the one before it:
 1. **`figma-color-scale`**: your brand and neutral colors, or `-default` for the system colors. Fills Brand.
 2. **`figma-alias-bridge`**: map Brand groups into Alias roles.
 3. **`figma-mapped-roles`**: build the usage tier on top of Alias.
-4. **`figma-spacing`**, **`figma-radius`**, **`figma-border-width`**, **`figma-sizing`**, **`figma-elevation`** and **`figma-type-scale`**: the non-color primitives. Elevation needs the Mapped tier, so run it after step 3. These don't depend on the color steps, so run them any time after step 1.
+4. **`figma-spacing`**, **`figma-radius`**, **`figma-border-width`**, **`figma-sizing`**, **`figma-elevation`**, **`figma-motion`** and **`figma-type-scale`**: the non-color primitives. Elevation needs the Mapped tier, so run it after step 3. These don't depend on the color steps, so run them any time after step 1.
 5. **`figma-token-docs`**: builds the Design Tokens page. Run it last, and again whenever tokens change.
 6. **`figma-export-tokens`**: writes the tokens as code files for developers. Run it whenever tokens change.
 
@@ -157,6 +158,16 @@ Steps: `0`, `0-25` (1px), `0-5` (2px), `1` (4px).
 | `reset Sizing` | Overwrite hand-changed values |
 
 Names follow the text styles (XSmall, Small, Default, Large, XLarge). Icon: 12, 16, 20, 24, 32. Control: Small 32, Default 40, Large 48, Touch 44 (the minimum tap target). Avatar: 24, 32, 40, 56, 72.
+
+### `figma-motion`
+
+| Type | Result |
+|---|---|
+| `Motion` | Durations and easing curves |
+| `Motion/Duration`, `Motion/Easing` | One group |
+| `reset Motion` | Overwrite hand-changed values |
+
+Durations (ms): XFast 50, Fast 100, Default 200, Slow 300, XSlow 500. Easings: Standard, Enter, Exit, Linear. Figma variables cannot drive prototype animation, so these are for developers: `Export tokens` writes them as `200ms` and `cubic-bezier(...)`.
 
 ### `figma-elevation`
 

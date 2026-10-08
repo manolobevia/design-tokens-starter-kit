@@ -119,6 +119,15 @@ and Avatar (XSmall 24 to XLarge 72). Names follow the text styles.
   Also handles reset and dry-run.
 - **Writes to:** Brand, under Size.
 
+### figma-motion
+Writes animation durations (`Motion/Duration/XFast` 50ms to `XSlow` 500ms,
+numbers) and easing curves (`Motion/Easing/Standard`, `Enter`, `Exit`,
+`Linear`, text holding CSS timing functions) to Brand. Scopes are empty because
+nothing in Figma can use them; they are for code and the Design Tokens page.
+- **Trigger:** `Motion`, `Motion/Duration`, `Motion/Easing`. Also handles reset
+  and dry-run.
+- **Writes to:** Brand, under Motion.
+
 ### figma-elevation
 Builds shadows as tokens: Brand black-opacity colors (`Shadow/Soft` to
 `Heavy`) and numbers (`Elevation/<n>/Key Y`, `Key Blur`, `Ambient Y`,

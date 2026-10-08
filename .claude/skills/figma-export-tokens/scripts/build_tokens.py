@@ -80,6 +80,17 @@ def ordered(variables):
     return out
 
 
+def elevation_levels(cols):
+    """Levels n for which Brand has Elevation/<n>/Key Y, Key Blur, Ambient Y and Ambient Blur, plus Mapped shadow colors."""
+    names = {v["n"] for c in cols if c["name"].lower() == "brand" for v in c["variables"]}
+    mapped = {v["n"] for c in cols if c["name"].lower() == "mapped" for v in c["variables"]}
+    if not {"Shadow/key", "Shadow/ambient"} <= mapped:
+        return []
+    levels = sorted({n.split("/")[1] for n in names if n.startswith("Elevation/") and n.count("/") == 2}, key=lambda x: int(x) if x.isdigit() else 99)
+    need = ["Key Y", "Key Blur", "Ambient Y", "Ambient Blur"]
+    return [n for n in levels if all("Elevation/%s/%s" % (n, k) in names for k in need)]
+
+
 def mode_kind(name):
     n = name.lower()
     if n == "dark":
@@ -97,8 +108,10 @@ def css_value(c, v, val, cols):
         return val.lower()
     if v["t"] == "FLOAT":
         num = int(val) if float(val).is_integer() else round(val, 4)
-        return "%spx" % num
+        return "%sms" % num if v["n"].lower().startswith("motion/duration/") else "%spx" % num
     if v["t"] == "STRING":
+        if v["n"].lower().startswith("motion/easing/"):
+            return str(val)
         if v["n"].lower().startswith("font weight/"):
             return str(WEIGHTS.get(str(val).lower(), val))
         if v["n"].lower().startswith("font family/"):
@@ -129,6 +142,14 @@ def build_css(data):
                     mobile.append(line)
                 else:
                     other.setdefault(c["modes"][i], []).append(line)
+    # Elevation levels as ready-to-use box-shadow values built from the variables.
+    levels = elevation_levels(cols)
+    if levels:
+        root.append("  /* Elevation (box-shadow values composed from the variables above) */")
+        for n in levels:
+            b = "--brand-elevation-%s" % n
+            root.append("  --elevation-%s: 0 var(%s-key-y) var(%s-key-blur) var(--mapped-shadow-key), "
+                        "0 var(%s-ambient-y) var(%s-ambient-blur) var(--mapped-shadow-ambient);" % (n, b, b, b, b))
     lines.append(":root {")
     lines += root
     lines.append("}")
@@ -145,12 +166,22 @@ def build_css(data):
     return "\n".join(lines) + "\n"
 
 
+def easing_points(val):
+    """'cubic-bezier(0.2, 0, 0, 1)' -> [0.2, 0, 0, 1] (DTCG cubicBezier). 'linear' -> [0, 0, 1, 1]."""
+    m = re.match(r"cubic-bezier\(([^)]+)\)", str(val).strip())
+    if m:
+        return [float(x) for x in m.group(1).split(",")]
+    return [0, 0, 1, 1]
+
+
 def dtcg_type(v):
     n = v["n"].lower()
     if v["t"] == "COLOR":
         return "color"
     if v["t"] == "FLOAT":
-        return "dimension"
+        return "duration" if n.startswith("motion/duration/") else "dimension"
+    if n.startswith("motion/easing/"):
+        return "cubicBezier"
     if n.startswith("font family/"):
         return "fontFamily"
     if n.startswith("font weight/"):
@@ -165,7 +196,10 @@ def dtcg_value(v, val, cols):
     if v["t"] == "COLOR":
         return val.lower()
     if v["t"] == "FLOAT":
-        return "%spx" % (int(val) if float(val).is_integer() else round(val, 4))
+        num = int(val) if float(val).is_integer() else round(val, 4)
+        return "%sms" % num if v["n"].lower().startswith("motion/duration/") else "%spx" % num
+    if v["n"].lower().startswith("motion/easing/"):
+        return easing_points(val)
     if v["n"].lower().startswith("font weight/"):
         return WEIGHTS.get(str(val).lower(), val)
     return val
@@ -214,13 +248,22 @@ def build_tailwind(data):
                 lines.append("  --color-%s: %s;" % ("-".join(slug(p) for p in v["n"].split("/")), ref(c, v)))
     b = by.get("brand")
     if b:
-        groups = [("spacing/", "spacing"), ("radius/", "radius"), ("font family/", "font"), ("font weight/", "font-weight")]
+        groups = [("spacing/", "spacing"), ("radius/", "radius"), ("font family/", "font"), ("font weight/", "font-weight"),
+                  ("motion/easing/", "ease")]
         for prefix, ns in groups:
             vs = [v for v in b["variables"] if v["n"].lower().startswith(prefix)]
             if vs:
                 lines.append("  /* %s */" % ns)
             for v in vs:
-                lines.append("  --%s-%s: %s;" % (ns, slug(v["n"].split("/", 1)[1]), ref(b, v)))
+                key = v["n"].split("/", 1)[1]
+                if ns == "ease":
+                    key = key.split("/", 1)[1]
+                lines.append("  --%s-%s: %s;" % (ns, slug(key), ref(b, v)))
+    levels = elevation_levels(cols)
+    if levels:
+        lines.append("  /* shadow */")
+        for n in levels:
+            lines.append("  --shadow-elevation-%s: var(--elevation-%s);" % (n, n))
     lines.append("}")
     return "\n".join(lines) + "\n"
 

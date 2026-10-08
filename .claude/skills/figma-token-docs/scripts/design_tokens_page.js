@@ -16,13 +16,13 @@
 
 // ---- CONFIG ----
 const PAGE = "Design Tokens";
-const SECTIONS = ["all"]; // "all", or any of: header, contents, guide, names, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border, sizing, elevation
+const SECTIONS = ["all"]; // "all", or any of: header, contents, guide, names, health, brand, alias, mapped, contrast, typography, fonts, spacing, radius, border, sizing, elevation, motion
 const DRY_RUN = false;    // true = report what would be built, write nothing
 const EXPECT_FILE = "";   // optional file name guard, e.g. "Design System MB"
 // ---- END CONFIG ----
 
 const TAG = "figma-token-docs";
-const ORDER = ["header", "contents", "guide", "names", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border", "sizing", "elevation"];
+const ORDER = ["header", "contents", "guide", "names", "health", "brand", "alias", "mapped", "contrast", "typography", "fonts", "spacing", "radius", "border", "sizing", "elevation", "motion"];
 const W = 1440, PAD = 80, CONTENT = W - PAD * 2; // 1280
 
 const low = (s) => String(s).trim().toLowerCase();
@@ -295,7 +295,8 @@ const TOC = {
   radius: ["Border radius", "Corner radius scale, from square to pill."],
   border: ["Border width", "Stroke weights from none to heavy."],
   sizing: ["Sizing", "Icon sizes, control heights and avatars, drawn at their real size."],
-  elevation: ["Elevation", "Five shadow levels, in Light and Dark, applied to real cards."]
+  elevation: ["Elevation", "Five shadow levels, in Light and Dark, applied to real cards."],
+  motion: ["Motion", "Durations as bars and easing curves as drawn curves, for code."]
 };
 SECTION_FN.contents = async () => {
   const c = await section("contents", "Contents", "Click a title to jump to that frame. Each frame has a link back here. In Present mode, click a card.");
@@ -320,6 +321,7 @@ SECTION_FN.contents = async () => {
     if (id === "radius") return count("radius/") + " steps";
     if (id === "border") return count("border width/") + " steps";
     if (id === "sizing") return count("size/") + " sizes · icons, controls, avatars";
+    if (id === "motion") return count("motion/duration/") + " durations · " + count("motion/easing/") + " easings";
     if (id === "elevation") return count("elevation/") / 4 + " levels · 2 shadows each";
     return "";
   };
@@ -389,6 +391,8 @@ const GUIDE = [
     ["Border width", "The whole scale"], ["Border width/0-5", "One step (2px)"] ] },
   { name: "figma-sizing", does: "Writes icon, control and avatar sizes to Brand as numbers.", rows: [
     ["Sizing", "All three groups: Icon, Control, Avatar"], ["Sizing/Icon", "One group"] ] },
+  { name: "figma-motion", does: "Writes animation durations and easing curves to Brand, for code.", rows: [
+    ["Motion", "Durations (ms) and easing curves"], ["Motion/Easing", "One group"] ] },
   { name: "figma-elevation", does: "Builds shadows as tokens and 5 effect styles that follow Light and Dark.", rows: [
     ["Elevation", "Shadow colors, offsets and blurs, plus Elevation/1 to 5"], ["Elevation/3", "One level"] ] },
   { name: "figma-token-docs", does: "Builds or refreshes this page from the live variables and styles.", rows: [
@@ -401,7 +405,7 @@ const BUILD_ORDER = [
   ["1", "figma-color-scale", "Brand colors"],
   ["2", "figma-alias-bridge", "Roles"],
   ["3", "figma-mapped-roles", "Usage"],
-  ["4", "spacing, radius, border width, sizing, elevation, type scale", "Primitives"],
+  ["4", "spacing, radius, border width, sizing, elevation, motion, type scale", "Primitives"],
   ["5", "figma-token-docs", "This page"],
   ["6", "figma-export-tokens", "Code for developers"]
 ];
@@ -586,6 +590,7 @@ SECTION_FN.health = async () => {
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("radius/")))) missingPrims.push("Radius (/figma-radius)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("border width/")))) missingPrims.push("Border width (/figma-border-width)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("size/")))) missingPrims.push("Sizing (/figma-sizing)");
+  if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("motion/")))) missingPrims.push("Motion (/figma-motion)");
   if (!(brand && varsOf(brand).some((v) => low(v.name).startsWith("elevation/")))) missingPrims.push("Elevation (/figma-elevation)");
   if (!(responsive && responsive.modes.length >= 2)) missingPrims.push("Responsive with Desktop and Mobile (/figma-type-scale Typography)");
   if (missingPrims.length) add("note", "Not built yet: " + missingPrims.join(", "), "", "");
@@ -918,6 +923,61 @@ SECTION_FN.sizing = async () => {
     }
   }
   built.sizing = vars.length;
+};
+
+// ===================== motion =====================
+SECTION_FN.motion = async () => {
+  const c = await section("motion", "Motion", "Durations and easing curves, for code. Figma variables cannot drive prototype animation, so these are exported to CSS. A bar is 1px per millisecond and is bound to its variable.");
+  const vars = brand ? varsOf(brand).filter((v) => low(v.name).startsWith("motion/")) : [];
+  if (!vars.length) { await sectionNote(c, "No Motion variables in Brand. Run /figma-motion."); built.motion = 0; return; }
+  const val = (v) => v.valuesByMode[brand.defaultModeId];
+  // Descriptions read "NAME = VALUE. USE. [figma-motion]". Split on dot-space so a dot inside a number (0.2) is safe.
+  const useOf = (v) => ((v.description || "").split(". ")[1] || "").replace(/\.$/, "");
+  const dur = vars.filter((v) => low(v.name).startsWith("motion/duration/") && v.resolvedType === "FLOAT").sort((a, b) => val(a) - val(b));
+  const eas = vars.filter((v) => low(v.name).startsWith("motion/easing/") && v.resolvedType === "STRING");
+  if (dur.length) {
+    const block = F(c, "Durations", { dir: "VERTICAL", gap: 16 });
+    await T(block, "Duration", "Heading/H4", { color: tHead });
+    const list = F(block, "List", { dir: "VERTICAL", gap: 14 });
+    for (const v of dur) {
+      const row = F(list, v.name, { dir: "HORIZONTAL", gap: 24, align: "CENTER" });
+      await T(row, v.name.split("/").pop(), "Label/Default", { color: tHead, w: 100 });
+      await T(row, val(v) + " ms", "Caption/Default", { color: tMuted, w: 70 });
+      const bar = R(row, "Bar", Math.max(val(v), 1), 16, { fill: mv("Surface/action"), radius: rad1 });
+      bar.setBoundVariable("width", v);
+      await T(row, useOf(v), "Body/Small", { color: tBody, w: 420 });
+    }
+  }
+  if (eas.length) {
+    const block = F(c, "Easing", { dir: "VERTICAL", gap: 16 });
+    await T(block, "Easing", "Heading/H4", { color: tHead });
+    const wrap = F(block, "Curves", { dir: "HORIZONTAL", gap: 32, gapY: 32, wrap: true, w: CONTENT });
+    const S = 160;
+    for (const v of eas) {
+      const raw = String(val(v));
+      const m = raw.match(/cubic-bezier\(([^)]+)\)/);
+      const [x1, y1, x2, y2] = m ? m[1].split(",").map((n) => parseFloat(n)) : [0, 0, 1, 1];
+      const cell = F(wrap, v.name, { dir: "VERTICAL", gap: 10, w: 260 });
+      const g = figma.createFrame();
+      g.name = "Curve"; g.resize(S, S); g.clipsContent = false; g.layoutMode = "NONE";
+      g.fills = [paint(mv("Surface/default"))];
+      for (const k of ["topLeftRadius", "topRightRadius", "bottomLeftRadius", "bottomRightRadius"]) g.setBoundVariable(k, rad2);
+      strokeOf(g, lineColor, hair);
+      cell.appendChild(g);
+      const d = "M 0 " + S + " C " + (x1 * S) + " " + (S - y1 * S) + " " + (x2 * S) + " " + (S - y2 * S) + " " + S + " 0";
+      const vec = figma.createVector();
+      vec.vectorPaths = [{ windingRule: "NONE", data: d }];
+      vec.fills = [];
+      vec.strokes = [paint(mv("Text/action"))];
+      vec.strokeWeight = 3;
+      g.appendChild(vec);
+      vec.x = 0; vec.y = 0;
+      await T(cell, v.name.split("/").pop(), "Label/Default", { color: tHead, w: 260 });
+      await T(cell, raw, "Caption/Default", { color: tMuted, w: 260 });
+      await T(cell, useOf(v), "Body/Small", { color: tBody, w: 260 });
+    }
+  }
+  built.motion = dur.length + eas.length;
 };
 
 // ===================== elevation =====================
