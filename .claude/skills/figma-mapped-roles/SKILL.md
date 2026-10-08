@@ -70,8 +70,13 @@ Dark values start from **mirroring the step** inside the same Alias group: 50 an
 Mirroring alone breaks a few pairs, so the preset carries a short list of exceptions. They exist only where the mirrored value fails contrast:
 
 - A solid action or status surface keeps its brand color in dark, so its hover and pressed states keep their steps and the content on it keeps its color too (`text/on-action` stays white).
-- A 500 used as text or as a line on a dark surface is too dim, so `text/action`, `icon/action`, `border/action`, `border/focus` and `border/selected` move to lighter steps in dark (300, then 200 and 100 for hover and pressed).
+- A 500 used as text or as a line on a dark surface is too dim, so `text/action`, `icon/action`, `border/action`, `border/focus` and `border/selected` move to lighter steps in dark (300, then 200 and 100 for hover and pressed; `text/action` and `icon/action` go one further, see below).
 - `text/information` and `border/information` move one step lighter than the mirror for the same reason.
+- A tinted surface would mirror to step 950, which is near black and invisible on a dark page. So the four `surface/*-secondary` status tints use step 900 in dark. The brand tints `surface/action-secondary` and `surface/selected` use 800 and `action-secondary-hover` uses 700, because a dark brand color such as Plum is already near black at 900.
+- Because dark cards are lighter than the page, `text/action`, `icon/action` (and their hover and pressed states) and `border/default` move one step lighter than the mirror so they keep their contrast on a card. Text links use 200, 100 and 50.
+- Surfaces step up in lightness in dark so raised layers read as raised: page is Neutral 950, `surface/default` 900, `secondary` 800 and `tertiary` 700 (`disabled` 800). Borders follow: `border/secondary` is 700, `tertiary` and `disabled` are 800.
+
+The neutral scale needs visible steps between 950 and 600 for this to work. A near-black scale (a color like Midnight used as Neutral) makes every dark surface collapse into the same black, which is why `Alias/Neutral` is fixed to `Brand/Gray`.
 
 These are a starting point, as the mirroring itself is. Taste-level tuning, such as a softer page background in dark, is the user's call after testing, and the script protects whatever they tune (see below).
 

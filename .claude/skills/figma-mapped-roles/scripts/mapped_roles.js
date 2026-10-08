@@ -25,6 +25,10 @@ const TARGET = "Mapped";
 // Row: [name, light, dark, use]. Light and dark are variables of the Alias collection.
 // dark null = the mirrored step of light (50<->950, 100<->900 ... 500 stays, White<->Black).
 // dark KEEP = same as light. A named dark is an exception where mirroring fails contrast.
+// Dark exceptions also cover visibility: a mirrored 950 tint (action-secondary, selected, the status
+// -secondary surfaces) is invisible on a near-black page, so tints use 900 (800 on hover), and surfaces
+// step up in lightness (page 950, default 900, secondary 800, tertiary 700) so raised layers read as raised.
+// Text links and the default control border move one step lighter in dark so they keep their contrast on the lighter card.
 const KEEP = "=";
 const N = "Neutral/", P = "Primary/", WHITE = "Foundation/White";
 const ROLES = ["error", "success", "warning", "information"];
@@ -40,9 +44,9 @@ const TEXT = [
   ["helper", N + 600, null, "Hint text under inputs"],
   ["placeholder", N + 400, null, "Input placeholders"],
   ["disabled", N + 300, null, "Disabled text"],
-  ["action", P + 500, P + 300, "Text links"],
-  ["action-hover", P + 600, P + 200, "Text link, hover"],
-  ["action-pressed", P + 700, P + 100, "Text link, pressed"],
+  ["action", P + 500, P + 200, "Text links"],
+  ["action-hover", P + 600, P + 100, "Text link, hover"],
+  ["action-pressed", P + 700, P + 50, "Text link, pressed"],
   ["error", "Error/600", null, "Error message on neutral surfaces"],
   ["success", "Success/600", null, "Success message on neutral surfaces"],
   ["warning", "Warning/700", null, "Warning message on neutral surfaces"],
@@ -65,26 +69,26 @@ const ICON = TEXT.filter((r) => !NOT_ICONS.includes(r[0]))
 const PRESET = {
   Surface: [
     ["page", N + 50, null, "App background"],
-    ["default", WHITE, null, "Cards, panels, modals"],
-    ["secondary", N + 100, null, "Secondary sections, table stripes"],
-    ["tertiary", N + 200, null, "Wells, chips, tracks"],
+    ["default", WHITE, N + 900, "Cards, panels, modals"],
+    ["secondary", N + 100, N + 800, "Secondary sections, table stripes"],
+    ["tertiary", N + 200, N + 700, "Wells, chips, tracks"],
     ["inverse", N + 900, null, "Tooltips, dark sections"],
     ["overlay", N + 950, KEEP, "Scrim behind modals (set the opacity on the layer)"],
-    ["disabled", N + 100, null, "Disabled controls"],
+    ["disabled", N + 100, N + 800, "Disabled controls"],
     ["action", P + 500, null, "Filled buttons"],
     ["action-hover", P + 600, KEEP, "Filled button, hover"],
     ["action-pressed", P + 700, KEEP, "Filled button, pressed"],
-    ["action-secondary", P + 50, null, "Secondary button fill"],
-    ["action-secondary-hover", P + 100, null, "Secondary button fill, hover"],
-    ["selected", P + 50, null, "Selected rows, active nav item"],
+    ["action-secondary", P + 50, P + 800, "Secondary button fill"],
+    ["action-secondary-hover", P + 100, P + 700, "Secondary button fill, hover"],
+    ["selected", P + 50, P + 800, "Selected rows, active nav item"],
     ...ROLES.map((r) => [r, cap(r) + "/500", null, "Solid " + r + " badges, toasts"]),
-    ...ROLES.map((r) => [r + "-secondary", cap(r) + "/50", null, "Tinted " + r + " banners, alerts"])
+    ...ROLES.map((r) => [r + "-secondary", cap(r) + "/50", cap(r) + "/900", "Tinted " + r + " banners, alerts"])
   ],
   Border: [
-    ["default", N + 400, null, "Input outlines, controls"],
-    ["secondary", N + 200, null, "Cards, dividers"],
-    ["tertiary", N + 100, null, "Light separators"],
-    ["disabled", N + 200, null, "Disabled controls"],
+    ["default", N + 400, N + 500, "Input outlines, controls"],
+    ["secondary", N + 200, N + 700, "Cards, dividers"],
+    ["tertiary", N + 100, N + 800, "Light separators"],
+    ["disabled", N + 200, N + 800, "Disabled controls"],
     ["action", P + 500, P + 300, "Outlined buttons"],
     ["action-hover", P + 600, P + 200, "Outlined button, hover"],
     ["action-pressed", P + 700, P + 100, "Outlined button, pressed"],
