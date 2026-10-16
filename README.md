@@ -1,6 +1,8 @@
 # Figma Design Tokens Starter Kit
 
-Type one short line, get real **Figma variables and text styles** written to your open file. Eleven Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width, motion and typography), a visual **Design Tokens** page that documents it, and code exports for developers.
+[![tests](https://github.com/manolobevia/design-tokens-starter-kit/actions/workflows/tests.yml/badge.svg)](https://github.com/manolobevia/design-tokens-starter-kit/actions/workflows/tests.yml)
+
+Type one short line, get real **Figma variables and text styles** written to your open file. Twelve Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width, motion and typography), a visual **Design Tokens** page that documents it, and code exports for developers.
 
 ![The Design Tokens page the skills build in Figma: a clickable contents frame with a card per section](docs/design-tokens-contents.png)
 
@@ -268,6 +270,8 @@ The color math and the code export have tests (standard library only, no install
 ```bash
 python3 -m unittest discover tests
 ```
+
+`tests/test_repo.py` checks that every skill has a name matching its folder and a description under 200 characters, and that every Figma script parses (this needs Node, and is skipped without it). GitHub runs all of these on every push (see `.github/workflows/tests.yml`).
 
 `tests/test_color_scale.py` checks the 11-step scales against the reference values in `figma-color-scale/SKILL.md`, the input forms and the `-default` preset. `tests/test_build_tokens.py` checks the CSS, DTCG and Tailwind output, including references, Dark and Mobile modes and the seconds-to-milliseconds conversion for motion.
 
