@@ -38,7 +38,7 @@ variables in Brand.
 - **Trigger:** a line in the form `Name:#HEX`, for example `Purple:#5C3FC4`.
   Several colors can arrive in one message, one per line. `-default` adds Red,
   Blue, Orange, Green and Gray scales plus Foundation (White, Black);
-  `Foundation` adds only the last.
+  `Foundation` adds only the last, and `Foundation White:#FAFAF7 Black:#0B0B0D` sets your own white and/or black (single variables, never a scale).
 - **Method:** the hex is the 500 Default. Darker steps lower the base color's
   opacity over pure black, lighter steps over pure white, in 20% increments,
   with the two ends (950 and 50) at 10%. This reproduces the manual Figma

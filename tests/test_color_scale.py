@@ -79,5 +79,39 @@ class Presets(unittest.TestCase):
         self.assertEqual(reds[0]["base"], "#FF0000")
 
 
+class FoundationOverrides(unittest.TestCase):
+    def run_cli(self, *args):
+        out = subprocess.run([sys.executable, str(SCRIPT), *args], capture_output=True, text=True)
+        return out.returncode, (json.loads(out.stdout) if out.stdout.strip().startswith("[") else out.stdout), out.stderr
+
+    def foundation(self, data):
+        return {s["step"]: s["hex"] for r in data if r["name"] == "Foundation" for s in r["steps"]}
+
+    def test_override_both_as_separate_arguments(self):
+        rc, data, _ = self.run_cli("Foundation", "White:#FAFAF7", "Black:#0b0b0d")
+        self.assertEqual(rc, 0)
+        self.assertEqual(self.foundation(data), {"White": "#FAFAF7", "Black": "#0B0B0D"})
+        self.assertEqual([r["name"] for r in data], ["Foundation"], "White and Black must not become color scales")
+
+    def test_override_one_keeps_the_other_default(self):
+        _, data, _ = self.run_cli("Foundation/White:#fff0e0")
+        self.assertEqual(self.foundation(data), {"White": "#FFF0E0", "Black": "#000000"})
+
+    def test_override_as_one_quoted_argument(self):
+        _, data, _ = self.run_cli("Foundation White:#FAFAF7 Black:#0B0B0D")
+        self.assertEqual(self.foundation(data), {"White": "#FAFAF7", "Black": "#0B0B0D"})
+
+    def test_override_wins_over_default_in_either_order(self):
+        for args in (["-default", "Foundation/Black:#111"], ["Foundation/Black:#111", "-default"]):
+            _, data, _ = self.run_cli(*args)
+            self.assertEqual(self.foundation(data)["Black"], "#111111")
+            self.assertEqual(len([r for r in data if r["name"] == "Foundation"]), 1)
+
+    def test_bad_foundation_name_is_refused(self):
+        rc, _, err = self.run_cli("Foundation/Red:#fff")
+        self.assertEqual(rc, 2)
+        self.assertIn("Foundation/White", err)
+
+
 if __name__ == "__main__":
     unittest.main()

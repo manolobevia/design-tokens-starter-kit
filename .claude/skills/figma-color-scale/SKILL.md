@@ -22,6 +22,7 @@ Turns one base color into an 11-step scale (950 to 50) in the Brand collection.
   several colors          One per line, or separated by spaces or commas
   -default                Red, Blue, Orange, Green, Gray, plus Foundation
   Foundation              Only Foundation/White and Foundation/Black
+  Foundation White:#FAFAF7 Black:#0B0B0D   Your own white and/or black (either one alone works)
   -default Purple:#3B1A53 The default set plus your own color
   dry run                 Preview only, writes nothing
 ```
@@ -42,8 +43,9 @@ Two extra triggers add the standard system colors without typing hexes:
 |---|---|
 | `-default` | Red (error), Blue (information), Orange (warning), Green (success), Gray (neutral), each a full scale, plus Foundation |
 | `Foundation` | Only `Foundation/White` (#FFFFFF) and `Foundation/Black` (#000000), single variables, not scales |
+| `Foundation White:#FAFAF7 Black:#0B0B0D` | Your own white and/or black, as single variables. Name only the one you want to change; the other keeps its default. `Foundation/White:#FAFAF7` also works |
 
-They combine with typed colors, for example `-default` followed by `Purple:#3B1A53`. A color typed by the user wins over the preset color of the same name. Pass `-default` or `Foundation` to the script as an argument and use its output like any other color. Foundation steps are not scales, so create them as plain variables with no 500 Default.
+They combine with typed colors, for example `-default` followed by `Purple:#3B1A53`. A color typed by the user wins over the preset color of the same name. Pass `-default`, `Foundation` or a Foundation override to the script as arguments (`Foundation White:#FAFAF7` as `Foundation`, then `White:#FAFAF7`, or as one `Foundation/White:#FAFAF7`; a Foundation override wins over the preset hex, and Foundation is never turned into a scale) and use its output like any other color. Foundation steps are not scales, so create them as plain variables with no 500 Default.
 
 A message in this format is the whole request and the go-ahead. Build the scale and write it to Figma without asking for confirmation first, because the user designed this to be a one-line action. The only reasons to stop and ask are listed under "When to ask".
 

@@ -68,6 +68,7 @@ Every skill reads one typed line. These are all the forms each one accepts.
 | Several colors | One per line, or separated by spaces or commas |
 | `-default` | Red (error), Blue (information), Orange (warning), Green (success), Gray, plus Foundation |
 | `Foundation` | Only `Foundation/White` and `Foundation/Black` |
+| `Foundation White:#FAFAF7 Black:#0B0B0D` | Your own white and/or black. Either one alone works |
 
 `-default` can be combined with your own colors. A color you type wins over the preset one of the same name. All colors go in the `Brand` collection.
 

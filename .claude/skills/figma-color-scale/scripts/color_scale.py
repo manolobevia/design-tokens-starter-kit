@@ -6,6 +6,8 @@ Usage:
     python color_scale.py --table "Purple:#5C3FC4"
     python color_scale.py -default            # Red, Blue, Orange, Green, Gray + Foundation
     python color_scale.py Foundation          # White and Black only
+    python color_scale.py Foundation White:#FAFAF7 Black:#0B0B0D   # your own white and/or black
+    python color_scale.py Foundation/White:#FAFAF7                 # same, one color, one argument
 
 The base color is the 500 step. Every other step is the base color at a
 given opacity, flattened over pure black (darker steps) or pure white
@@ -87,9 +89,26 @@ def scale(name, hx):
     return {"name": name, "base": f"#{hx}", "steps": steps}
 
 
-def foundation():
-    steps = [{"variable": f"Foundation/{n}", "step": n, "hex": hx} for n, hx in FOUNDATION]
+def foundation(overrides=None):
+    """White and Black as single variables. overrides = {"White": "FAFAF7"} replaces a default."""
+    overrides = overrides or {}
+    steps = [{"variable": f"Foundation/{n}", "step": n, "hex": "#" + overrides.get(n, hx.lstrip("#")).upper()}
+             for n, hx in FOUNDATION]
     return {"name": "Foundation", "base": None, "steps": steps}
+
+
+FOUNDATION_LINE = re.compile(
+    r"(?:^|\s|/)(white|black)\s*[:=]\s*#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})(?![0-9a-fA-F])", re.I)
+
+
+def foundation_overrides(text):
+    """Pick White/Black hexes out of 'Foundation White:#FAFAF7 Black:#0B0B0D' or 'Foundation/White:#FAFAF7'."""
+    out = {}
+    for name, hx in FOUNDATION_LINE.findall(text):
+        if len(hx) == 3:
+            hx = "".join(c * 2 for c in hx)
+        out[name.capitalize()] = hx.upper()
+    return out
 
 
 def table(result):
@@ -112,18 +131,37 @@ def main(argv):
         return 1
     results, seen = [], set()
     try:
-        for a in args:
+        scales, found, presets = [], None, []
+        i = 0
+        while i < len(args):
+            a = args[i]
             key = a.strip().lower()
             if key in ("-default", "--default"):
-                items = [scale(*parse(c)) for c in DEFAULT_COLORS] + [foundation()]
-            elif key == "foundation":
-                items = [foundation()]
+                presets.append("default")
+            elif key == "foundation" or key.startswith(("foundation ", "foundation/")):
+                found = found or {}
+                found.update(foundation_overrides(a))
+                # "Foundation White:#FAFAF7 Black:#0B0B0D" arrives as separate arguments: take the ones that follow
+                while key == "foundation" and i + 1 < len(args) and args[i + 1].strip().lower().startswith(("white", "black")):
+                    i += 1
+                    ov = foundation_overrides(args[i])
+                    if not ov:
+                        raise ValueError(f"Could not read '{args[i]}'. Expected White:#RRGGBB or Black:#RRGGBB after Foundation")
+                    found.update(ov)
+                if key != "foundation" and not foundation_overrides(a):
+                    raise ValueError(f"Could not read '{a}'. Expected Foundation/White:#RRGGBB or Foundation/Black:#RRGGBB")
             else:
-                items = [scale(*parse(a))]
-            for r in items:
-                if r["name"] not in seen:  # explicit colors typed first win over the preset
-                    seen.add(r["name"])
-                    results.append(r)
+                scales.append(scale(*parse(a)))
+            i += 1
+        items = scales[:]
+        if found is not None:
+            items.append(foundation(found))
+        if presets:  # the preset fills only what the user did not type
+            items += [scale(*parse(c)) for c in DEFAULT_COLORS] + [foundation()]
+        for r in items:
+            if r["name"] not in seen:  # explicit colors typed win over the preset
+                seen.add(r["name"])
+                results.append(r)
     except ValueError as e:
         print(str(e), file=sys.stderr)
         return 2
