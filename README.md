@@ -36,6 +36,7 @@ Every Alias variable references a Brand variable. Every Mapped variable referenc
 | `figma-radius` | `Border radius` | Border-radius scale in **Brand** |
 | `figma-border-width` | `Border width` | Border-weight scale in **Brand** |
 | `figma-motion` | `Motion` | Duration (TIMING) and easing (EASING) variables in **Brand** |
+| `figma-contrast-fix` | `Contrast fix` | A preview frame of failing text and border pairs with a passing fix; `apply` retargets **Mapped** variables |
 | `figma-token-docs` | `Design Tokens` | A **Design Tokens** page in Figma showing the whole system |
 | `figma-export-tokens` | `Export tokens` | `tokens.css`, `tokens.tokens.json` and `tailwind.theme.css` for developers |
 | `figma-starter` | `/figma-starter Plum:#3B1A53 ...` | Runs all of the above in order from your brand colors and fonts |
@@ -51,7 +52,8 @@ Run the skills in this order, because each tier references the one before it:
 3. **`figma-mapped-roles`**: build the usage tier on top of Alias.
 4. **`figma-spacing`**, **`figma-radius`**, **`figma-border-width`**, **`figma-motion`** and **`figma-type-scale`**: the non-color primitives. These don't depend on the color steps, so run them any time after step 1.
 5. **`figma-token-docs`**: builds the Design Tokens page. Run it last, and again whenever tokens change.
-6. **`figma-export-tokens`**: writes the tokens as code files for developers. Run it whenever tokens change.
+6. **`figma-contrast-fix`**: when the page shows failing contrast, preview a passing fix for each pair, then apply the ones you choose.
+7. **`figma-export-tokens`**: writes the tokens as code files for developers. Run it whenever tokens change.
 
 ## Parameters
 
@@ -167,6 +169,18 @@ Durations are Figma's native `TIMING` variables (XFast 250, Fast 500, Default 10
 | `Design Tokens` | Build or refresh the whole page |
 
 The page opens with a clickable Contents (a card per frame with a live stat, and a link back from every frame), a short How to use guide (a card per skill, like this README) a How names work frame (the naming rules and a short Do and Don't), and a Token health frame (what needs attention, with the fix to run), then shows Brand color scales, Alias roles, Mapped usage in Light and Dark, contrast checks, every text style in Desktop and Mobile, font families and weights, spacing, border radius and border width. Each section is its own frame on the page, so you can find, link to or copy one at a time. Everything is bound to your variables and styles, so rerun it after a token changes. Sections whose tokens don't exist yet show a one-line note.
+
+### `figma-contrast-fix`
+
+| Type | Result |
+|---|---|
+| `Contrast fix` | Preview: builds a **Contrast fixes (preview)** frame below the Contrast checks frame. Each failing pair is a row such as `Light · action-hover on default · 4.45:1, needs 4.5:1`, with a box in the current colors next to a box with a passing fix. Variables are not changed |
+| `Contrast fix apply` | Applies every fix |
+| `Contrast fix apply Text/action Border/error` | Applies the fix for those Mapped variables only |
+| `Contrast fix apply dark` | Applies only the Dark mode (`light` works too) |
+| `dry run` | With `apply`: lists the changes and writes nothing |
+
+A fix is the closest step of the same Alias role that passes on every surface the variable is used on, so the color changes as little as possible. It points the Mapped variable at that step (a reference, never a hex) and never edits Brand or Alias. If no single step passes (for example white or dark text on a button's three states), it says so and changes nothing: change the surface instead. To undo a fix, use `reset Mapped/Text` (`figma-mapped-roles`). Rerun `Design Tokens` afterward to refresh the page.
 
 ### `figma-type-scale`
 

@@ -121,6 +121,21 @@ replaced.
   and dry-run.
 - **Writes to:** Brand, under Motion.
 
+### figma-contrast-fix
+Finds Mapped Text and Border pairs that fail WCAG AA (4.5:1 text, 3:1 borders)
+in Light and Dark, previews a passing fix for each, and applies fixes on request.
+- **Trigger:** `Contrast fix` (preview frame, no variable changes),
+  `Contrast fix apply` (all fixes), `Contrast fix apply Text/action` (one
+  variable), `Contrast fix apply dark`. `dry run` lists changes without writing.
+- **Method:** per Mapped variable and mode, the closest step of the same Alias
+  role that passes on every surface it is used on. `Text/on-*` tries Neutral
+  950/900 and Foundation Black/White. Where no single step passes it reports the
+  group as unfixable and changes nothing.
+- **Rules:** applying is a separate request from previewing, because a fix can
+  be a brand decision. Never edits Brand or Alias, never writes a hex.
+- **Writes to:** a preview frame on the Design Tokens page; on apply, Mapped
+  (and the matching Icon variable) as references into Alias.
+
 ### figma-token-docs
 Builds a page named Design Tokens that documents the whole system visually:
 a clickable Contents (card per frame with a live stat, links to each frame and
@@ -176,6 +191,7 @@ Tokens page.
 4. `figma-spacing`, `figma-radius`, `figma-border-width` and `figma-type-scale`
    for the non-color primitives.
 5. `figma-token-docs` to build the Design Tokens page (rerun when tokens change).
+6. `figma-contrast-fix` when the page shows failing contrast (preview first).
 
 ## Repo tooling
 

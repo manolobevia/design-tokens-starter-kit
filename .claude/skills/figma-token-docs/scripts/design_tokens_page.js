@@ -392,6 +392,10 @@ const GUIDE = [
     ["Border width", "The whole scale"], ["Border width/0-5", "One step (2px)"] ] },
   { name: "figma-motion", does: "Writes durations and easing curves to Brand as native TIMING and EASING variables.", rows: [
     ["Motion", "Durations (ms) and easing curves"], ["Motion/Easing", "One group"] ] },
+  { name: "figma-contrast-fix", does: "Previews a passing fix for each failing contrast pair, then applies the ones you choose.", rows: [
+    ["Contrast fix", "A preview frame, current next to fix. Changes nothing"],
+    ["Contrast fix apply", "Apply every fix"],
+    ["Contrast fix apply Text/action", "Apply one variable"] ] },
   { name: "figma-token-docs", does: "Builds or refreshes this page from the live variables and styles.", rows: [
     ["Design Tokens", "The whole page. Rerun it after a token changes"] ] },
   { name: "figma-export-tokens", does: "Writes the tokens as code for developers: CSS, JSON and a Tailwind v4 theme.", rows: [
@@ -505,7 +509,7 @@ SECTION_FN.health = async () => {
   const fails = [];
   for (const r of rows) for (const k of ["light", "dark"]) if (pass(r, k) === false) fails.push((k === "light" ? "Light" : "Dark") + " " + r.fg.replace("Text/", "").replace("Border/", "border ") + " on " + r.bg.replace("Surface/", "") + " " + r[k].toFixed(2) + ":1 (needs " + r.min + ")");
   if (!rows.length) add("issue", "Contrast could not be checked", "The Mapped collection has no pairs to check.", "Run /figma-mapped-roles Mapped.");
-  else if (fails.length) add("issue", fails.length + " contrast pair" + (fails.length === 1 ? "" : "s") + " do not pass WCAG AA", list(fails), "Retarget one variable with an arrow line, for example Alias/Success/700 -> Mapped/Text/success. The Contrast frame lists every pair.");
+  else if (fails.length) add("issue", fails.length + " contrast pair" + (fails.length === 1 ? "" : "s") + " do not pass WCAG AA", list(fails), "Retarget one variable with an arrow line, for example Alias/Success/700 -> Mapped/Text/success. The Contrast frame lists every pair. Run /figma-contrast-fix to preview fixes.");
   else add("ok", "Every checked contrast pair passes in Light and Dark");
 
   // 2. Missing Mapped variables
