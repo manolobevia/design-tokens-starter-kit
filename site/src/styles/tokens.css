@@ -65,6 +65,7 @@
   --surface-action: var(--alias-primary-400);
   --surface-action-hover: var(--alias-primary-300);
   --border-default: var(--alias-neutral-700);
+  --border-control: var(--alias-neutral-500);
   --border-focus: var(--alias-primary-300);
   --glow: var(--alias-primary-500);
 
@@ -83,6 +84,7 @@
   --surface-action: var(--alias-primary-400);
   --surface-action-hover: var(--alias-primary-300);
   --border-default: var(--alias-neutral-300);
+  --border-control: var(--alias-neutral-500);
   --border-focus: var(--alias-primary-700);
 
   color-scheme: light;
