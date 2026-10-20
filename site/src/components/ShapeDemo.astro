@@ -1,0 +1,24 @@
+---
+const radius: [string, number][] = [['0', 0], ['0-5', 2], ['1', 4], ['2', 8], ['3', 12], ['4', 16], ['6', 24], ['full', 9999]];
+const border: [string, number][] = [['0', 0], ['0-25', 1], ['0-5', 2], ['1', 4]];
+---
+<div class="d-box" data-shape style="--r:8px;--b:2px">
+  <p class="d-muted">Border radius</p>
+  <div class="d-chips" role="group" aria-label="Border radius token">
+    {radius.map(([t, px]) => <button type="button" class="d-chip" data-kind="radius" data-token={t} data-px={px} aria-pressed={t === '2' ? 'true' : 'false'}>{t}</button>)}
+  </div>
+  <p class="d-muted">Border width</p>
+  <div class="d-chips" role="group" aria-label="Border width token">
+    {border.map(([t, px]) => <button type="button" class="d-chip" data-kind="border" data-token={t} data-px={px} aria-pressed={t === '0-5' ? 'true' : 'false'}>{t}</button>)}
+  </div>
+  <div class="d-stage">
+    <div class="d-shape-card">
+      <button type="button" class="d-shape d-shape--fill" tabindex="-1">Button</button>
+      <span class="d-shape" style="padding: var(--brand-space-2) var(--brand-space-6)">Input</span>
+      <span class="d-shape-avatar" aria-hidden="true"></span>
+    </div>
+    <p class="d-label" data-label-radius>Border radius/2 = 8px</p>
+    <p class="d-label" data-label-border>Border width/0-5 = 2px</p>
+  </div>
+  <p class="d-muted">The card is capped at 28px so full stays readable.</p>
+</div>

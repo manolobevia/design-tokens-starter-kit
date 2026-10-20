@@ -1,0 +1,23 @@
+---
+const durations: [string, number][] = [['XFast', 250], ['Fast', 500], ['Default', 1000], ['Slow', 1500], ['XSlow', 2500]];
+const easings = ['Standard', 'Enter', 'Exit', 'Linear'];
+---
+<div class="d-box" data-motion>
+  <div class="d-chips" role="group" aria-label="Duration">
+    {durations.map(([t, ms]) => <button type="button" class="d-chip" data-dur={ms} data-name={t} aria-pressed={t === 'Default' ? 'true' : 'false'}>{t}</button>)}
+  </div>
+  <div class="d-chips" role="group" aria-label="Easing">
+    {easings.map((t) => <button type="button" class="d-chip" data-ease={t} aria-pressed={t === 'Standard' ? 'true' : 'false'}>{t}</button>)}
+  </div>
+  <div class="d-track" data-track><span class="d-dot" data-dot></span></div>
+  <div class="d-row">
+    <svg class="d-curve" viewBox="0 0 100 100" aria-hidden="true">
+      <line x1="0" y1="100" x2="100" y2="100" /><line x1="0" y1="0" x2="0" y2="100" />
+      <path data-curve d="M0,100 C20,100 0,0 100,0" />
+    </svg>
+    <div>
+      <p class="d-label" data-readout>Motion/Duration/Default = 1000ms<br />Motion/Easing/Standard = cubic-bezier(0.2, 0, 0, 1)</p>
+      <p style="margin-top: var(--brand-space-3)"><button type="button" class="d-btn" data-play>Play</button></p>
+    </div>
+  </div>
+</div>

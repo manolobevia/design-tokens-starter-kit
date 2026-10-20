@@ -1,16 +1,17 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import SkillCard from '../components/SkillCard.astro';
 import HeroDemo from '../components/HeroDemo.astro';
 import ColorDemo from '../components/ColorDemo.astro';
 import AliasDemo from '../components/AliasDemo.astro';
 import MappedDemo from '../components/MappedDemo.astro';
 import SpacingDemo from '../components/SpacingDemo.astro';
 import TypeDemo from '../components/TypeDemo.astro';
+import ShapeDemo from '../components/ShapeDemo.astro';
+import MotionDemo from '../components/MotionDemo.astro';
+import ContrastDemo from '../components/ContrastDemo.astro';
+import ExportDemo from '../components/ExportDemo.astro';
+import StarterDemo from '../components/StarterDemo.astro';
 
-const skills = (await getCollection('skills')).sort((a, b) => a.data.order - b.data.order);
-const more = skills.filter((s) => !s.data.core);
 
 const features = [
   {
@@ -52,6 +53,46 @@ const features = [
     body: 'Font variables, a size scale with a Desktop and a Mobile mode, and text styles bound to both. One command, no spreadsheet.',
     note: 'Default settings: base 16, ratio 1.25 Desktop and 1.2 Mobile.',
     line: 'Typography',
+  },
+  {
+    id: 'shape',
+    skill: 'figma-radius · figma-border-width',
+    title: 'Corners and borders, on a scale',
+    body: 'Border radius from square to a full pill, and four border weights, all in 4px units. Pick one of each and watch the same card, button and avatar follow.',
+    note: 'Interactive. The values are the two skills\u2019 fixed scales.',
+    line: 'Border radius',
+  },
+  {
+    id: 'motion',
+    skill: 'figma-motion',
+    title: 'Timing and easing you can feel',
+    body: 'Durations from 250ms to 2500ms and four easing curves, stored as Figma\u2019s own timing and easing variables.',
+    note: 'Interactive. The durations and curves are the skill\u2019s presets.',
+    line: 'Motion',
+  },
+  {
+    id: 'contrast',
+    skill: 'figma-contrast-fix',
+    title: 'Fix the colors that fail',
+    body: 'Finds Mapped pairs below WCAG AA and previews a passing step from the same role. Nothing changes until you ask to apply.',
+    note: 'Live demo of the rule, for one pair.',
+    line: 'Contrast fix',
+  },
+  {
+    id: 'export',
+    skill: 'figma-export-tokens',
+    title: 'Tokens as code',
+    body: 'CSS custom properties, W3C design tokens JSON and a Tailwind v4 theme, with references kept as references.',
+    note: 'A trimmed sample of the skill\u2019s real output.',
+    line: 'Export tokens',
+  },
+  {
+    id: 'starter',
+    skill: 'figma-starter',
+    title: 'The whole system from one line',
+    body: 'Give it one to four brand colors and a font pair. It runs every skill above in order, and a dry run shows the plan first.',
+    note: 'Scripted preview of the run order.',
+    line: '/figma-starter Plum:#3B1A53 ...',
   },
 ];
 
@@ -102,7 +143,7 @@ const faq = [
   <section class="section" id="skills">
     <div class="container">
       <h2>Twelve skills, one system</h2>
-      <p class="lead sub">Five do the core build. Try them below.</p>
+      <p class="lead sub">Every one of them, interactive. Try them below.</p>
       {features.map((f, i) => (
         <article class:list={['feature', { flip: i % 2 === 1 }]} id={f.id}>
           <div class="copy">
@@ -118,14 +159,27 @@ const faq = [
             {f.id === 'mapped' && <MappedDemo />}
             {f.id === 'spacing' && <SpacingDemo />}
             {f.id === 'type' && <TypeDemo />}
+            {f.id === 'shape' && <ShapeDemo />}
+            {f.id === 'motion' && <MotionDemo />}
+            {f.id === 'contrast' && <ContrastDemo />}
+            {f.id === 'export' && <ExportDemo />}
+            {f.id === 'starter' && <StarterDemo />}
           </div>
         </article>
       ))}
 
-      <h3 class="more-title">And seven more</h3>
-      <div class="grid">
-        {more.map((s) => <SkillCard {...s.data} />)}
-      </div>
+      <article class="docs" id="docs">
+        <div class="d-docs">
+          <div class="copy">
+            <p class="eyebrow">figma-token-docs</p>
+            <h3>A page that documents it all</h3>
+            <p>One frame per section, generated from your live variables. Rerun it after a change and the page refreshes.</p>
+            <p class="mono typed-line">Design Tokens</p>
+            <p class="note">A real screenshot of the Contents frame.</p>
+          </div>
+          <img class="d-shot" src="/design-tokens-contents.png" width="1440" height="1280" alt="The Contents frame of the Design Tokens page in Figma: a card for each section of the system" loading="lazy" />
+        </div>
+      </article>
     </div>
   </section>
 
@@ -173,6 +227,7 @@ const faq = [
 
 <script>
   import '../scripts/demos';
+  import '../scripts/demos2';
 </script>
 
 <style>
@@ -201,7 +256,7 @@ const faq = [
   .copy > p:not(.eyebrow):not(.typed-line):not(.note) { color: var(--text-secondary); }
   .typed-line { align-self: flex-start; background: var(--surface-sunken); color: var(--text-heading); padding: var(--brand-space-2) var(--brand-space-3); border-radius: var(--brand-radius-2); overflow-wrap: anywhere; }
   .note { color: var(--text-secondary); font-size: 0.85rem; }
-  .more-title { margin-top: var(--brand-space-24); }
+  .docs { margin-top: var(--brand-space-24); }
   .grid { margin-top: var(--brand-space-6); display: grid; gap: var(--brand-space-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
 
   .benefits { list-style: none; margin: var(--brand-space-8) 0 0; padding: 0; display: grid; gap: var(--brand-space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }

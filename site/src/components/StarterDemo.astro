@@ -1,0 +1,26 @@
+---
+const steps: [string, string][] = [
+  ['figma-color-scale', 'Plum:#3B1A53, Periwinkle:#8E7FAE, then -default'],
+  ['figma-alias-bridge', 'Primary, Secondary, then -default roles'],
+  ['figma-mapped-roles', 'Mapped, then Mapped dark'],
+  ['figma-spacing', 'Spacing'],
+  ['figma-radius', 'Border radius'],
+  ['figma-border-width', 'Border width'],
+  ['figma-motion', 'Motion'],
+  ['figma-type-scale', 'Typography heading "Moneta Sans" body Lato'],
+  ['figma-token-docs', 'Design Tokens'],
+];
+---
+<div class="d-box" data-starter>
+  <p class="d-term">/figma-starter Plum:#3B1A53 Periwinkle:#8E7FAE heading "Moneta Sans" body Lato<span data-dry></span></p>
+  <div class="d-row">
+    <button type="button" class="d-btn" data-run>Run</button>
+    <label class="d-muted"><input type="checkbox" data-dryrun /> dry run</label>
+  </div>
+  <ol class="d-steps">
+    {steps.map(([name, arg]) => (
+      <li><span class="tick" aria-hidden="true">·</span><span><b>{name}</b><small>{arg}</small></span></li>
+    ))}
+  </ol>
+  <p class="d-muted" data-status>Runs the other skills in order. Steps that already exist are skipped.</p>
+</div>
