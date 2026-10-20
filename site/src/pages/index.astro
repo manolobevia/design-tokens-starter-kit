@@ -11,6 +11,7 @@ import MotionDemo from '../components/MotionDemo.astro';
 import ContrastDemo from '../components/ContrastDemo.astro';
 import ExportDemo from '../components/ExportDemo.astro';
 import StarterDemo from '../components/StarterDemo.astro';
+import Divider from '../components/Divider.astro';
 
 
 const features = [
@@ -96,6 +97,14 @@ const features = [
   },
 ];
 
+const benefits = [
+  { title: 'Faster setup', text: 'A whole system in minutes, not days.', icon: ['M13 2 4 14h7l-1 8 9-12h-7z'] },
+  { title: 'Consistent naming', text: 'The same names in every file you start.', icon: ['M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z', 'M7.5 8.5h.01'] },
+  { title: 'Structure that scales', text: 'Brand, Alias and Mapped keep changes in one place.', icon: ['M12 2 2 7l10 5 10-5-10-5z', 'M2 17l10 5 10-5', 'M2 12l10 5 10-5'] },
+  { title: 'No code required', text: 'You type short lines. Claude does the scripting.', icon: ['M4 6h16', 'M4 12h10', 'M4 18h6'] },
+  { title: 'Free and open source', text: 'MIT licensed. Use it, change it, share it.', icon: ['M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z'] },
+];
+
 const faq = [
   ['Do I need Claude Code?', 'Yes. The skills run inside Claude Code and write to your Figma file through the Figma Console MCP.'],
   ['Do I need GitHub?', 'No account needed. You download the project once, and the Guide walks you through it in plain steps.'],
@@ -138,6 +147,8 @@ const faq = [
       <h2>Twelve skills, one system</h2>
       <p class="lead sub">Every one of them, interactive. Try them below.</p>
       {features.map((f, i) => (
+        <Fragment>
+        {i > 0 && <Divider kind={f.id} />}
         <article class:list={['feature', { flip: i % 2 === 1 }]} id={f.id}>
           <div class="copy">
             <p class="eyebrow">{f.skill}</p>
@@ -159,8 +170,10 @@ const faq = [
             {f.id === 'starter' && <StarterDemo />}
           </div>
         </article>
+        </Fragment>
       ))}
 
+      <Divider kind="docs" />
       <article class="feature" id="docs">
         <div class="copy">
           <p class="eyebrow">figma-token-docs</p>
@@ -182,24 +195,49 @@ const faq = [
     <div class="container">
       <h2>Why designers like it</h2>
       <ul class="benefits">
-        <li><h3>Faster setup</h3><p>A whole system in minutes, not days.</p></li>
-        <li><h3>Consistent naming</h3><p>The same names in every file you start.</p></li>
-        <li><h3>Structure that scales</h3><p>Brand, Alias and Mapped keep changes in one place.</p></li>
-        <li><h3>No code required</h3><p>You type short lines. Claude does the scripting.</p></li>
-        <li><h3>Free and open source</h3><p>MIT licensed. Use it, change it, share it.</p></li>
+        {benefits.map((b) => (
+          <li>
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                {b.icon.map((d) => <path d={d} />)}
+              </svg>
+            </span>
+            <h3>{b.title}</h3>
+            <p>{b.text}</p>
+          </li>
+        ))}
       </ul>
     </div>
   </section>
 
   <section class="section tight">
-    <div class="container narrow">
-      <h2>Who it is for</h2>
-      <p class="lead">Figma designers who already use Claude Code and would rather not learn GitHub or scripting to get a solid token system.</p>
+    <div class="container">
+      <div class="for">
+        <p class="eyebrow">Who it is for</p>
+        <p class="statement">Designers who want design tokens fast, so they can move on to components and patterns.</p>
+        <ul class="needs">
+          <li>
+            <span class="check" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
+            <h3>No scripting</h3>
+            <p>The variables are written to Figma for you. You never write code.</p>
+          </li>
+          <li>
+            <span class="check" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
+            <h3>No Git or GitHub</h3>
+            <p>Download the skills once and use them. No repositories or commands to learn.</p>
+          </li>
+          <li>
+            <span class="check" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
+            <h3>Just Claude Code and Figma</h3>
+            <p>A Claude Code account and Figma are all it takes to run the skills.</p>
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <section class="section tight">
-    <div class="container narrow">
+    <div class="container">
       <h2>Questions</h2>
       <div class="faq">
         {faq.map(([q, a]) => (
@@ -242,7 +280,7 @@ const faq = [
   .n { color: var(--text-link); }
   .steps p { color: var(--text-secondary); }
 
-  .feature { margin-top: var(--brand-space-24); display: grid; gap: var(--brand-space-8); grid-template-columns: minmax(0, 1fr); align-items: center; }
+  .feature { margin-top: var(--brand-space-16); display: grid; gap: var(--brand-space-8); grid-template-columns: minmax(0, 1fr); align-items: center; }
   @media (min-width: 900px) {
     .feature { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: var(--brand-space-12); }
     .feature.flip .copy { order: 2; }
@@ -253,9 +291,24 @@ const faq = [
   .note { color: var(--text-secondary); font-size: 0.85rem; }
   .grid { margin-top: var(--brand-space-6); display: grid; gap: var(--brand-space-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
 
-  .benefits { list-style: none; margin: var(--brand-space-8) 0 0; padding: 0; display: grid; gap: var(--brand-space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
-  .benefits p { margin-top: var(--brand-space-2); color: var(--text-secondary); }
+  .benefits { list-style: none; margin: var(--brand-space-8) 0 0; padding: 0; display: grid; gap: var(--brand-space-8) var(--brand-space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+  .benefits li { position: relative; display: flex; flex-direction: column; gap: var(--brand-space-2); }
+  .benefits p { color: var(--text-secondary); }
+  .icon { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; margin-bottom: var(--brand-space-2); border-radius: var(--brand-radius-3); background: var(--surface-raised); border: var(--brand-border-1) solid var(--border-default); color: var(--text-link); }
+  @media (min-width: 960px) {
+    .benefits { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; }
+    .benefits li { padding-inline: var(--brand-space-6); }
+    .benefits li:first-child { padding-left: 0; }
+    .benefits li + li::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, transparent, var(--border-default) 25%, var(--border-default) 75%, transparent); }
+  }
 
+  .for { padding: var(--brand-space-12) var(--brand-space-8); border: var(--brand-border-1) solid var(--border-default); border-radius: var(--brand-radius-4); background: radial-gradient(70% 120% at 0% 0%, color-mix(in srgb, var(--alias-primary-500) 18%, transparent), transparent), var(--surface-raised); display: flex; flex-direction: column; gap: var(--brand-space-6); }
+  @media (max-width: 560px) { .for { padding: var(--brand-space-8) var(--brand-space-6); } }
+  .statement { font-family: var(--brand-font-heading); font-weight: 600; font-size: clamp(1.75rem, 4.2vw, 3rem); line-height: 1.12; letter-spacing: -0.02em; color: var(--text-heading); max-width: 24ch; }
+  .needs { list-style: none; margin: var(--brand-space-4) 0 0; padding: 0; display: grid; gap: var(--brand-space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+  .needs li { display: flex; flex-direction: column; gap: var(--brand-space-2); }
+  .needs p { color: var(--text-secondary); }
+  .check { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: var(--brand-radius-full); background: var(--surface-action); color: var(--text-on-action); margin-bottom: var(--brand-space-1); }
   .faq { margin-top: var(--brand-space-6); border-top: var(--brand-border-1) solid var(--border-default); }
   details { border-bottom: var(--brand-border-1) solid var(--border-default); padding-block: var(--brand-space-4); }
   summary { cursor: pointer; font-weight: 600; color: var(--text-heading); }
