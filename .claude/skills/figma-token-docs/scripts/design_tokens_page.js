@@ -608,9 +608,11 @@ SECTION_FN.health = async () => {
     if (k.detail) await T(box, k.detail, "Body/Small", { color: tBody, w: CONTENT - 48 });
     if (k.fix) await T(box, "Fix: " + k.fix, "Body/Small", { color: mv("Text/action"), w: CONTENT - 48 });
   };
-  const todoList = F(c, "Needs attention", { dir: "VERTICAL", gap: 16, w: CONTENT });
-  for (const k of issues) await card(todoList, k);
-  for (const k of notes) await card(todoList, k);
+  if (issues.length || notes.length) {
+    const todoList = F(c, "Needs attention", { dir: "VERTICAL", gap: 16, w: CONTENT });
+    for (const k of issues) await card(todoList, k);
+    for (const k of notes) await card(todoList, k);
+  }
   const good = F(c, "Passing", { dir: "VERTICAL", gap: 12, pad: 24, w: CONTENT, fill: mv("Surface/success-secondary"), radius: rad3 });
   await T(good, "Passing (" + oks.length + ")", "Heading/H5", { color: tHead });
   for (const k of oks) await T(good, "✓ " + k.title, "Body/Small", { color: tBody, w: CONTENT - 48 });
