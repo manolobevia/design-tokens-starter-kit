@@ -31,9 +31,7 @@
 .d-curve path { fill: none; stroke: var(--text-link); stroke-width: 3; }
 .d-curve line { stroke: var(--border-default); stroke-width: 1; }
 
-/* design tokens page card */
-.d-docs { display: grid; gap: var(--brand-space-8); grid-template-columns: minmax(0, 1fr); align-items: center; padding: var(--brand-space-6); background: var(--surface-raised); border: var(--brand-border-1) solid var(--border-default); border-radius: var(--brand-radius-4); }
-@media (min-width: 900px) { .d-docs { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); } }
+/* design tokens page */
 .d-shot { width: 100%; height: auto; border-radius: var(--brand-radius-3); border: var(--brand-border-1) solid var(--border-default); display: block; }
 
 /* contrast fix */

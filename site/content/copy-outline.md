@@ -17,9 +17,7 @@ Reusable source copy is cited as README line numbers.
   beside the variables it produces; 11 ramp steps stagger in; page glow takes the color.
 - Buttons: Get started (to `/guide#install`), GitHub (secondary).
 
-**2. The problem**
-- Setting up tokens by hand is slow, inconsistent and easy to get wrong: 11 steps per color,
-  three tiers, Light and Dark, two type modes. Two or three sentences.
+**2. The problem** (removed: the hero goes straight into How it works)
 
 **3. How it works, three steps**
 1. Install the skills.

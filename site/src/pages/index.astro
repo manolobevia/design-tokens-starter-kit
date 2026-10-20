@@ -123,13 +123,6 @@ const faq = [
   </section>
 
   <section class="section tight">
-    <div class="container narrow">
-      <h2>Tokens by hand are a chore</h2>
-      <p class="lead">Eleven steps for every color. Three tiers that must point at each other. A Dark mode. Two type scales. It is slow, it drifts, and one wrong hex slips through. Ask for it in a sentence instead.</p>
-    </div>
-  </section>
-
-  <section class="section tight">
     <div class="container">
       <h2>How it works</h2>
       <ol class="steps">
@@ -168,16 +161,18 @@ const faq = [
         </article>
       ))}
 
-      <article class="docs" id="docs">
-        <div class="d-docs">
-          <div class="copy">
-            <p class="eyebrow">figma-token-docs</p>
-            <h3>A page that documents it all</h3>
-            <p>One frame per section, generated from your live variables. Rerun it after a change and the page refreshes.</p>
-            <p class="mono typed-line">Design Tokens</p>
-            <p class="note">A real screenshot of the Contents frame.</p>
+      <article class="feature" id="docs">
+        <div class="copy">
+          <p class="eyebrow">figma-token-docs</p>
+          <h3>A page that documents it all</h3>
+          <p>One frame per section, generated from your live variables. Rerun it after a change and the page refreshes.</p>
+          <p class="mono typed-line">Design Tokens</p>
+          <p class="note">A real screenshot of the Contents frame.</p>
+        </div>
+        <div class="demo-col">
+          <div class="d-box">
+            <img class="d-shot" src="/design-tokens-contents.png" width="1440" height="1280" alt="The Contents frame of the Design Tokens page in Figma: a card for each section of the system" loading="lazy" />
           </div>
-          <img class="d-shot" src="/design-tokens-contents.png" width="1440" height="1280" alt="The Contents frame of the Design Tokens page in Figma: a card for each section of the system" loading="lazy" />
         </div>
       </article>
     </div>
@@ -256,7 +251,6 @@ const faq = [
   .copy > p:not(.eyebrow):not(.typed-line):not(.note) { color: var(--text-secondary); }
   .typed-line { align-self: flex-start; background: var(--surface-sunken); color: var(--text-heading); padding: var(--brand-space-2) var(--brand-space-3); border-radius: var(--brand-radius-2); overflow-wrap: anywhere; }
   .note { color: var(--text-secondary); font-size: 0.85rem; }
-  .docs { margin-top: var(--brand-space-24); }
   .grid { margin-top: var(--brand-space-6); display: grid; gap: var(--brand-space-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
 
   .benefits { list-style: none; margin: var(--brand-space-8) 0 0; padding: 0; display: grid; gap: var(--brand-space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
