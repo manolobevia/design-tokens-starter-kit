@@ -1,0 +1,224 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import GuideSkill from '../components/GuideSkill.astro';
+import Shot from '../components/Shot.astro';
+import { stepHex, ink } from '../scripts/scale';
+
+const skills = (await getCollection('skills')).sort((a, b) => a.data.guideOrder - b.data.guideOrder);
+const starter = skills[0];
+const rest = skills.slice(1);
+
+const toc = [
+  ['before', 'Before you start'],
+  ['install', 'Install'],
+  ['model', 'The mental model'],
+  ['build', 'Build your system'],
+  ['cheat-sheet', 'Cheat sheet'],
+  ['troubleshooting', 'Troubleshooting'],
+  ['next', 'Next steps'],
+];
+
+const chain = [
+  ['Brand', 'Purple/500', stepHex('#5C3FC4', '500'), 'A raw value. Nothing points anywhere.'],
+  ['Alias', 'Primary/500', stepHex('#5C3FC4', '500'), 'A role. A reference to Brand/Purple/500.'],
+  ['Mapped', 'Text/action', stepHex('#5C3FC4', '500'), 'A usage. A reference to Alias/Primary/500 (Primary/200 in Dark).'],
+];
+
+const trouble = [
+  ['A skill says nothing was written', 'Figma is not connected. Open your file in Figma Desktop, run the Desktop Bridge plugin in that file, and restart Claude Code if you just added the server. The skill names what is missing and never guesses.'],
+  ['Claude does not know the skill', 'Run the install again, then restart Claude Code. Type / to see the installed figma-* skills.'],
+  ['A font is refused', 'The heading and body fonts must be available in your Figma account. Google Fonts are. Figma suggests the closest name it can find, so retype the line with that name.'],
+  ['Mapped says Alias/Foundation is missing', 'Send Brand/Foundation -> Alias/Foundation, or run the alias bridge with -default. Then send the Mapped line again.'],
+  ['Dark mode is empty', 'Type Mapped dark. Mapped starts with Light only.'],
+  ['The Design Tokens page shows failing contrast', 'Type Contrast fix to preview a passing fix for each pair, then Contrast fix apply for the ones you want.'],
+  ['I changed a token and the page or the code is out of date', 'Run Design Tokens again, and Export tokens if you use the code files.'],
+  ['I am not sure what a line will do', 'Add dry run to it and nothing is written. Type -h after a skill name (for example /figma-spacing -h) for its usage.'],
+];
+---
+<Base
+  title="Designer's Guide: build Figma design tokens with Claude Code"
+  description="Step-by-step guide to installing Design Token Skills and building a Figma design token system with Claude Code."
+>
+  <div class="container layout">
+    <aside class="toc" aria-label="On this page">
+      <p class="eyebrow">On this page</p>
+      <ol>
+        {toc.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}
+      </ol>
+    </aside>
+
+    <div class="doc">
+      <header class="intro">
+        <p class="eyebrow">Designer's Guide</p>
+        <h1>Build your system, step by step</h1>
+        <p class="lead">From zero to a full Figma token system with Claude Code. You never write code: you type short lines, and Figma fills up.</p>
+      </header>
+
+      <section id="before">
+        <h2>Before you start</h2>
+        <p>You need four things, and a couple of words explained:</p>
+        <ul class="plain">
+          <li><strong>Claude Code</strong>: the app where you type your lines. The skills run inside it.</li>
+          <li><strong>Figma Desktop</strong>: the desktop app, not the browser. The skills write into the file you have open.</li>
+          <li><strong>Node.js 18 or newer</strong>: a small background tool the Figma connection runs on. Check by typing <code>node --version</code> in a terminal.</li>
+          <li><strong>A Figma file</strong> to build in.</li>
+        </ul>
+        <p class="callout">Works on macOS and Linux. Windows is not supported for now.</p>
+        <p><strong>Skill</strong> means a ready-made ability for Claude Code. <strong>Variable</strong> is Figma's word for a named value, like a color or a number. <strong>Token</strong> is the same thing in design-system language.</p>
+      </section>
+
+      <section id="install">
+        <h2>Install</h2>
+        <p>Two parts: connect Claude Code to Figma once, then get the skills.</p>
+
+        <h3>Part 1: Connect Claude Code to Figma (one time)</h3>
+        <ol class="steps">
+          <li>
+            <strong>Create a Figma access token.</strong> In Figma, create a personal access token named <code>Figma Console MCP</code> with these scopes: File content (read), File versions (read), Variables (read), Comments (read and write). Copy it right away, because Figma shows it only once. Treat it like a password.
+            <Shot caption="The token screen in Figma with the four scopes selected (token hidden)" />
+          </li>
+          <li>
+            <strong>Add the connection to Claude Code.</strong> In a terminal, run the command in the <a href="https://github.com/manolobevia/design-tokens-starter-kit/blob/main/docs/figma-console-setup.md">setup doc</a> with your token in it, then restart Claude Code.
+          </li>
+          <li>
+            <strong>Add the plugin to Figma.</strong> In Figma Desktop, open your file and choose Plugins, Development, Import plugin from manifest. Pick <code>~/.figma-console-mcp/plugin/manifest.json</code> and run the plugin. That file appears after the connection has run once.
+            <Shot caption="Plugins, Development, Import plugin from manifest" />
+          </li>
+          <li>
+            <strong>Test it.</strong> In Claude Code, type <code class="line">Check Figma status</code>. It should say Figma is connected.
+          </li>
+        </ol>
+
+        <h3>Part 2: Get the skills (pick one)</h3>
+        <div class="options">
+          <div class="option">
+            <p class="eyebrow">Option A · no terminal</p>
+            <h4>Ask Claude Code</h4>
+            <ol>
+              <li>On the project's GitHub page choose Code, then Download ZIP, and unzip it.</li>
+              <li>Open the unzipped folder in Claude Code.</li>
+              <li>Type <code class="line">Run ./install.sh to install the skills.</code></li>
+              <li>Restart Claude Code.</li>
+            </ol>
+          </div>
+          <div class="option">
+            <p class="eyebrow">Option B · terminal</p>
+            <h4>Run the installer</h4>
+            <ol>
+              <li>Download and unzip the project, as in Option A.</li>
+              <li>In a terminal, go to that folder and run <code class="line">./install.sh</code></li>
+              <li>Want a preview first? Run <code>./install.sh --check</code>. It copies nothing.</li>
+              <li>Restart Claude Code.</li>
+            </ol>
+          </div>
+        </div>
+        <p>The installer only copies skills into <code>~/.claude/skills</code> and never deletes anything. Prefer one project only? Open the unzipped folder in Claude Code and the skills load from it, no install needed.</p>
+        <Shot caption="The installer reporting each skill as new or up to date" />
+
+        <h3>Part 3: Each time you work</h3>
+        <ol class="steps">
+          <li>Open your Figma file in Figma Desktop and run the Desktop Bridge plugin.</li>
+          <li>In Claude Code, type a line such as <code class="line">Spacing</code>.</li>
+          <li>Open the Variables panel in Figma. Each tier should show references, not hex values.</li>
+        </ol>
+      </section>
+
+      <section id="model">
+        <h2>The mental model</h2>
+        <p>The color system has three tiers. Each one points at the one before it, so a change in one place flows everywhere.</p>
+        <ol class="chain">
+          {chain.map(([tier, name, hex, text]) => (
+            <li>
+              <span class="tier mono">{tier}</span>
+              <span class="swatch" style={`--c:${hex};--ink:${ink(hex)}`}>{name}</span>
+              <span class="why">{text}</span>
+            </li>
+          ))}
+        </ol>
+        <ul class="plain">
+          <li><strong>Brand</strong> holds raw values: color scales, spacing, fonts. Nothing there points anywhere.</li>
+          <li><strong>Alias</strong> holds roles such as Primary, Neutral and Error. Each is a reference to a Brand variable.</li>
+          <li><strong>Mapped</strong> holds usage: Surface, Border, Text and Icon. This is what you apply to layers. It has Light and Dark modes.</li>
+          <li><strong>Responsive</strong> is separate: type sizes with a Desktop and a Mobile mode.</li>
+        </ul>
+        <p>Why references? Swap Purple for another color and every role and every layer follows. A copied hex looks identical today and breaks that tomorrow, so the skills never write one into Alias or Mapped.</p>
+      </section>
+
+      <section id="build">
+        <h2>Build your system</h2>
+        <p>Two ways. The one-line way does everything. The step-by-step way runs one skill at a time, in this order, because each tier builds on the one before.</p>
+        <h3>The one-line way</h3>
+        <GuideSkill {...starter.data} n={1} />
+        <h3>The step-by-step way</h3>
+        <p>Add <code>dry run</code> to any line to preview without writing.</p>
+        {rest.map((s, i) => <GuideSkill {...s.data} n={i + 2} />)}
+      </section>
+
+      <section id="cheat-sheet">
+        <h2>Cheat sheet</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Skill</th><th>Type</th></tr></thead>
+            <tbody>
+              {skills.map((s) => <tr><td>{s.data.title}</td><td><code>{s.data.line}</code></td></tr>)}
+            </tbody>
+          </table>
+        </div>
+        <p>Add <code>dry run</code> to preview. Type <code>-h</code> after a skill name for its usage.</p>
+      </section>
+
+      <section id="troubleshooting">
+        <h2>Troubleshooting</h2>
+        <div class="faq">
+          {trouble.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}
+        </div>
+      </section>
+
+      <section id="next">
+        <h2>Next steps</h2>
+        <p>Open your Design Tokens page in Figma and look around. Then make it yours: change a brand color, rerun the skills and watch every tier follow.</p>
+        <p>Want to contribute, report a bug or ask for a skill? Everything lives on <a href="https://github.com/manolobevia/design-tokens-starter-kit">GitHub</a>.</p>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .layout { display: grid; gap: var(--brand-space-12); grid-template-columns: minmax(0, 1fr); padding-block: var(--brand-space-16); }
+  @media (min-width: 960px) { .layout { grid-template-columns: 14rem minmax(0, 1fr); } }
+  .toc { align-self: start; position: sticky; top: var(--brand-space-6); display: none; }
+  @media (min-width: 960px) { .toc { display: block; } }
+  .toc ol { list-style: none; margin: var(--brand-space-3) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--brand-space-2); }
+  .toc a { color: var(--text-secondary); text-decoration: none; }
+  .toc a:hover { color: var(--text-heading); }
+  .doc { max-width: 46rem; display: flex; flex-direction: column; gap: var(--brand-space-24); }
+  .doc section { display: flex; flex-direction: column; gap: var(--brand-space-4); scroll-margin-top: var(--brand-space-6); }
+  .intro { display: flex; flex-direction: column; gap: var(--brand-space-4); }
+  .lead { font-size: 1.2rem; color: var(--text-secondary); }
+  .doc h3 { margin-top: var(--brand-space-4); }
+  .doc p, .doc li { color: var(--text-default); }
+  .plain { margin: 0; padding-left: var(--brand-space-6); display: flex; flex-direction: column; gap: var(--brand-space-2); }
+  .callout { padding: var(--brand-space-3) var(--brand-space-4); background: var(--surface-raised); border: var(--brand-border-1) solid var(--border-default); border-left: var(--brand-border-2) solid var(--border-focus); border-radius: var(--brand-radius-2); }
+  .steps { margin: 0; padding-left: var(--brand-space-6); display: flex; flex-direction: column; gap: var(--brand-space-4); }
+  .line { background: var(--surface-sunken); color: var(--text-heading); padding: 2px var(--brand-space-2); border-radius: var(--brand-radius-1); overflow-wrap: anywhere; }
+  .options { display: grid; gap: var(--brand-space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+  .option { padding: var(--brand-space-6); background: var(--surface-raised); border: var(--brand-border-1) solid var(--border-default); border-radius: var(--brand-radius-4); display: flex; flex-direction: column; gap: var(--brand-space-3); }
+  .option h4 { margin: 0; font-family: var(--brand-font-heading); font-size: 1.25rem; color: var(--text-heading); }
+  .option ol { margin: 0; padding-left: var(--brand-space-6); display: flex; flex-direction: column; gap: var(--brand-space-2); }
+  .chain { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--brand-space-3); }
+  .chain li { display: grid; grid-template-columns: 5rem minmax(0, 11rem) minmax(0, 1fr); gap: var(--brand-space-3); align-items: center; }
+  @media (max-width: 640px) { .chain li { grid-template-columns: 1fr; gap: var(--brand-space-1); } }
+  .tier { color: var(--text-secondary); font-size: 0.85rem; }
+  .swatch { background: var(--c); color: var(--ink); padding: var(--brand-space-2) var(--brand-space-3); border-radius: var(--brand-radius-2); font-family: var(--brand-font-mono); font-size: 0.85rem; }
+  .why { color: var(--text-secondary); font-size: 0.95rem; }
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; padding: var(--brand-space-2) var(--brand-space-3); border-bottom: var(--brand-border-1) solid var(--border-default); vertical-align: top; }
+  th { color: var(--text-secondary); font-weight: 500; }
+  td code { overflow-wrap: anywhere; color: var(--text-heading); }
+  .faq { border-top: var(--brand-border-1) solid var(--border-default); }
+  details { border-bottom: var(--brand-border-1) solid var(--border-default); padding-block: var(--brand-space-4); }
+  summary { cursor: pointer; font-weight: 600; color: var(--text-heading); }
+  details p { margin-top: var(--brand-space-3); color: var(--text-secondary); }
+</style>
