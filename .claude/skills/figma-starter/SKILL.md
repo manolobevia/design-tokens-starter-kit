@@ -59,6 +59,8 @@ Run these in order with the Skill tool, passing the arguments shown. Fill the pl
 | 7 | `figma-type-scale` | `Typography heading <heading font> body <body font>` (leave a font out if the user did not name it) |
 | 8 | `figma-token-docs` | `Design Tokens` |
 
+Before step 1, start the script server in the background if `curl -s localhost:9231/health` does not print `ok`: `python3 ~/.claude/skills/figma-starter/scripts/serve_scripts.py`. Every skill below then sends a short fetch call instead of pasting its script. If it cannot start, the skills paste their scripts as before. If more than one Figma file is connected, pin the target to the user's file first and pass its `fileKey` on every call.
+
 Notes:
 - The color names the user types are used as typed, so `Plum:#3B1A53` makes `Brand/Plum`. The role names (Primary, Secondary, Tertiary, Accent) are fixed by position.
 - `-default` adds Red, Blue, Orange, Green, Gray and Foundation, and bridges Neutral (always Gray), Error, Success, Warning, Information and Foundation.

@@ -16,6 +16,8 @@ One line builds the whole system: your brand colors, the system colors, aliases,
 
 The first color becomes Primary and the second Secondary (up to four: Tertiary, Accent). Fonts are optional and default to Inter and Roboto. Add `dry run` to see the plan first. Want to understand each step? The skills below do the same work one at a time.
 
+**Fonts.** The heading and body fonts must be available in your Figma account (Google Fonts are). Figma checks this and refuses a name it cannot find, with the closest match. The code export only names the font (`"Playfair", sans-serif`); load it on your site yourself, for example with a Google Fonts link, or text falls back to `sans-serif`.
+
 ## How the tokens fit together
 
 ```
@@ -227,6 +229,16 @@ To use the skills in every project, not only this folder, install them globally:
 
 It only copies and never deletes. Run it again after you change a skill, then restart Claude Code.
 
+### Faster runs: the script server
+
+Each skill runs a JavaScript file inside Figma. Without help, Claude has to paste the whole file into the tool call (the Design Tokens page script is about 1000 lines). The script server removes that: Figma fetches the script from your machine instead, and Claude only sends a few lines saying which script and which settings.
+
+```bash
+python3 ~/.claude/skills/figma-starter/scripts/serve_scripts.py   # or .claude/skills/... in this repo
+```
+
+It listens on `localhost:9231` (a port the Desktop Bridge plugin is allowed to reach), is read only, and serves only `figma-*/scripts/*.js`. The skills use it automatically when it is running and fall back to pasting when it is not. A full `/figma-starter` run needs about a dozen short calls instead of thousands of lines. Figma runs what the server returns, so only run it from a folder you trust.
+
 ## Running a skill
 
 Two ways, same result:
@@ -265,13 +277,15 @@ Check the Variables panel in Figma. Each tier should show references, not hex va
 
 ## Development
 
-The color math and the code export have tests (standard library only, no install):
+The color math, the code export and the Figma scripts have tests (standard library plus Node, no install):
 
 ```bash
 python3 -m unittest discover tests
 ```
 
 `tests/test_repo.py` checks that every skill has a name matching its folder and a description under 200 characters, and that every Figma script parses (this needs Node, and is skipped without it). GitHub runs all of these on every push (see `.github/workflows/tests.yml`).
+
+`tests/test_figma_scripts.py` runs the real Figma scripts against a small fake of the Plugin API (`tests/figma_harness.js`): the spacing, radius, border width, motion and type scale values (the type scale is checked against the table in its `SKILL.md`, Desktop and Mobile), that Alias and Mapped hold references and never hex, that Dark mirrors Light, and that the script server's CONFIG overrides work. `tests/test_mapped_contrast.py` checks that the Mapped preset passes WCAG AA in Light and Dark with the default colors and with a very dark brand color.
 
 `tests/test_color_scale.py` checks the 11-step scales against the reference values in `figma-color-scale/SKILL.md`, the input forms and the `-default` preset. `tests/test_build_tokens.py` checks the CSS, DTCG and Tailwind output, including references, Dark and Mobile modes and the seconds-to-milliseconds conversion for motion.
 

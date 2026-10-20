@@ -198,8 +198,14 @@ Tokens page.
 - `install.sh` copies the `figma-*` skills to `~/.claude/skills` (`--check` to
   preview). It never deletes. Run it after changing a skill so the global copies
   do not drift from the repo.
-- `python3 -m unittest discover tests` runs the tests for the color math and
-  the code export converter. Run it after editing either script.
+- `python3 -m unittest discover tests` runs the tests: the color math, the code export
+  converter, the Mapped preset contrast, and the Figma scripts themselves against a fake
+  Plugin API (`tests/figma_harness.js`, needs Node). Run it after editing any script.
+- `.claude/skills/figma-starter/scripts/serve_scripts.py` serves the skills' Figma scripts on
+  `localhost:9231` with CONFIG overrides, so a `figma_execute` call can fetch and `eval` a script
+  instead of pasting it. Each SKILL.md has the "Fast path" snippet. Start it once per session in the
+  background; without it the skills fall back to pasting. Pass `fileKey` to `figma_execute` when more
+  than one file is connected.
 
 ## Requirements
 

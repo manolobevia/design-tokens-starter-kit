@@ -49,6 +49,15 @@ Do not use the server's own `figma_export_tokens` tool for this. It reads its ow
 
 ## Step 2: Read the variables from Figma
 
+**Fast path, no pasting.** If the script server is running (`curl -s localhost:9231/health` prints `ok`), do not read or paste the script. Send this instead, with the CONFIG constants you would have changed given as JSON in `cfg` (a constant replaces the whole value, so give a full object for `REQUEST` or `SCALE`; an unknown name is refused). The result is the same one the script returns when pasted.
+
+```js
+const u = "http://localhost:9231/figma-export-tokens/scripts/read_tokens.js?cfg=" + encodeURIComponent(JSON.stringify({ EXPECT_FILE: "<file name>" }));
+return await (0, eval)("(async()=>{" + await (await fetch(u)).text() + "})()");
+```
+
+Start the server once per session with `python3 ~/.claude/skills/figma-starter/scripts/serve_scripts.py` as a background command. If it cannot run, paste the script as described next.
+
 Read `scripts/read_tokens.js` and send its full contents as the code, changing only the CONFIG block at the top. Set the tool's timeout to 20000 ms. Set `EXPECT_FILE` to the user's design system file name when you know it.
 
 The script returns every collection, mode and variable. It pads its result on purpose so the host saves it to a file instead of printing 400 variables into the chat. The tool then reports that the output exceeded the limit and **was saved to a file; that is the expected result.** Take the file path from that message. If the result comes back inline with no saved file, the padding did not work: raise `PAD_TO` and run it again.
