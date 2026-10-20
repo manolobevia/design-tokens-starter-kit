@@ -1,0 +1,85 @@
+@import './tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--surface-default);
+  color: var(--text-default);
+  font-family: var(--brand-font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  color: var(--text-heading);
+  font-family: var(--brand-font-heading);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+h1 { font-size: clamp(2.5rem, 7vw, 4.75rem); font-weight: 700; }
+h2 { font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 600; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+p { margin: 0; }
+
+a { color: var(--text-link); text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: var(--brand-border-2) solid var(--border-focus);
+  outline-offset: 3px;
+  border-radius: var(--brand-radius-1);
+}
+
+code, .mono { font-family: var(--brand-font-mono); font-size: 0.92em; }
+
+.container {
+  width: min(100% - 2 * var(--brand-space-4), 1120px);
+  margin-inline: auto;
+}
+.section { padding-block: var(--brand-space-24); }
+.eyebrow {
+  font-family: var(--brand-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--brand-space-3) var(--brand-space-6);
+  border-radius: var(--brand-radius-full);
+  border: var(--brand-border-1) solid var(--border-default);
+  color: var(--text-heading);
+  font-weight: 600;
+  text-decoration: none;
+}
+.btn:hover { background: var(--surface-sunken); text-decoration: none; }
+.btn--primary {
+  background: var(--surface-action);
+  border-color: transparent;
+  color: var(--text-on-action);
+}
+.btn--primary:hover { background: var(--surface-action-hover); }
+
+.skip-link {
+  position: absolute;
+  left: var(--brand-space-4);
+  top: -100px;
+  background: var(--surface-action);
+  color: var(--text-on-action);
+  padding: var(--brand-space-2) var(--brand-space-4);
+  border-radius: var(--brand-radius-2);
+}
+.skip-link:focus { top: var(--brand-space-4); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

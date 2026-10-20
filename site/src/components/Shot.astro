@@ -1,0 +1,13 @@
+---
+interface Props { caption: string; }
+---
+<figure class="shot">
+  <div class="frame" role="img" aria-label={`Screenshot to come: ${Astro.props.caption}`}>Screenshot to come</div>
+  <figcaption>{Astro.props.caption}</figcaption>
+</figure>
+
+<style>
+  .shot { margin: var(--brand-space-4) 0 0; }
+  .frame { display: grid; place-items: center; min-height: 140px; border: var(--brand-border-1) dashed var(--border-default); border-radius: var(--brand-radius-3); color: var(--text-secondary); font-family: var(--brand-font-mono); font-size: 0.8rem; }
+  figcaption { margin-top: var(--brand-space-2); color: var(--text-secondary); font-size: 0.85rem; }
+</style>

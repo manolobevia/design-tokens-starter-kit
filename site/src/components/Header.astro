@@ -1,0 +1,23 @@
+---
+const path = Astro.url.pathname;
+const link = (href: string) => (path === href || path === href + '/' ? 'page' : undefined);
+---
+<header class="site-header">
+  <div class="container bar">
+    <a class="wordmark" href="/">Design Token Skills</a>
+    <nav aria-label="Main">
+      <a href="/" aria-current={link('/')}>Home</a>
+      <a href="/guide" aria-current={link('/guide')}>Guide</a>
+      <a href="https://github.com/manolobevia/design-tokens-starter-kit">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header { border-bottom: var(--brand-border-1) solid var(--border-default); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: var(--brand-space-4); padding-block: var(--brand-space-4); }
+  .wordmark { font-family: var(--brand-font-heading); font-weight: 700; font-size: 1.2rem; color: var(--text-heading); text-decoration: none; }
+  nav { display: flex; gap: var(--brand-space-6); }
+  nav a { color: var(--text-secondary); text-decoration: none; }
+  nav a:hover, nav a[aria-current='page'] { color: var(--text-heading); }
+</style>

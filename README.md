@@ -214,7 +214,7 @@ Example: `Typography base 18 ratio 1.333 mobile 1.2`. Settings are not stored, s
 
 ## Setup
 
-You need: [Claude Code](https://claude.com/claude-code), Figma Desktop, and the [Figma Console MCP](https://github.com/southleft/figma-console-mcp) with its Desktop Bridge plugin running.
+You need: [Claude Code](https://claude.com/claude-code), Figma Desktop, and the [Figma Console MCP](https://github.com/southleft/figma-console-mcp) with its Desktop Bridge plugin running. First time? [Connect Claude Code to Figma](docs/figma-console-setup.md) walks through the token, the server and the plugin. macOS and Linux only; Windows is not supported for now.
 
 1. Clone this repo and open the folder in Claude Code. The skills in `.claude/skills/` load automatically.
 2. Open your Figma file in Figma Desktop and start the Desktop Bridge plugin.

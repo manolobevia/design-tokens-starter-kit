@@ -1,0 +1,89 @@
+/* Site tokens follow the same three tiers the skills build in Figma:
+   Brand (raw values) -> Alias (roles) -> Mapped (usage, Dark default + Light). */
+
+:root {
+  /* Brand */
+  --brand-gray-950: #08080b;
+  --brand-gray-900: #101015;
+  --brand-gray-800: #1a1a22;
+  --brand-gray-700: #2a2a35;
+  --brand-gray-500: #6c6c7d;
+  --brand-gray-300: #b4b4c2;
+  --brand-gray-100: #ececf2;
+  --brand-gray-50: #f7f7fa;
+  --brand-violet-700: #5b3fc4;
+  --brand-violet-500: #7c5cf0;
+  --brand-violet-400: #a78bfa;
+  --brand-violet-300: #c4b0fc;
+  --brand-violet-200: #ddd2fd;
+
+  --brand-space-1: 4px;
+  --brand-space-2: 8px;
+  --brand-space-3: 12px;
+  --brand-space-4: 16px;
+  --brand-space-6: 24px;
+  --brand-space-8: 32px;
+  --brand-space-12: 48px;
+  --brand-space-16: 64px;
+  --brand-space-24: 96px;
+  --brand-radius-1: 4px;
+  --brand-radius-2: 8px;
+  --brand-radius-3: 12px;
+  --brand-radius-4: 16px;
+  --brand-radius-full: 9999px;
+  --brand-border-1: 1px;
+  --brand-border-2: 2px;
+
+  --brand-font-heading: 'Bricolage Grotesque', system-ui, sans-serif;
+  --brand-font-body: 'Geist', system-ui, sans-serif;
+  --brand-font-mono: 'Geist Mono', ui-monospace, monospace;
+
+  /* Alias */
+  --alias-neutral-950: var(--brand-gray-950);
+  --alias-neutral-900: var(--brand-gray-900);
+  --alias-neutral-800: var(--brand-gray-800);
+  --alias-neutral-700: var(--brand-gray-700);
+  --alias-neutral-500: var(--brand-gray-500);
+  --alias-neutral-300: var(--brand-gray-300);
+  --alias-neutral-100: var(--brand-gray-100);
+  --alias-neutral-50: var(--brand-gray-50);
+  --alias-primary-700: var(--brand-violet-700);
+  --alias-primary-500: var(--brand-violet-500);
+  --alias-primary-400: var(--brand-violet-400);
+  --alias-primary-300: var(--brand-violet-300);
+  --alias-primary-200: var(--brand-violet-200);
+
+  /* Mapped: Dark (default) */
+  --surface-default: var(--alias-neutral-950);
+  --surface-raised: var(--alias-neutral-900);
+  --surface-sunken: var(--alias-neutral-800);
+  --text-heading: var(--alias-neutral-50);
+  --text-default: var(--alias-neutral-100);
+  --text-secondary: var(--alias-neutral-300);
+  --text-link: var(--alias-primary-300);
+  --text-on-action: var(--alias-neutral-950);
+  --surface-action: var(--alias-primary-400);
+  --surface-action-hover: var(--alias-primary-300);
+  --border-default: var(--alias-neutral-700);
+  --border-focus: var(--alias-primary-300);
+  --glow: var(--alias-primary-500);
+
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --surface-default: var(--alias-neutral-50);
+  --surface-raised: #ffffff;
+  --surface-sunken: var(--alias-neutral-100);
+  --text-heading: var(--alias-neutral-950);
+  --text-default: var(--alias-neutral-900);
+  --text-secondary: var(--alias-neutral-700);
+  --text-link: var(--alias-primary-700);
+  --text-on-action: var(--alias-neutral-950);
+  --surface-action: var(--alias-primary-400);
+  --surface-action-hover: var(--alias-primary-300);
+  --border-default: var(--alias-neutral-300);
+  --border-focus: var(--alias-primary-700);
+
+  color-scheme: light;
+}

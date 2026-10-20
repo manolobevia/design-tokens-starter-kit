@@ -1,0 +1,20 @@
+---
+import Strip from './Strip.astro';
+---
+<div class="demo" data-hero-demo>
+  <div class="term" aria-label="Example line typed into Claude Code">
+    <span class="prompt">&gt;</span>
+    <span class="typed mono" data-typed>Purple:#5C3FC4</span><span class="caret" aria-hidden="true"></span>
+  </div>
+  <Strip hex="#5C3FC4" />
+  <p class="caption mono" data-caption>11 variables written to Brand/Purple</p>
+</div>
+
+<style>
+  .demo { display: flex; flex-direction: column; gap: var(--brand-space-4); padding: var(--brand-space-6); background: var(--surface-raised); border: var(--brand-border-1) solid var(--border-default); border-radius: var(--brand-radius-4); }
+  .term { display: flex; align-items: center; gap: var(--brand-space-2); padding: var(--brand-space-3) var(--brand-space-4); background: var(--surface-sunken); border-radius: var(--brand-radius-2); min-height: 3rem; color: var(--text-heading); }
+  .prompt { color: var(--text-secondary); }
+  .caret { width: 0.55ch; height: 1.15em; background: var(--text-heading); animation: blink 1s steps(1) infinite; }
+  .caption { color: var(--text-secondary); font-size: 0.85rem; }
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
