@@ -48,7 +48,7 @@ const TEXT = [
   ["action-hover", P + 600, P + 100, "Text link, hover"],
   ["action-pressed", P + 700, P + 50, "Text link, pressed"],
   ["error", "Error/600", null, "Error message on neutral surfaces"],
-  ["success", "Success/600", null, "Success message on neutral surfaces"],
+  ["success", "Success/700", null, "Success message on neutral surfaces"],
   ["warning", "Warning/700", null, "Warning message on neutral surfaces"],
   ["information", "Information/600", "Information/300", "Information message on neutral surfaces"],
   ["on-action", WHITE, KEEP, "On surface/action, all states"],
@@ -57,7 +57,7 @@ const TEXT = [
   ["on-disabled", N + 400, null, "On surface/disabled"],
   ["on-inverse", WHITE, null, "On surface/inverse"],
   ["on-inverse-secondary", N + 300, null, "Supporting content on surface/inverse"],
-  ...ROLES.map((r) => ["on-" + r, r === "warning" ? N + 950 : WHITE, KEEP, "On surface/" + r]),
+  ...ROLES.map((r) => ["on-" + r, r === "warning" || r === "success" ? N + 950 : WHITE, KEEP, "On surface/" + r]),
   ...ROLES.map((r) => ["on-" + r + "-secondary", cap(r) + "/800", null, "On surface/" + r + "-secondary"])
 ];
 
@@ -95,7 +95,7 @@ const PRESET = {
     ["focus", P + 500, P + 300, "Focus ring"],
     ["selected", P + 500, P + 300, "Selected card, active tab underline"],
     ["on-inverse", N + 700, null, "Dividers on surface/inverse"],
-    ...ROLES.map((r) => [r, cap(r) + "/500", r === "information" ? "Information/400" : null, cap(r) + " outline, input validation"]),
+    ...ROLES.map((r) => [r, cap(r) + (r === "warning" ? "/600" : "/500"), r === "information" ? "Information/400" : null, cap(r) + " outline, input validation"]),
     ...ROLES.map((r) => [r + "-secondary", cap(r) + "/200", null, "Outline on tinted " + r + " banners"])
   ],
   Text: TEXT,

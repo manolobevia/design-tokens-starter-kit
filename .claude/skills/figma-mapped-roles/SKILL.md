@@ -70,6 +70,7 @@ Dark values start from **mirroring the step** inside the same Alias group: 50 an
 Mirroring alone breaks a few pairs, so the preset carries a short list of exceptions. They exist only where the mirrored value fails contrast:
 
 - A solid action or status surface keeps its brand color in dark, so its hover and pressed states keep their steps and the content on it keeps its color too (`text/on-action` stays white).
+- With the default Green and Orange, white on a solid success surface (3.30:1), `text/success` at step 600 (4.34:1 on the page) and `border/warning` at step 500 (2.80:1) fail AA, so `text/on-success` uses Neutral 950 like `text/on-warning`, `text/success` uses step 700 and `border/warning` step 600.
 - A 500 used as text or as a line on a dark surface is too dim, so `text/action`, `icon/action`, `border/action`, `border/focus` and `border/selected` move to lighter steps in dark (300, then 200 and 100 for hover and pressed; `text/action` and `icon/action` go one further, see below).
 - `text/information` and `border/information` move one step lighter than the mirror for the same reason.
 - A tinted surface would mirror to step 950, which is near black and invisible on a dark page. So the four `surface/*-secondary` status tints use step 900 in dark. The brand tints `surface/action-secondary` and `surface/selected` use 800 and `action-secondary-hover` uses 700, because a dark brand color such as Plum is already near black at 900.
