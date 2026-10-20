@@ -1,10 +1,19 @@
 ---
+interface Props { overlay?: boolean; }
+const { overlay = false } = Astro.props;
 const path = Astro.url.pathname;
 const link = (href: string) => (path === href || path === href + '/' ? 'page' : undefined);
 ---
-<header class="site-header">
-  <div class="container bar">
-    <a class="wordmark" href="/">Design Token Skills</a>
+<header class:list={['site-header', { overlay }]}>
+  <div class="bar">
+    <a class="lockup" href="/" aria-label="Design Token Skills, home">
+      <svg class="mark" viewBox="0 0 64 64" width="64" height="64" fill="none" aria-hidden="true">
+        <path d="M44 3H15C8.3726 3 3 8.3726 3 15V49C3 55.6274 8.3726 61 15 61H49C55.6274 61 61 55.6274 61 49V22" stroke="var(--text-logo)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="59" cy="5" r="5" fill="var(--text-logo)" />
+        <path d="M28 19L24 45M40 19L36 45M19 27H46M17 37H44" stroke="#fff" stroke-width="4.5" stroke-linecap="round" />
+      </svg>
+      <span class="wordmark">Design <span class="accent">Token</span> Skills</span>
+    </a>
     <nav aria-label="Main">
       <a href="/" aria-current={link('/')}>Home</a>
       <a href="/guide" aria-current={link('/guide')}>Guide</a>
@@ -14,15 +23,23 @@ const link = (href: string) => (path === href || path === href + '/' ? 'page' : 
 </header>
 
 <style>
-  .site-header { border-bottom: var(--brand-border-1) solid var(--border-default); }
-  .bar { display: flex; align-items: center; justify-content: space-between; gap: var(--brand-space-4); padding-block: var(--brand-space-4); }
-  .wordmark { font-family: var(--brand-font-heading); font-weight: 700; font-size: 1.2rem; color: var(--text-heading); text-decoration: none; }
-  nav { display: flex; gap: var(--brand-space-6); }
+  .site-header { padding-block: 21px; }
+  .site-header.overlay { position: absolute; top: 0; left: 0; right: 0; z-index: 3; padding-top: 71px; padding-bottom: 0; }
+  .bar { width: min(100% - 2 * var(--brand-space-4), 1148px); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--brand-space-4); }
+  .lockup { display: flex; align-items: center; gap: 16px; text-decoration: none; color: #fff; }
+  .mark { flex: none; }
+  .wordmark { font-family: var(--brand-font-display); font-weight: 400; font-size: 30.83px; letter-spacing: -0.9px; line-height: 1.3; white-space: nowrap; }
+  .accent { color: var(--text-logo); }
+  nav { display: flex; gap: 24px; font-size: 18.29px; line-height: 24px; }
   nav a { color: var(--text-secondary); text-decoration: none; }
-  nav a:hover, nav a[aria-current='page'] { color: var(--text-heading); }
-  .wordmark { white-space: nowrap; }
-  @media (max-width: 480px) {
-    .wordmark { font-size: 1rem; }
-    nav { gap: var(--brand-space-4); font-size: 0.95rem; }
+  nav a:hover { color: var(--text-heading); }
+  nav a[aria-current='page'] { color: var(--text-heading); border-bottom: 1px solid #fff; }
+  @media (max-width: 640px) {
+    .site-header { padding-block: 16px; }
+    .site-header.overlay { padding-top: 24px; }
+    .lockup { gap: 10px; }
+    .mark { width: 40px; height: 40px; }
+    .wordmark { font-size: 22px; }
+    nav { gap: 16px; font-size: 16px; }
   }
 </style>

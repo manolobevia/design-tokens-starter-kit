@@ -12,6 +12,9 @@ import ContrastDemo from '../components/ContrastDemo.astro';
 import ExportDemo from '../components/ExportDemo.astro';
 import StarterDemo from '../components/StarterDemo.astro';
 import Divider from '../components/Divider.astro';
+import { scale } from '../scripts/scale';
+
+const ramp = scale('#5C3FC4');
 
 
 const features = [
@@ -113,10 +116,14 @@ const faq = [
 ];
 ---
 <Base
+  overlay
   title="Design Token Skills: Figma design tokens from one line in Claude Code"
   description="Free, open-source Claude Code skills that write a complete design token system into your Figma file from short typed lines."
 >
   <section class="section hero" data-glow style="--glow-color:#5C3FC4">
+    <div class="strip" aria-hidden="true">
+      {ramp.map((s) => <span style={`background:${s.hex}`}></span>)}
+    </div>
     <div class="container hero-grid">
       <div>
         <p class="eyebrow">Free and open source</p>
@@ -264,11 +271,15 @@ const faq = [
 </script>
 
 <style>
-  .hero { position: relative; overflow: hidden; padding-block: var(--brand-space-16); }
-  .hero::before { content: ''; position: absolute; inset: -20% -10% auto auto; width: 70%; height: 120%; background: radial-gradient(closest-side, color-mix(in srgb, var(--glow-color) 24%, transparent), transparent); transition: background 1.2s ease; pointer-events: none; }
+  .hero { position: relative; overflow: hidden; padding-top: 294px; padding-bottom: var(--brand-space-16); }
+  .hero::before { content: ''; position: absolute; left: calc(50% + 40px); top: -300px; width: 900px; height: 900px; background: radial-gradient(closest-side, color-mix(in srgb, var(--glow-color) 24%, transparent), transparent); transition: background 1.2s ease; pointer-events: none; }
+  .strip { position: absolute; left: 14px; top: -9px; width: 1865px; height: 819px; display: flex; opacity: 0.16; pointer-events: none; z-index: 5; }
+  .strip span { flex: 1; }
+  @media (max-width: 1100px) { .strip { left: 0; width: 100%; } }
+  @media (max-width: 640px) { .hero { padding-top: 132px; } }
   .hero-grid { position: relative; display: grid; gap: var(--brand-space-12); grid-template-columns: minmax(0, 1fr); align-items: center; }
   @media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); } }
-  .hero h1 { margin-top: var(--brand-space-4); }
+  .hero h1 { margin-top: var(--brand-space-4); font-family: var(--brand-font-display); font-weight: 400; }
   .lead { margin-top: var(--brand-space-6); max-width: 38rem; font-size: 1.2rem; color: var(--text-secondary); }
   .lead.sub { margin-top: var(--brand-space-3); }
   .actions { margin-top: var(--brand-space-8); display: flex; flex-wrap: wrap; gap: var(--brand-space-3); }
