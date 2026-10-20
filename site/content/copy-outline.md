@@ -48,7 +48,7 @@ Reusable source copy is cited as README line numbers.
 - Is it free? Yes, MIT licensed.
 
 **8. Closing CTA and footer**
-- Get started, GitHub, MIT license, "Made by Manolo Bevia" linking to manolobevia.com
+- Get started, GitHub, MIT license, "Made by Manolo Bevia" linking to whatthefux.studio
   (pending the open question).
 
 ## Guide (/guide)
