@@ -23,8 +23,9 @@ const link = (href: string) => (path === href || path === href + '/' ? 'page' : 
 </header>
 
 <style>
-  .site-header { padding-block: 21px; }
-  .site-header.overlay { position: absolute; top: 0; left: 0; right: 0; z-index: 3; padding-top: 71px; padding-bottom: 0; }
+  /* The logo sits 92px from the top on every page (71px above the header frame plus 21px inside it). */
+  .site-header { padding: 92px 0 21px; }
+  .site-header.overlay { position: absolute; top: 0; left: 0; right: 0; z-index: 3; }
   .bar { width: min(100% - 2 * var(--brand-space-4), 1148px); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--brand-space-4); }
   .lockup { display: flex; align-items: center; gap: 16px; text-decoration: none; color: #fff; }
   .mark { flex: none; }
@@ -35,8 +36,7 @@ const link = (href: string) => (path === href || path === href + '/' ? 'page' : 
   nav a:hover { color: var(--text-heading); }
   nav a[aria-current='page'] { color: var(--text-heading); border-bottom: 1px solid #fff; }
   @media (max-width: 640px) {
-    .site-header { padding-block: 16px; }
-    .site-header.overlay { padding-top: 24px; }
+    .site-header { padding: 24px 0 16px; }
     .lockup { gap: 10px; }
     .mark { width: 40px; height: 40px; }
     .wordmark { font-size: 22px; }

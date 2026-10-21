@@ -126,9 +126,8 @@ const faq = [
     </div>
     <div class="container hero-grid">
       <div>
-        <p class="eyebrow">Free and open source</p>
         <h1>Type one line. Get Figma design tokens.</h1>
-        <p class="lead">Claude Code skills that write real variables and text styles into your Figma file.</p>
+        <p class="lead">Claude Code skills that write real variables and text styles into your Figma file. Free and open source.</p>
         <p class="actions">
           <a class="btn btn--primary" href="/guide#install">Get started</a>
           <a class="btn" href="https://github.com/manolobevia/design-tokens-starter-kit">GitHub</a>
@@ -273,13 +272,13 @@ const faq = [
 <style>
   .hero { position: relative; overflow: hidden; padding-top: 294px; padding-bottom: var(--brand-space-16); }
   .hero::before { content: ''; position: absolute; left: calc(50% + 40px); top: -300px; width: 900px; height: 900px; background: radial-gradient(closest-side, color-mix(in srgb, var(--glow-color) 24%, transparent), transparent); transition: background 1.2s ease; pointer-events: none; }
-  .strip { position: absolute; left: 14px; top: -9px; width: 1865px; height: 819px; display: flex; opacity: 0.16; pointer-events: none; z-index: 5; }
+  .strip { position: absolute; left: 14px; top: -9px; width: 1865px; height: 819px; display: flex; opacity: 0.16; pointer-events: none; z-index: 5; -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 40%, #000 55%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, #000 40%, #000 55%, transparent 100%); }
   .strip span { flex: 1; }
   @media (max-width: 1100px) { .strip { left: 0; width: 100%; } }
   @media (max-width: 640px) { .hero { padding-top: 132px; } }
   .hero-grid { position: relative; display: grid; gap: var(--brand-space-12); grid-template-columns: minmax(0, 1fr); align-items: center; }
   @media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); } }
-  .hero h1 { margin-top: var(--brand-space-4); font-family: var(--brand-font-display); font-weight: 400; }
+  .hero h1 { font-family: var(--brand-font-display); font-weight: 400; }
   .lead { margin-top: var(--brand-space-6); max-width: 38rem; font-size: 1.2rem; color: var(--text-secondary); }
   .lead.sub { margin-top: var(--brand-space-3); }
   .actions { margin-top: var(--brand-space-8); display: flex; flex-wrap: wrap; gap: var(--brand-space-3); }
