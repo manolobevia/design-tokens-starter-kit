@@ -1,0 +1,47 @@
+---
+// Real output of build_tokens.py for a small sample file (plum brand), trimmed.
+const css = `:root {
+  /* Brand */
+  --brand-plum-500: #3b1a53;
+  --brand-spacing-4: 16px;
+  --brand-motion-duration-default: 1000ms;
+  /* Alias */
+  --alias-primary-500: var(--brand-plum-500);
+  /* Mapped */
+  --mapped-surface-page: var(--alias-primary-500);
+}
+
+/* Dark mode: set data-theme="dark" on a parent, or follow the system setting. */
+:root[data-theme="dark"] {
+  --mapped-surface-page: #0b0b0d;
+}`;
+const json = `{
+  "alias": {
+    "primary": {
+      "500": {
+        "$type": "color",
+        "$value": "{brand.plum.500}"
+      }
+    }
+  }
+}`;
+const tailwind = `@theme inline {
+  /* Alias colors */
+  --color-primary-500: var(--alias-primary-500);
+  /* Mapped colors */
+  --color-surface-page: var(--mapped-surface-page);
+  /* spacing */
+  --spacing-4: var(--brand-spacing-4);
+}`;
+const panes: [string, string, string][] = [['css', 'tokens.css', css], ['json', 'tokens.tokens.json', json], ['tailwind', 'tailwind.theme.css', tailwind]];
+---
+<div class="d-box" data-export data-tab="css">
+  <p class="d-term">Export tokens</p>
+  <div class="d-chips" role="group" aria-label="Output file">
+    {panes.map(([id, name], i) => <button type="button" class="d-chip" data-tabbtn={id} aria-pressed={i === 0 ? 'true' : 'false'}>{name}</button>)}
+  </div>
+  {panes.map(([id, , code], i) => (
+    <pre class={i === 0 ? 'd-code is-in' : 'd-code'} data-pane={id} tabindex="0">{code.split('\n').map((l, n) => <span style={`--i:${n}`}>{l}</span>)}</pre>
+  ))}
+  <p class="d-muted">A trimmed sample of the skill's real output. References stay references, and the files are generated, so rebuild instead of editing.</p>
+</div>

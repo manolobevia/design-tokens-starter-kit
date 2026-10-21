@@ -34,6 +34,8 @@
   --brand-border-1: 1px;
   --brand-border-2: 2px;
 
+  --brand-violet-logo: #b99aff;
+  --brand-font-display: 'Cal Sans', 'Bricolage Grotesque', system-ui, sans-serif;
   --brand-font-heading: 'Bricolage Grotesque', system-ui, sans-serif;
   --brand-font-body: 'Geist', system-ui, sans-serif;
   --brand-font-mono: 'Geist Mono', ui-monospace, monospace;
@@ -52,6 +54,7 @@
   --alias-primary-400: var(--brand-violet-400);
   --alias-primary-300: var(--brand-violet-300);
   --alias-primary-200: var(--brand-violet-200);
+  --alias-primary-logo: var(--brand-violet-logo);
 
   /* Mapped: Dark (default) */
   --surface-default: var(--alias-neutral-950);
@@ -61,6 +64,7 @@
   --text-default: var(--alias-neutral-100);
   --text-secondary: var(--alias-neutral-300);
   --text-link: var(--alias-primary-300);
+  --text-logo: var(--alias-primary-logo);
   --text-on-action: var(--alias-neutral-950);
   --surface-action: var(--alias-primary-400);
   --surface-action-hover: var(--alias-primary-300);

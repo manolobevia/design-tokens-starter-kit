@@ -1,0 +1,17 @@
+---
+---
+<div class="d-box" data-contrast>
+  <div class="d-chips" role="group" aria-label="Surface">
+    <button type="button" class="d-chip" data-surface="light" aria-pressed="false">Light surface</button>
+    <button type="button" class="d-chip" data-surface="dark" aria-pressed="true">Dark surface</button>
+  </div>
+  <label class="d-muted">Text color: <span class="d-label" data-step-name>Primary/400</span>
+    <input class="d-range" type="range" min="0" max="10" value="6" data-range aria-label="Primary step, 950 to 50" />
+  </label>
+  <div class="d-pair">
+    <div class="d-sw" data-now><span>Current</span><strong>Text/action</strong><span data-now-ratio></span><span class="d-badge" data-now-badge></span></div>
+    <div class="d-sw" data-fix><span>Preview fix</span><strong>Text/action</strong><span data-fix-ratio></span><span class="d-badge d-badge--pass" data-fix-badge></span></div>
+  </div>
+  <div class="d-row"><button type="button" class="d-btn" data-apply>Apply fix</button><span class="d-muted" data-msg></span></div>
+  <p class="d-muted">Simplified to one pair. The skill checks every Mapped pair, on every surface it sits on. Preview changes nothing; Apply is a separate request.</p>
+</div>

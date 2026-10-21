@@ -53,3 +53,17 @@ export function ink(hex: string): string {
 }
 
 export const stepHex = (hex: string, step: string) => scale(hex).find((s) => s.step === step)!.hex;
+
+function luminance(hex: string): number {
+  return toRgb(hex)
+    .map((c) => c / 255)
+    .map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4))
+    .reduce((s, c, i) => s + c * [0.2126, 0.7152, 0.0722][i], 0);
+}
+
+/** WCAG contrast ratio between two hex colors. */
+export function contrast(a: string, b: string): number {
+  const x = luminance(a);
+  const y = luminance(b);
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+}

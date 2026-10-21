@@ -10,16 +10,14 @@ Reusable source copy is cited as README line numbers.
 ## Home (/)
 
 **1. Hero**
-- Headline (draft): "Type one line. Get a Figma design system."
+- Headline (draft): "Type one line. Get Figma design tokens."
 - Supporting: Free, open-source Claude Code skills that write real variables and text styles
   into your Figma file (`README.md:5`).
 - Visual: typed line `/figma-starter Plum:#3B1A53 Periwinkle:#8E7FAE heading "Moneta Sans" body Lato`
   beside the variables it produces; 11 ramp steps stagger in; page glow takes the color.
 - Buttons: Get started (to `/guide#install`), GitHub (secondary).
 
-**2. The problem**
-- Setting up tokens by hand is slow, inconsistent and easy to get wrong: 11 steps per color,
-  three tiers, Light and Dark, two type modes. Two or three sentences.
+**2. The problem** (removed: the hero goes straight into How it works)
 
 **3. How it works, three steps**
 1. Install the skills.
@@ -48,7 +46,7 @@ Reusable source copy is cited as README line numbers.
 - Is it free? Yes, MIT licensed.
 
 **8. Closing CTA and footer**
-- Get started, GitHub, MIT license, "Made by Manolo Bevia" linking to manolobevia.com
+- Get started, GitHub, MIT license, "Made by whatthefux.studio" linking to https://whatthefux.studio/
   (pending the open question).
 
 ## Guide (/guide)

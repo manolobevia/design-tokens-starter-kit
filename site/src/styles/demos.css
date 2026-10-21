@@ -1,0 +1,63 @@
+/* Shared styles for the interactive skill demos. Global, because some demos
+   build their elements with script and scoped styles would not reach them. */
+
+.d-box { padding: var(--brand-space-6); background: var(--surface-raised); border: var(--brand-border-1) solid var(--border-default); border-radius: var(--brand-radius-4); display: flex; flex-direction: column; gap: var(--brand-space-4); }
+.d-label { font-family: var(--brand-font-mono); font-size: 0.85rem; color: var(--text-heading); }
+.d-muted { color: var(--text-secondary); font-size: 0.9rem; }
+.d-row { display: flex; flex-wrap: wrap; gap: var(--brand-space-2); align-items: center; }
+
+.d-chips { display: flex; flex-wrap: wrap; gap: var(--brand-space-2); }
+.d-chip { background: none; border: var(--brand-border-1) solid var(--border-control); border-radius: var(--brand-radius-full); color: var(--text-secondary); padding: var(--brand-space-1) var(--brand-space-3); font: inherit; font-family: var(--brand-font-mono); font-size: 0.8rem; cursor: pointer; }
+.d-chip:hover { color: var(--text-heading); }
+.d-chip[aria-pressed='true'] { background: var(--surface-action); border-color: transparent; color: var(--text-on-action); font-weight: 600; }
+.d-btn { background: var(--surface-action); color: var(--text-on-action); border: 0; border-radius: var(--brand-radius-full); padding: var(--brand-space-2) var(--brand-space-4); font: inherit; font-weight: 600; cursor: pointer; }
+.d-btn:hover { background: var(--surface-action-hover); }
+.d-btn:disabled { opacity: 0.4; cursor: default; }
+.d-btn--ghost { background: none; color: var(--text-heading); border: var(--brand-border-1) solid var(--border-control); }
+.d-btn--ghost:hover { background: var(--surface-sunken); }
+
+/* shape: border radius and border width */
+.d-stage { background: var(--surface-sunken); border-radius: var(--brand-radius-3); padding: var(--brand-space-6); display: flex; flex-direction: column; gap: var(--brand-space-2); align-items: flex-start; }
+.d-shape-card { background: var(--surface-raised); border: var(--b) solid var(--border-focus); border-radius: min(var(--r), 28px); padding: var(--brand-space-4); display: flex; flex-wrap: wrap; gap: var(--brand-space-3); align-items: center; width: 100%; margin-bottom: var(--brand-space-2); }
+.d-shape { border: var(--b) solid var(--border-focus); border-radius: var(--r); background: none; color: var(--text-heading); padding: var(--brand-space-2) var(--brand-space-4); font: inherit; }
+.d-shape--fill { background: var(--surface-action); color: var(--text-on-action); font-weight: 600; }
+.d-shape-avatar { width: 2.5rem; height: 2.5rem; border-radius: var(--r); border: var(--b) solid var(--border-focus); background: var(--surface-action); display: inline-block; }
+.d-shape-card, .d-shape, .d-shape-avatar { transition: border-radius 0.25s ease, border-width 0.25s ease; }
+
+/* motion */
+.d-track { position: relative; height: 2.75rem; background: var(--surface-sunken); border-radius: var(--brand-radius-full); }
+.d-dot { position: absolute; top: 4px; left: 4px; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--surface-action); }
+.d-curve { width: 7rem; height: 7rem; background: var(--surface-sunken); border-radius: var(--brand-radius-3); padding: var(--brand-space-2); flex: none; }
+.d-curve path { fill: none; stroke: var(--text-link); stroke-width: 3; }
+.d-curve line { stroke: var(--border-default); stroke-width: 1; }
+
+/* design tokens page */
+.d-shot { width: 100%; height: auto; border-radius: var(--brand-radius-3); border: var(--brand-border-1) solid var(--border-default); display: block; }
+
+/* contrast fix */
+.d-pair { display: grid; gap: var(--brand-space-3); grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); }
+.d-sw { border-radius: var(--brand-radius-3); padding: var(--brand-space-4); display: flex; flex-direction: column; gap: var(--brand-space-1); border: var(--brand-border-1) solid var(--border-default); }
+.d-sw strong { font-family: var(--brand-font-heading); font-size: 1.2rem; }
+.d-sw span { font-family: var(--brand-font-mono); font-size: 0.8rem; }
+.d-badge { align-self: flex-start; font-family: var(--brand-font-mono); font-size: 0.75rem; padding: 2px var(--brand-space-2); border-radius: var(--brand-radius-full); }
+.d-badge--fail { background: #5b1a1a; color: #ffd6d6; }
+.d-badge--pass { background: #14532d; color: #d4f5df; }
+.d-range { width: 100%; accent-color: var(--surface-action); }
+
+/* export */
+.d-code { margin: 0; background: var(--surface-sunken); border-radius: var(--brand-radius-3); padding: var(--brand-space-4); overflow-x: auto; font-family: var(--brand-font-mono); font-size: 0.8rem; line-height: 1.6; color: var(--text-default); }
+.d-code span { display: block; white-space: pre; }
+[data-export] [data-pane] { display: none; }
+[data-export][data-tab='css'] [data-pane='css'], [data-export][data-tab='json'] [data-pane='json'], [data-export][data-tab='tailwind'] [data-pane='tailwind'] { display: block; }
+.anim [data-export] .d-code.is-in span { animation: d-line 0.35s ease backwards; animation-delay: calc(var(--i) * 30ms); }
+@keyframes d-line { from { opacity: 0; transform: translateY(4px); } }
+
+/* starter */
+.d-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--brand-space-2); counter-reset: s; }
+.d-steps li { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr); gap: var(--brand-space-3); align-items: baseline; padding: var(--brand-space-2) var(--brand-space-3); border-radius: var(--brand-radius-2); background: var(--surface-sunken); transition: background 0.3s; }
+.d-steps .tick { font-family: var(--brand-font-mono); color: var(--text-secondary); }
+.d-steps li.done .tick { color: var(--text-link); }
+.d-steps li.done { background: color-mix(in srgb, var(--surface-action) 14%, var(--surface-sunken)); }
+.d-steps b { font-family: var(--brand-font-mono); font-weight: 500; font-size: 0.85rem; color: var(--text-heading); }
+.d-steps small { display: block; color: var(--text-secondary); font-size: 0.8rem; }
+.d-term { background: var(--surface-sunken); border-radius: var(--brand-radius-2); padding: var(--brand-space-3) var(--brand-space-4); font-family: var(--brand-font-mono); font-size: 0.85rem; color: var(--text-heading); overflow-wrap: anywhere; }
