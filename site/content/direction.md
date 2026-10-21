@@ -13,7 +13,7 @@ developer docs.
 ## Type
 | Use | Font |
 |---|---|
-| Headlines, wordmark | Bricolage Grotesque |
+| Headlines, wordmark | Cal Sans (one weight, Regular) |
 | Body | Geist Sans |
 | Typed lines, code | Geist Mono |
 

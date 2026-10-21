@@ -190,8 +190,8 @@ const trouble = [
   .toc { align-self: start; position: sticky; top: var(--brand-space-6); display: none; }
   @media (min-width: 960px) { .toc { display: block; } }
   .toc ol { list-style: none; margin: var(--brand-space-3) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--brand-space-2); }
-  .toc a { color: var(--text-secondary); text-decoration: none; }
-  .toc a:hover { color: var(--text-heading); }
+  .toc a { color: var(--text-secondary); text-decoration: none; border-bottom: 1px solid transparent; }
+  .toc a:hover { color: var(--text-heading); border-bottom-color: #fff; }
   .doc { max-width: 46rem; display: flex; flex-direction: column; gap: var(--brand-space-24); }
   .doc section { display: flex; flex-direction: column; gap: var(--brand-space-4); scroll-margin-top: var(--brand-space-6); }
   .intro { display: flex; flex-direction: column; gap: var(--brand-space-4); }
@@ -204,7 +204,7 @@ const trouble = [
   .line { background: var(--surface-sunken); color: var(--text-heading); padding: 2px var(--brand-space-2); border-radius: var(--brand-radius-1); overflow-wrap: anywhere; }
   .options { display: grid; gap: var(--brand-space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
   .option { padding: var(--brand-space-6); background: var(--surface-raised); border: var(--brand-border-1) solid var(--border-default); border-radius: var(--brand-radius-4); display: flex; flex-direction: column; gap: var(--brand-space-3); }
-  .option h4 { margin: 0; font-family: var(--brand-font-heading); font-size: 1.25rem; color: var(--text-heading); }
+  .option h4 { margin: 0; font-family: var(--brand-font-heading); font-weight: 400; font-size: 1.25rem; color: var(--text-heading); }
   .option ol { margin: 0; padding-left: var(--brand-space-6); display: flex; flex-direction: column; gap: var(--brand-space-2); }
   .chain { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--brand-space-3); }
   .chain li { display: grid; grid-template-columns: 5rem minmax(0, 11rem) minmax(0, 1fr); gap: var(--brand-space-3); align-items: center; }

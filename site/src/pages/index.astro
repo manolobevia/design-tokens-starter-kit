@@ -108,6 +108,12 @@ const benefits = [
   { title: 'Free and open source', text: 'MIT licensed. Use it, change it, share it.', icon: ['M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z'] },
 ];
 
+const howSteps = [
+  { title: 'Install the skills', text: 'Download the project once. The Guide shows how.' },
+  { title: 'Type a short line', text: 'Like <code>Purple:#5C3FC4</code> or <code>Spacing</code>. That is the whole request.' },
+  { title: 'Watch Figma fill up', text: 'Real variables and text styles land in your open file.' },
+];
+
 const faq = [
   ['Do I need Claude Code?', 'Yes. The skills run inside Claude Code and write to your Figma file through the Figma Console MCP.'],
   ['Do I need GitHub?', 'No account needed. You <a href="https://github.com/manolobevia/design-tokens-starter-kit/archive/refs/heads/main.zip">download the project</a> once, and the <a href="/guide">Guide</a> walks you through it in plain steps.'],
@@ -141,14 +147,18 @@ const faq = [
     <div class="container">
       <h2>How it works</h2>
       <ol class="steps">
-        <li><span class="n mono">1</span><h3>Install the skills</h3><p>Download the project once. The Guide shows how.</p></li>
-        <li><span class="n mono">2</span><h3>Type a short line</h3><p>Like <code>Purple:#5C3FC4</code> or <code>Spacing</code>. That is the whole request.</p></li>
-        <li><span class="n mono">3</span><h3>Watch Figma fill up</h3><p>Real variables and text styles land in your open file.</p></li>
+        {howSteps.map((st, i) => (
+          <li>
+            <span class="icon n mono" aria-hidden="true">{i + 1}</span>
+            <h3>{st.title}</h3>
+            <p set:html={st.text} />
+          </li>
+        ))}
       </ol>
     </div>
   </section>
 
-  <section class="section" id="skills">
+  <section class="section tight" id="skills">
     <div class="container">
       <h2>Twelve skills, one system</h2>
       <p class="lead sub">Every one of them, interactive. Try them below.</p>
@@ -278,7 +288,7 @@ const faq = [
   @media (max-width: 640px) { .hero { padding-top: 132px; } }
   .hero-grid { position: relative; display: grid; gap: var(--brand-space-12); grid-template-columns: minmax(0, 1fr); align-items: center; }
   @media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); } }
-  .hero h1 { font-family: var(--brand-font-display); font-weight: 400; }
+  
   .lead { margin-top: var(--brand-space-6); max-width: 38rem; font-size: 1.2rem; color: var(--text-secondary); }
   .lead.sub { margin-top: var(--brand-space-3); }
   .actions { margin-top: var(--brand-space-8); display: flex; flex-wrap: wrap; gap: var(--brand-space-3); }
@@ -287,7 +297,7 @@ const faq = [
 
   .steps { list-style: none; margin: var(--brand-space-8) 0 0; padding: 0; display: grid; gap: var(--brand-space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
   .steps li { padding: var(--brand-space-6); background: var(--surface-raised); border: var(--brand-border-1) solid var(--border-default); border-radius: var(--brand-radius-4); display: flex; flex-direction: column; gap: var(--brand-space-3); }
-  .n { color: var(--text-link); }
+  .n { color: var(--text-link); font-size: 1rem; }
   .steps p { color: var(--text-secondary); }
 
   .feature { margin-top: var(--brand-space-16); display: grid; gap: var(--brand-space-8); grid-template-columns: minmax(0, 1fr); align-items: center; }
@@ -314,7 +324,7 @@ const faq = [
 
   .for { padding: var(--brand-space-12) var(--brand-space-8); border: var(--brand-border-1) solid var(--border-default); border-radius: var(--brand-radius-4); background: radial-gradient(70% 120% at 0% 0%, color-mix(in srgb, var(--alias-primary-500) 18%, transparent), transparent), var(--surface-raised); display: flex; flex-direction: column; gap: var(--brand-space-6); }
   @media (max-width: 560px) { .for { padding: var(--brand-space-8) var(--brand-space-6); } }
-  .statement { font-family: var(--brand-font-heading); font-weight: 600; font-size: clamp(1.75rem, 4.2vw, 3rem); line-height: 1.12; letter-spacing: -0.02em; color: var(--text-heading); max-width: 24ch; }
+  .statement { font-family: var(--brand-font-heading); font-weight: 400; font-size: clamp(1.75rem, 4.2vw, 3rem); line-height: 1.12; letter-spacing: -0.02em; color: var(--text-heading); max-width: 24ch; }
   .needs { list-style: none; margin: var(--brand-space-4) 0 0; padding: 0; display: grid; gap: var(--brand-space-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
   .needs li { display: flex; flex-direction: column; gap: var(--brand-space-2); }
   .needs p { color: var(--text-secondary); }

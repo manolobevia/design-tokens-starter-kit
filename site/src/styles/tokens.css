@@ -35,8 +35,7 @@
   --brand-border-2: 2px;
 
   --brand-violet-logo: #b99aff;
-  --brand-font-display: 'Cal Sans', 'Bricolage Grotesque', system-ui, sans-serif;
-  --brand-font-heading: 'Bricolage Grotesque', system-ui, sans-serif;
+  --brand-font-heading: 'Cal Sans', system-ui, sans-serif;
   --brand-font-body: 'Geist', system-ui, sans-serif;
   --brand-font-mono: 'Geist Mono', ui-monospace, monospace;
 

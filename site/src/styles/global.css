@@ -22,12 +22,16 @@ h1, h2, h3 {
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
-h1 { font-size: clamp(2.5rem, 7vw, 4.75rem); font-weight: 700; }
-h2 { font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 600; }
-h3 { font-size: 1.25rem; font-weight: 600; }
+h1 { font-size: clamp(2.5rem, 7vw, 4.75rem); font-weight: 400; }
+h2 { font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 400; }
+h3 { font-size: 1.25rem; font-weight: 400; }
 p { margin: 0; }
 
 a { color: var(--text-link); text-underline-offset: 3px; }
+
+/* A hand cursor on everything you can click. */
+a[href], button:not(:disabled), summary, [role='button'], label[for], select,
+input[type='range'], input[type='color'], input[type='checkbox'] { cursor: pointer; }
 a:hover { text-decoration-thickness: 2px; }
 
 :focus-visible {
