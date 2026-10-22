@@ -10,7 +10,7 @@ const easings = ['Standard', 'Enter', 'Exit', 'Linear'];
     {easings.map((t) => <button type="button" class="d-chip" data-ease={t} aria-pressed={t === 'Standard' ? 'true' : 'false'}>{t}</button>)}
   </div>
   <div class="d-track" data-track><span class="d-dot" data-dot></span></div>
-  <div class="d-row">
+  <div class="d-row d-stack">
     <svg class="d-curve" viewBox="0 0 100 100" aria-hidden="true">
       <line x1="0" y1="100" x2="100" y2="100" /><line x1="0" y1="0" x2="0" y2="100" />
       <path data-curve d="M0,100 C20,100 0,0 100,0" />

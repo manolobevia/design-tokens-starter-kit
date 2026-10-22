@@ -10,7 +10,7 @@ Reusable source copy is cited as README line numbers.
 ## Home (/)
 
 **1. Hero**
-- Headline (draft): "Type one line. Get Figma design tokens."
+- Headline (draft): "Type one line. Watch Figma fill with tokens."
 - Supporting: Free, open-source Claude Code skills that write real variables and text styles
   into your Figma file (`README.md:5`).
 - Visual: typed line `/figma-starter Plum:#3B1A53 Periwinkle:#8E7FAE heading "Moneta Sans" body Lato`

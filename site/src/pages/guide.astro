@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import GuideSkill from '../components/GuideSkill.astro';
-import Shot from '../components/Shot.astro';
 import { stepHex, ink } from '../scripts/scale';
 
 const skills = (await getCollection('skills')).sort((a, b) => a.data.guideOrder - b.data.guideOrder);
@@ -13,7 +12,7 @@ const toc = [
   ['before', 'Before you start'],
   ['install', 'Install'],
   ['model', 'The mental model'],
-  ['build', 'Build your system'],
+  ['build', 'Build your design tokens'],
   ['cheat-sheet', 'Cheat sheet'],
   ['troubleshooting', 'Troubleshooting'],
   ['next', 'Next steps'],
@@ -38,7 +37,7 @@ const trouble = [
 ---
 <Base
   title="Designer's Guide: build Figma design tokens with Claude Code"
-  description="Step-by-step guide to installing Design Token Skills and building a Figma design token system with Claude Code."
+  description="Step-by-step guide to installing Design Token Skills and building Figma design tokens with Claude Code."
 >
   <div class="container layout">
     <aside class="toc" aria-label="On this page">
@@ -51,8 +50,8 @@ const trouble = [
     <div class="doc">
       <header class="intro">
         <p class="eyebrow">Designer's Guide</p>
-        <h1>Build your system, step by step</h1>
-        <p class="lead">From zero to a full Figma token system with Claude Code. You never write code: you type short lines, and Figma fills up.</p>
+        <h1>Build your design tokens, step by step</h1>
+        <p class="lead">From zero to a full set of Figma design tokens with Claude Code. You never write code: you type short lines, and Figma fills up.</p>
       </header>
 
       <section id="before">
@@ -76,14 +75,12 @@ const trouble = [
         <ol class="steps">
           <li>
             <strong>Create a Figma access token.</strong> In Figma, create a personal access token named <code>Figma Console MCP</code> with these scopes: File content (read), File versions (read), Variables (read), Comments (read and write). Copy it right away, because Figma shows it only once. Treat it like a password.
-            <Shot caption="The token screen in Figma with the four scopes selected (token hidden)" />
           </li>
           <li>
             <strong>Add the connection to Claude Code.</strong> In a terminal, run the command in the <a href="https://github.com/manolobevia/design-tokens-starter-kit/blob/main/docs/figma-console-setup.md">setup doc</a> with your token in it, then restart Claude Code.
           </li>
           <li>
             <strong>Add the plugin to Figma.</strong> In Figma Desktop, open your file and choose Plugins, Development, Import plugin from manifest. Pick <code>~/.figma-console-mcp/plugin/manifest.json</code> and run the plugin. That file appears after the connection has run once.
-            <Shot caption="Plugins, Development, Import plugin from manifest" />
           </li>
           <li>
             <strong>Test it.</strong> In Claude Code, type <code class="line">Check Figma status</code>. It should say Figma is connected.
@@ -114,7 +111,6 @@ const trouble = [
           </div>
         </div>
         <p>The installer only copies skills into <code>~/.claude/skills</code> and never deletes anything. Prefer one project only? Open the unzipped folder in Claude Code and the skills load from it, no install needed.</p>
-        <Shot caption="The installer reporting each skill as new or up to date" />
 
         <h3>Part 3: Each time you work</h3>
         <ol class="steps">
@@ -126,7 +122,7 @@ const trouble = [
 
       <section id="model">
         <h2>The mental model</h2>
-        <p>The color system has three tiers. Each one points at the one before it, so a change in one place flows everywhere.</p>
+        <p>Color tokens come in three tiers. Each one points at the one before it, so a change in one place flows everywhere.</p>
         <ol class="chain">
           {chain.map(([tier, name, hex, text]) => (
             <li>
@@ -146,7 +142,7 @@ const trouble = [
       </section>
 
       <section id="build">
-        <h2>Build your system</h2>
+        <h2>Build your design tokens</h2>
         <p>Two ways. The one-line way does everything. The step-by-step way runs one skill at a time, in this order, because each tier builds on the one before.</p>
         <h3>The one-line way</h3>
         <GuideSkill {...starter.data} n={1} />
@@ -184,15 +180,39 @@ const trouble = [
   </div>
 </Base>
 
+<script>
+  // Mark the contents link for the section you are reading.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.toc a')];
+  const sections = links.map((a) => document.querySelector<HTMLElement>(a.getAttribute('href')!));
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const line = window.innerHeight * 0.3;
+    let current = 0;
+    sections.forEach((s, i) => { if (s && s.getBoundingClientRect().top <= line) current = i; });
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) current = sections.length - 1;
+    links.forEach((a, i) => (i === current ? a.setAttribute('aria-current', 'location') : a.removeAttribute('aria-current')));
+  };
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  links.forEach((a, i) => a.addEventListener('click', () => { links.forEach((l, j) => (j === i ? l.setAttribute('aria-current', 'location') : l.removeAttribute('aria-current'))); }));
+  update();
+</script>
+
 <style>
   .layout { display: grid; gap: var(--brand-space-12); grid-template-columns: minmax(0, 1fr); padding-block: var(--brand-space-16); }
   @media (min-width: 960px) { .layout { grid-template-columns: 14rem minmax(0, 1fr); } }
   .toc { align-self: start; position: sticky; top: var(--brand-space-6); display: none; }
   @media (min-width: 960px) { .toc { display: block; } }
   .toc ol { list-style: none; margin: var(--brand-space-3) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--brand-space-2); }
-  .toc a { color: var(--text-secondary); text-decoration: none; border-bottom: 1px solid transparent; }
+  .toc a { position: relative; color: var(--text-secondary); text-decoration: none; border-bottom: 1px solid transparent; transition: color 0.15s ease, border-color 0.15s ease; }
   .toc a:hover { color: var(--text-heading); border-bottom-color: #fff; }
-  .doc { max-width: 46rem; display: flex; flex-direction: column; gap: var(--brand-space-24); }
+  /* Where you are: the link for the section in view, with a violet marker. */
+  .toc a[aria-current='location'] { color: var(--text-heading); border-bottom-color: #fff; }
+  .toc a[aria-current='location']::before { content: ''; position: absolute; left: calc(-1 * var(--brand-space-3)); top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: var(--text-logo); }
+  .doc { max-width: 46rem; display: flex; flex-direction: column; gap: var(--brand-space-12); }
+  @media (max-width: 640px) { .doc { gap: var(--brand-space-8); } }
   .doc section { display: flex; flex-direction: column; gap: var(--brand-space-4); scroll-margin-top: var(--brand-space-6); }
   .intro { display: flex; flex-direction: column; gap: var(--brand-space-4); }
   .lead { font-size: 1.2rem; color: var(--text-secondary); }
