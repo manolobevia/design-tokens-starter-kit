@@ -30,7 +30,7 @@ const rows: [string, number, number, number, number][] = [
   .toggle button { background: none; border: 0; color: var(--text-secondary); padding: var(--brand-space-2) var(--brand-space-4); font: inherit; cursor: pointer; }
   .toggle button[aria-pressed='true'] { background: var(--surface-action); color: var(--text-on-action); font-weight: 600; }
   ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-  li { display: flex; flex-direction: column; padding-block: var(--brand-space-2); border-bottom: var(--brand-border-1) solid var(--border-default); overflow: hidden; }
+  li { display: flex; flex-direction: column; padding-block: 12px; border-bottom: var(--brand-border-1) solid var(--border-default); overflow: hidden; }
   .meta { font-size: 0.75rem; color: var(--text-secondary); display: flex; justify-content: space-between; }
   .sample { font-family: var(--brand-font-heading); color: var(--text-heading); font-size: var(--ds); line-height: var(--dl); white-space: nowrap; transition: font-size 0.35s ease, line-height 0.35s ease; }
   @media (max-width: 640px) { .sample { white-space: normal; } }
