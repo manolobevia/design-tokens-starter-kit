@@ -167,11 +167,13 @@ const faq = [
         {i > 0 && <Divider kind={f.id} />}
         <article class:list={['feature', { flip: i % 2 === 1 }]} id={f.id}>
           <div class="copy">
+            <div class="copy-in">
             <p class="eyebrow">{f.skill}</p>
             <h3>{f.title}</h3>
             <p>{f.body}</p>
             <p class="mono typed-line">{f.line}</p>
             <p class="note">{f.note}</p>
+          </div>
           </div>
           <div class="demo-col">
             {f.id === 'color' && <ColorDemo />}
@@ -192,12 +194,14 @@ const faq = [
       <Divider kind="docs" />
       <article class="feature" id="docs">
         <div class="copy">
+            <div class="copy-in">
           <p class="eyebrow">figma-token-docs</p>
           <h3>A page that documents it all</h3>
           <p>One frame per section, generated from your live variables. Rerun it after a change and the page refreshes.</p>
           <p class="mono typed-line">Design Tokens</p>
           <p class="note">A real screenshot of the Contents frame.</p>
         </div>
+          </div>
         <div class="demo-col">
           <div class="d-box">
             <img class="d-shot" src="/design-tokens-contents.png" width="1440" height="1280" alt="The Contents frame of the Design Tokens page in Figma: a card for each section of the system" loading="lazy" />
@@ -302,10 +306,14 @@ const faq = [
 
   .feature { margin-top: var(--brand-space-16); display: grid; gap: var(--brand-space-8); grid-template-columns: minmax(0, 1fr); align-items: center; }
   @media (min-width: 900px) {
-    .feature { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: var(--brand-space-12); }
+    .feature { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: var(--brand-space-12); align-items: stretch; }
     .feature.flip .copy { order: 2; }
+    /* The copy is centered on the graphic, then stays centered on the screen while the graphic scrolls past. */
+    .feature .copy { justify-content: center; }
+    .feature .copy-in { position: sticky; top: var(--copy-top, 96px); }
   }
-  .copy { display: flex; flex-direction: column; gap: var(--brand-space-3); }
+  .copy { display: flex; flex-direction: column; }
+  .copy-in { display: flex; flex-direction: column; gap: var(--brand-space-3); }
   .copy > p:not(.eyebrow):not(.typed-line):not(.note) { color: var(--text-secondary); }
   .typed-line { align-self: flex-start; background: var(--surface-sunken); color: var(--text-heading); padding: var(--brand-space-2) var(--brand-space-3); border-radius: var(--brand-radius-2); overflow-wrap: anywhere; }
   .note { color: var(--text-secondary); font-size: 0.85rem; }
