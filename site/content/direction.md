@@ -14,8 +14,8 @@ developer docs.
 | Use | Font |
 |---|---|
 | Headlines, wordmark | Cal Sans (one weight, Regular) |
-| Body | Geist Sans |
-| Typed lines, code | Geist Mono |
+| Body | Sometype Mono |
+| Typed lines, code | Sometype Mono |
 
 All on Google Fonts. First pick; licenses to be confirmed at build time.
 

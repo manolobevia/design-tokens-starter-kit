@@ -12,10 +12,12 @@ import ContrastDemo from '../components/ContrastDemo.astro';
 import ExportDemo from '../components/ExportDemo.astro';
 import StarterDemo from '../components/StarterDemo.astro';
 import Divider from '../components/Divider.astro';
+import '../styles/hero-variants.css';
 import schemaHome from '../data/schema-home.jsonld?raw';
 import { scale } from '../scripts/scale';
 
 const ramp = scale('#5C3FC4');
+const rampStyle = ramp.map((s, i) => `--r${i}:${s.hex}`).join(';') + ';--glow-color:#5C3FC4';
 
 
 const features = [
@@ -128,10 +130,8 @@ const faq = [
   description="Free, open-source Claude Code skills that write a complete design token system into your Figma file from short typed lines."
 >
   <script slot="head" type="application/ld+json" set:html={schemaHome} />
-  <section class="section hero" data-glow style="--glow-color:#5C3FC4">
-    <div class="strip" aria-hidden="true">
-      {ramp.map((s) => <span style={`background:${s.hex}`}></span>)}
-    </div>
+  <section class="section hero hero-var" data-glow style={rampStyle}>
+    <div class="gradient" aria-hidden="true"></div>
     <div class="container hero-grid">
       <div>
         <h1>Type one line. Watch Figma fill with tokens.</h1>
@@ -285,11 +285,9 @@ const faq = [
 
 <style>
   .hero { position: relative; overflow: hidden; padding-top: 294px; padding-bottom: var(--brand-space-16); }
-  .hero::before { content: ''; position: absolute; left: calc(50% + 40px); top: -300px; width: 900px; height: 900px; background: radial-gradient(closest-side, color-mix(in srgb, var(--glow-color) 24%, transparent), transparent); transition: background 1.2s ease; pointer-events: none; }
-  .strip { position: absolute; left: 14px; top: -9px; width: 1865px; height: 819px; display: flex; opacity: 0.16; pointer-events: none; z-index: 5; -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 40%, #000 55%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, #000 40%, #000 55%, transparent 100%); }
-  .strip span { flex: 1; }
-  @media (max-width: 1100px) { .strip { left: 0; width: 100%; } }
   @media (max-width: 640px) { .hero { padding-top: 132px; } }
+  /* One smooth gradient through the 11 steps, concentrated at the upper right and fading out everywhere else. */
+  .gradient { position: absolute; inset: 0; pointer-events: none; opacity: 0.46; filter: saturate(1.25); background: linear-gradient(100deg, var(--r0) 0%, var(--r1) 8%, var(--r2) 17%, var(--r3) 26%, var(--r4) 35%, var(--r5) 45%, var(--r6) 56%, var(--r7) 68%, var(--r8) 80%, var(--r9) 91%, var(--r10) 100%); -webkit-mask-image: radial-gradient(85% 90% at 64% 26%, #000 0%, rgb(0 0 0 / 0.55) 46%, transparent 84%); mask-image: radial-gradient(85% 90% at 64% 26%, #000 0%, rgb(0 0 0 / 0.55) 46%, transparent 84%); }
   .hero-grid { position: relative; display: grid; gap: var(--brand-space-12); grid-template-columns: minmax(0, 1fr); align-items: center; }
   @media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); } }
   

@@ -13,6 +13,8 @@ body {
   font-size: 1.0625rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  /* Sometype Mono is wide; tighten the letters a little so paragraphs read as text, not a column of characters. */
+  letter-spacing: -0.03em;
 }
 
 h1, h2, h3 {
