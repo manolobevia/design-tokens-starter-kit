@@ -1,0 +1,15 @@
+/* Registered color variables: the hero ramp (--r0 darkest ... --r10 lightest).
+   Registering them lets gradients and colors animate when the ramp changes. */
+@property --r0 { syntax: '<color>'; inherits: true; initial-value: #090614; }
+@property --r1 { syntax: '<color>'; inherits: true; initial-value: #120D27; }
+@property --r2 { syntax: '<color>'; inherits: true; initial-value: #25194E; }
+@property --r3 { syntax: '<color>'; inherits: true; initial-value: #372676; }
+@property --r4 { syntax: '<color>'; inherits: true; initial-value: #4A329D; }
+@property --r5 { syntax: '<color>'; inherits: true; initial-value: #5C3FC4; }
+@property --r6 { syntax: '<color>'; inherits: true; initial-value: #7D65D0; }
+@property --r7 { syntax: '<color>'; inherits: true; initial-value: #9D8CDC; }
+@property --r8 { syntax: '<color>'; inherits: true; initial-value: #BEB2E7; }
+@property --r9 { syntax: '<color>'; inherits: true; initial-value: #DED9F3; }
+@property --r10 { syntax: '<color>'; inherits: true; initial-value: #EFECF9; }
+
+.hero-var { transition: --r0 1.1s ease, --r1 1.1s ease, --r2 1.1s ease, --r3 1.1s ease, --r4 1.1s ease, --r5 1.1s ease, --r6 1.1s ease, --r7 1.1s ease, --r8 1.1s ease, --r9 1.1s ease, --r10 1.1s ease; }

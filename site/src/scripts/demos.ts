@@ -1,4 +1,5 @@
 import { scale, ink } from './scale';
+import { setRamp } from './hero-cycle';
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -87,7 +88,7 @@ if (hero && !reduced) {
       });
       strip.classList.remove('is-hidden');
       caption.textContent = `11 variables written to Brand/${name}`;
-      glowHost?.style.setProperty('--glow-color', hex);
+      if (glowHost) setRamp(glowHost, hex);
       await wait(3200);
     }
   })();
