@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import GuideSkill from '../components/GuideSkill.astro';
 import { stepHex, ink } from '../scripts/scale';
+import schemaGuide from '../data/schema-guide.jsonld?raw';
 
 const skills = (await getCollection('skills')).sort((a, b) => a.data.guideOrder - b.data.guideOrder);
 const starter = skills[0];
@@ -39,6 +40,7 @@ const trouble = [
   title="Designer's Guide: build Figma design tokens with Claude Code"
   description="Step-by-step guide to installing Design Token Skills and building Figma design tokens with Claude Code."
 >
+  <script slot="head" type="application/ld+json" set:html={schemaGuide} />
   <div class="container layout">
     <aside class="toc" aria-label="On this page">
       <p class="eyebrow">On this page</p>

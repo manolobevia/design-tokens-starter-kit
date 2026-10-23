@@ -12,6 +12,7 @@ import ContrastDemo from '../components/ContrastDemo.astro';
 import ExportDemo from '../components/ExportDemo.astro';
 import StarterDemo from '../components/StarterDemo.astro';
 import Divider from '../components/Divider.astro';
+import schemaHome from '../data/schema-home.jsonld?raw';
 import { scale } from '../scripts/scale';
 
 const ramp = scale('#5C3FC4');
@@ -116,7 +117,7 @@ const howSteps = [
 
 const faq = [
   ['Do I need Claude Code?', 'Yes. The skills run inside Claude Code and write to your Figma file through the Figma Console MCP.'],
-  ['Do I need GitHub?', 'No account needed. You <a href="https://github.com/manolobevia/design-tokens-starter-kit/archive/refs/heads/main.zip">download the project</a> once, and the <a href="/guide">Guide</a> walks you through it in plain steps.'],
+  ['Do I need GitHub?', 'No account needed. You <a href="https://github.com/manolobevia/design-tokens-starter-kit/archive/refs/heads/main.zip">download the project</a> once, and the <a href="/guide/">Guide</a> walks you through it in plain steps.'],
   ['Will it overwrite my existing variables?', 'It writes to the Brand, Alias, Mapped and Responsive collections. A variable with the same name has its value updated in place, and hand-tuned Mapped values are kept unless you ask for a reset. Add dry run to any line to see what would happen first.'],
   ['Is it free?', 'Yes. It is open source under the MIT license, including for commercial work.'],
 ];
@@ -126,6 +127,7 @@ const faq = [
   title="Design Token Skills: Figma design tokens from one line in Claude Code"
   description="Free, open-source Claude Code skills that write a complete design token system into your Figma file from short typed lines."
 >
+  <script slot="head" type="application/ld+json" set:html={schemaHome} />
   <section class="section hero" data-glow style="--glow-color:#5C3FC4">
     <div class="strip" aria-hidden="true">
       {ramp.map((s) => <span style={`background:${s.hex}`}></span>)}
@@ -135,7 +137,7 @@ const faq = [
         <h1>Type one line. Watch Figma fill with tokens.</h1>
         <p class="lead">Claude Code skills that write real variables and text styles into your Figma file. Free and open source.</p>
         <p class="actions">
-          <a class="btn btn--primary" href="/guide#install">Get started</a>
+          <a class="btn btn--primary" href="/guide/#install">Get started</a>
           <a class="btn" href="https://github.com/manolobevia/design-tokens-starter-kit">GitHub</a>
         </p>
       </div>
@@ -271,7 +273,7 @@ const faq = [
     <div class="container narrow">
       <h2>Build your design tokens in a few lines</h2>
       <p class="actions">
-        <a class="btn btn--primary" href="/guide#install">Get started</a>
+        <a class="btn btn--primary" href="/guide/#install">Get started</a>
         <a class="btn" href="https://github.com/manolobevia/design-tokens-starter-kit">GitHub</a>
       </p>
     </div>

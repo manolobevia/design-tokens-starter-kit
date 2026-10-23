@@ -1,0 +1,42 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Design Token Skills", "item": "https://designtokenskills.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Designer's Guide", "item": "https://designtokenskills.com/guide/" }
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "name": "Build Figma design tokens with Claude Code",
+      "description": "From zero to a full set of Figma design tokens with Claude Code. You never write code: you type short lines, and Figma fills up.",
+      "tool": [
+        { "@type": "HowToTool", "name": "Claude Code" },
+        { "@type": "HowToTool", "name": "Figma Desktop" },
+        { "@type": "HowToTool", "name": "Node.js 18 or newer" }
+      ],
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Connect Claude Code to Figma (one time)",
+          "text": "Create a Figma personal access token, add the Figma Console MCP connection to Claude Code, add the plugin to Figma Desktop, then type Check Figma status in Claude Code to test it.",
+          "url": "https://designtokenskills.com/guide/#install"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Get the skills",
+          "text": "Download the project ZIP from GitHub and unzip it. Then either ask Claude Code to run ./install.sh, or run ./install.sh in a terminal. Restart Claude Code.",
+          "url": "https://designtokenskills.com/guide/#install"
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Type a short line",
+          "text": "Open your Figma file in Figma Desktop, run the Desktop Bridge plugin, then type a line such as Spacing or Purple:#5C3FC4 in Claude Code. Open the Variables panel in Figma to see the tokens.",
+          "url": "https://designtokenskills.com/guide/#build"
+        }
+      ]
+    }
+  ]
+}
