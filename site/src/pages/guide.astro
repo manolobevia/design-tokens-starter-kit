@@ -41,6 +41,7 @@ const trouble = [
   description="Step-by-step guide to installing Design Token Skills and building Figma design tokens with Claude Code."
 >
   <script slot="head" type="application/ld+json" set:html={schemaGuide} />
+  <link slot="head" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&display=swap" />
   <div class="container layout">
     <aside class="toc" aria-label="On this page">
       <p class="eyebrow">On this page</p>
@@ -204,6 +205,10 @@ const trouble = [
 
 <style>
   .layout { display: grid; gap: var(--brand-space-12); grid-template-columns: minmax(0, 1fr); padding-block: var(--brand-space-16); }
+  /* On the Guide, text is Montserrat Light. Headings stay Cal Sans, and Sometype Mono stays on code-like items: token names, snippets and the small labels. */
+  .layout { font-family: var(--brand-font-text); font-weight: 300; letter-spacing: 0; }
+  .layout :global(strong), .layout :global(b) { font-weight: 500; color: var(--text-heading); }
+  .layout :global(code), .layout :global(.mono), .swatch, .tier { letter-spacing: -0.03em; }
   @media (min-width: 960px) { .layout { grid-template-columns: 14rem minmax(0, 1fr); } }
   .toc { align-self: start; position: sticky; top: var(--brand-space-6); display: none; }
   @media (min-width: 960px) { .toc { display: block; } }
@@ -241,6 +246,6 @@ const trouble = [
   td code { overflow-wrap: anywhere; color: var(--text-heading); }
   .faq { border-top: var(--brand-border-1) solid var(--border-default); }
   details { border-bottom: var(--brand-border-1) solid var(--border-default); padding-block: var(--brand-space-4); }
-  summary { cursor: pointer; font-weight: 600; color: var(--text-heading); }
+  summary { cursor: pointer; font-weight: 500; color: var(--text-heading); }
   details p { margin-top: var(--brand-space-3); color: var(--text-secondary); }
 </style>
