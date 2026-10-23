@@ -1,0 +1,62 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://designtokenskills.com/#website",
+      "name": "Design Token Skills",
+      "url": "https://designtokenskills.com/",
+      "description": "Free, open-source Claude Code skills that write a complete design token system into your Figma file from short typed lines.",
+      "publisher": { "@id": "https://designtokenskills.com/#org" }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://designtokenskills.com/#org",
+      "name": "whatthefux.studio",
+      "url": "https://whatthefux.studio/"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://designtokenskills.com/#software",
+      "name": "Design Token Skills",
+      "alternateName": "Figma Design Tokens Starter Kit",
+      "url": "https://designtokenskills.com/",
+      "description": "Twelve free, open-source Claude Code skills that write design tokens (Figma variables and text styles) into your open Figma file: color scales, Brand, Alias and Mapped tiers, Light and Dark, spacing, radius, border width, motion, a responsive type scale, a documentation page and code export.",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "macOS, Linux",
+      "softwareRequirements": "Claude Code, Figma Desktop, Figma Console MCP, Node.js 18 or newer",
+      "isAccessibleForFree": true,
+      "license": "https://opensource.org/licenses/MIT",
+      "downloadUrl": "https://github.com/manolobevia/design-tokens-starter-kit/archive/refs/heads/main.zip",
+      "sameAs": ["https://github.com/manolobevia/design-tokens-starter-kit"],
+      "author": { "@id": "https://designtokenskills.com/#org" },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://designtokenskills.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do I need Claude Code?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. The skills run inside Claude Code and write to your Figma file through the Figma Console MCP." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need GitHub?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No account needed. You download the project once, and the Guide walks you through it in plain steps." }
+        },
+        {
+          "@type": "Question",
+          "name": "Will it overwrite my existing variables?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It writes to the Brand, Alias, Mapped and Responsive collections. A variable with the same name has its value updated in place, and hand-tuned Mapped values are kept unless you ask for a reset. Add dry run to any line to see what would happen first." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is it free?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. It is open source under the MIT license, including for commercial work." }
+        }
+      ]
+    }
+  ]
+}

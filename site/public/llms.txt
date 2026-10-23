@@ -1,0 +1,36 @@
+# Design Token Skills
+
+> Design Token Skills is a free, open-source set of 12 Claude Code skills that write a design token system into a Figma file from short typed lines. It creates Figma variables and text styles (not components). MIT licensed. Works on macOS and Linux; Windows is not supported for now. It is an independent project, not affiliated with Figma or Anthropic.
+
+Design tokens are organized in three color tiers, all by reference and never copied hex values: Brand (raw values), Alias (roles such as Primary and Neutral) and Mapped (usage such as Text/heading, with Light and Dark modes). Spacing, radius, border width, motion and a responsive type scale (Desktop and Mobile) sit alongside them.
+
+Requirements: a Claude Code account, Figma Desktop, the Figma Console MCP connection (set up once) and Node.js 18 or newer. No coding and no Git knowledge needed.
+
+## Docs
+
+- [Home](https://designtokenskills.com/): what it does, with a live demo of each skill
+- [Designer's Guide](https://designtokenskills.com/guide/): install, mental model, every skill step by step, cheat sheet and troubleshooting
+
+## Source
+
+- [GitHub repository](https://github.com/manolobevia/design-tokens-starter-kit): the skills, the README with every parameter, tests and the MIT license
+- [Connect Claude Code to Figma](https://github.com/manolobevia/design-tokens-starter-kit/blob/main/docs/figma-console-setup.md): one-time setup of the token, the server and the plugin
+
+## The 12 skills (what you type, what it writes)
+
+- figma-color-scale: `Purple:#5C3FC4` writes an 11-step scale (950 to 50) in Brand
+- figma-alias-bridge: `Brand/Purple -> Alias/Primary` writes Alias roles that reference Brand
+- figma-mapped-roles: `Mapped` writes Surface, Border, Text and Icon variables in Light and Dark, referencing Alias
+- figma-spacing: `Spacing` writes a 4px-unit spacing scale
+- figma-radius: `Border radius` writes a border radius scale
+- figma-border-width: `Border width` writes a border weight scale
+- figma-motion: `Motion` writes duration and easing variables
+- figma-type-scale: `Typography` writes font variables, a Desktop and Mobile size scale and text styles
+- figma-token-docs: `Design Tokens` builds a Design Tokens documentation page in Figma
+- figma-contrast-fix: `Contrast fix` finds Mapped pairs below WCAG AA and previews a passing fix
+- figma-export-tokens: `Export tokens` writes CSS custom properties, W3C design tokens JSON and a Tailwind v4 theme
+- figma-starter: `/figma-starter Plum:#3B1A53 Periwinkle:#8E7FAE heading "Moneta Sans" body Lato` runs all of the above in order
+
+## Optional
+
+- [whatthefux.studio](https://whatthefux.studio/): the studio that makes Design Token Skills
