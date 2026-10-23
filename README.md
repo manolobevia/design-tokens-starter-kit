@@ -4,7 +4,7 @@
 
 Type one short line, get real **Figma variables and text styles** written to your open file. Twelve Claude Code skills build a complete token system (color, aliases, usage roles, spacing, radius, border width, motion and typography), a visual **Design Tokens** page that documents it, and code exports for developers.
 
-![The Design Tokens page the skills build in Figma: a clickable contents frame with a card per section](docs/design-tokens-contents.png)
+![Type one line. Watch Figma fill with tokens. A typed /figma-starter line next to the Local variables panel it fills: Brand collection, Purple scale from 950 to 50](docs/readme-hero.png)
 
 ## Quick start
 
