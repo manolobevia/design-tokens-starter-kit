@@ -92,10 +92,3 @@ if (hero && !reduced) {
     }
   })();
 }
-
-/* ---------- feature copy: stay vertically centered on screen while pinned ---------- */
-const copies = document.querySelectorAll<HTMLElement>('.copy-in');
-const centerCopies = () =>
-  copies.forEach((el) => el.style.setProperty('--copy-top', Math.max(24, (window.innerHeight - el.offsetHeight) / 2) + 'px'));
-centerCopies();
-window.addEventListener('resize', centerCopies);
