@@ -60,4 +60,10 @@ const dark = rows.map((r) => `--${r[0].replace('/', '-')}:${r[4]}`).join(';');
   th { color: var(--text-secondary); font-weight: 500; }
   td { color: var(--text-default); }
   [data-mode='light'] [data-col='light'], [data-mode='dark'] [data-col='dark'] { color: var(--text-heading); font-weight: 600; }
+  @media (max-width: 640px) {
+    .demo { padding: var(--brand-space-4); }
+    table { table-layout: fixed; font-size: 0.72rem; }
+    th, td { padding: 10px 4px; overflow-wrap: anywhere; }
+    th:first-child, td:first-child { width: 36%; }
+  }
 </style>
