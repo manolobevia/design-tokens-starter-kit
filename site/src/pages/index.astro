@@ -295,6 +295,11 @@ const faq = [
   .lead.sub { margin-top: var(--brand-space-3); }
   .actions { margin-top: var(--brand-space-8); display: flex; flex-wrap: wrap; gap: var(--brand-space-3); }
   .tight { padding-block: var(--brand-space-16); }
+  /* On phones the space between sections is 84px: 42px of padding above and below each one. */
+  @media (max-width: 640px) {
+    .section, .tight { padding-block: 42px; }
+    .hero { padding-top: 132px; padding-bottom: 42px; }
+  }
   .narrow { width: min(100% - 2 * var(--brand-space-4), 720px); }
 
   .steps { list-style: none; margin: var(--brand-space-8) 0 0; padding: 0; display: grid; gap: var(--brand-space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
