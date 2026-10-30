@@ -76,7 +76,7 @@ Every skill reads one typed line. These are all the forms each one accepts.
 | `Foundation` | Only `Foundation/White` and `Foundation/Black` |
 | `Foundation White:#FAFAF7 Black:#0B0B0D` | Your own white and/or black. Either one alone works |
 
-`-default` can be combined with your own colors. A color you type wins over the preset one of the same name. All colors go in the `Brand` collection.
+`-default` can be combined with your own colors. A color you type wins over the preset one of the same name. All colors go in the `Brand` collection. Re-running a line whose name already exists updates those steps in place, so a hand-edited step is overwritten (even with the same hex), and there is no reset command. Extra steps you added yourself, like `Purple/850`, are left alone.
 
 ### `figma-alias-bridge`
 
@@ -88,7 +88,7 @@ Every skill reads one typed line. These are all the forms each one accepts.
 | Several lines | One bridge per line. Running again repoints, never duplicates |
 | `-default` | Six bridges: Gray → Neutral (Neutral is always Gray), Red → Error, Green → Success, Orange → Warning, Blue → Information, Foundation → Foundation |
 
-`-default` does not create Primary, Secondary and so on. Add those yourself, in the same message: `-default` plus `Brand/Purple -> Alias/Primary`. A line you type replaces the default for the same role. If a Brand group is missing, the skill names it and does not guess.
+`-default` does not create Primary, Secondary and so on. Add those yourself, in the same message: `-default` plus `Brand/Purple -> Alias/Primary`. A line you type replaces the default for the same role. If a Brand group is missing, the skill names it and does not guess. Running a line again points every mirrored alias back at its source, so a hand-repointed alias is reset; extra variables you added to the group, like `Primary/850`, are left alone.
 
 ### `figma-mapped-roles`
 
@@ -134,7 +134,7 @@ Use them in code: `@import "./tokens/tokens.css";`, then set `data-theme="dark"`
 | `heading <font>`, `body <font>` | Font families. Defaults: Inter and Roboto. Quote names with spaces |
 | `dry run` | Show the plan, write nothing |
 
-It calls the other skills in order, so it is safe to repeat: steps that already exist are skipped.
+It calls the other skills in order, so it is safe to repeat, and each step follows its own rule for what already exists. Color scales and alias links are updated to match your line (a hand-edited step is overwritten, even with the same hex). Spacing, radius, border width, motion, type and Mapped keep values you changed by hand.
 
 ### `figma-radius`
 
@@ -295,6 +295,6 @@ python3 -m unittest discover tests
 
 ## Good to know
 
-- A typed line is the whole request. The skills do not ask for confirmation, and they are safe to repeat.
+- A typed line is the whole request. The skills do not ask for confirmation, and they are safe to repeat. Color scales and alias links are rewritten to match the line you type; the other groups keep hand-changed values (see Parameters).
 - If Figma is not connected, the skill says what is missing and writes nothing.
 - Full rules per skill are in each `SKILL.md`. Project conventions are in [CLAUDE.md](CLAUDE.md).

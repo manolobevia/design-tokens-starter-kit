@@ -67,7 +67,7 @@
           "name": "Will it overwrite my existing variables?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Not the ones you tuned by hand. If you edit a value in Mapped, Spacing, Border radius, Border width, Motion or your type styles, a re-run keeps your edit. To put a group back to the preset, add reset, for example reset Mapped/Text. The exceptions are color scales and alias links: if you re-run a line with the same name, such as Purple:#5C3FC4 with a new hex, the skill updates those steps to match. Add dry run to any line to see what would happen first."
+            "text": "Not the ones you tuned by hand. If you edit a value in Mapped, Spacing, Border radius, Border width, Motion or your type styles, a re-run keeps your edit. To put one back on the preset, use that skill’s reset line, such as reset Mapped/Text, reset Spacing, reset Border radius, reset Border width, reset Motion, reset Responsive or reset type styles. Three things do overwrite: color scales and alias links (re-running Purple:#5C3FC4 rewrites every Purple step, even with the same hex, and there is no reset), a Typography line that names settings such as base 18, and the generated Design Tokens page and export files. Add dry run to a line to preview it. For color scales and the starter it shows the plan, not each variable."
           }
         },
         {
