@@ -132,6 +132,7 @@ const faq = [
   description="Free, open-source Claude Code skills that write a complete design token system into your Figma file from short typed lines."
 >
   <script slot="head" type="application/ld+json" set:html={schemaHome} />
+  <link slot="head" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap" />
   <section class="section hero hero-var" data-glow style={rampStyle}>
     <div class="gradient" aria-hidden="true"></div>
     <div class="container hero-grid">
@@ -297,6 +298,10 @@ const faq = [
   .lead.sub { margin-top: var(--brand-space-3); }
   .actions { margin-top: var(--brand-space-8); display: flex; flex-wrap: wrap; gap: var(--brand-space-3); }
   .tight { padding-block: var(--brand-space-16); }
+  /* Descriptive text (hero and section paragraphs, notes, card text) and the button labels are Montserrat Light. Typed lines and the section headings stay as they were. */
+  .lead, .steps p, .copy > p:not(.eyebrow):not(.typed-line), .note, .benefits p, .needs p { font-family: var(--brand-font-text); font-weight: 300; }
+  /* The buttons are Montserrat SemiBold. */
+  .btn { font-family: var(--brand-font-text); font-weight: 600; }
   /* On phones the space between sections is 84px: 42px of padding above and below each one. */
   @media (max-width: 640px) {
     .section, .tight { padding-block: 42px; }
@@ -338,9 +343,9 @@ const faq = [
   .needs li { display: flex; flex-direction: column; gap: var(--brand-space-2); }
   .needs p { color: var(--text-secondary); }
   .check { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: var(--brand-radius-full); background: var(--surface-action); color: var(--text-on-action); margin-bottom: var(--brand-space-1); }
-  .faq { margin-top: var(--brand-space-6); border-top: var(--brand-border-1) solid var(--border-default); }
+  .faq { margin-top: var(--brand-space-6); border-top: var(--brand-border-1) solid var(--border-default); font-family: var(--brand-font-text); font-weight: 300; }
   details { border-bottom: var(--brand-border-1) solid var(--border-default); padding-block: var(--brand-space-4); }
-  summary { cursor: pointer; font-weight: 600; color: var(--text-heading); }
+  summary { cursor: pointer; font-weight: inherit; color: var(--text-heading); }
   details p { margin-top: var(--brand-space-3); color: var(--text-secondary); }
 
   .cta { text-align: center; }
