@@ -40,7 +40,7 @@
 .d-sw { border-radius: var(--brand-radius-3); padding: var(--brand-space-4); display: flex; flex-direction: column; gap: var(--brand-space-1); border: var(--brand-border-1) solid var(--border-default); }
 .d-sw strong { font-family: var(--brand-font-heading); font-weight: 400; font-size: 1.2rem; }
 .d-sw span { font-family: var(--brand-font-mono); font-size: 0.8rem; }
-.d-badge { align-self: flex-start; font-family: var(--brand-font-mono); font-size: 0.75rem; padding: 2px var(--brand-space-2); border-radius: var(--brand-radius-full); }
+.d-badge { align-self: flex-start; font-family: var(--brand-font-mono); font-size: 0.75rem; padding: 2px var(--brand-space-2); border-radius: var(--brand-radius-2); }
 .d-badge--fail { background: #5b1a1a; color: #ffd6d6; }
 .d-badge--pass { background: #14532d; color: #d4f5df; }
 .d-range { width: 100%; accent-color: var(--surface-action); }
