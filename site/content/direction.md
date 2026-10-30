@@ -14,8 +14,8 @@ developer docs.
 | Use | Font |
 |---|---|
 | Headlines, wordmark | Cal Sans (one weight, Regular) |
-| Body | Sometype Mono |
-| Typed lines, code | Sometype Mono |
+| Body | Martian Mono Light (300) |
+| Typed lines, code | Martian Mono |
 
 All on Google Fonts. First pick; licenses to be confirmed at build time.
 

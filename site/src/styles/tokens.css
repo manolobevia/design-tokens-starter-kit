@@ -37,8 +37,8 @@
   --brand-violet-logo: #b99aff;
   --brand-font-text: 'Montserrat', system-ui, sans-serif;
   --brand-font-heading: 'Cal Sans', system-ui, sans-serif;
-  --brand-font-body: 'Sometype Mono', ui-monospace, monospace;
-  --brand-font-mono: 'Sometype Mono', ui-monospace, monospace;
+  --brand-font-body: 'Martian Mono', ui-monospace, monospace;
+  --brand-font-mono: 'Martian Mono', ui-monospace, monospace;
 
   /* Alias */
   --alias-neutral-950: var(--brand-gray-950);
