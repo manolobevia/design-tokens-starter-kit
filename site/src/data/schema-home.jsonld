@@ -7,7 +7,9 @@
       "name": "Design Token Skills",
       "url": "https://designtokenskills.com/",
       "description": "Free, open-source Claude Code skills that write a complete design token system into your Figma file from short typed lines.",
-      "publisher": { "@id": "https://designtokenskills.com/#org" }
+      "publisher": {
+        "@id": "https://designtokenskills.com/#org"
+      }
     },
     {
       "@type": "Organization",
@@ -28,9 +30,17 @@
       "isAccessibleForFree": true,
       "license": "https://opensource.org/licenses/MIT",
       "downloadUrl": "https://github.com/manolobevia/design-tokens-starter-kit/archive/refs/heads/main.zip",
-      "sameAs": ["https://github.com/manolobevia/design-tokens-starter-kit"],
-      "author": { "@id": "https://designtokenskills.com/#org" },
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      "sameAs": [
+        "https://github.com/manolobevia/design-tokens-starter-kit"
+      ],
+      "author": {
+        "@id": "https://designtokenskills.com/#org"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
     },
     {
       "@type": "FAQPage",
@@ -39,22 +49,50 @@
         {
           "@type": "Question",
           "name": "Do I need Claude Code?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. The skills run inside Claude Code and write to your Figma file through the Figma Console MCP." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The skills run inside Claude Code and write to your Figma file through the Figma Console MCP."
+          }
         },
         {
           "@type": "Question",
           "name": "Do I need GitHub?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No account needed. You download the project once, and the Guide walks you through it in plain steps." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No account needed. You download the project once, and the Guide walks you through it in plain steps."
+          }
         },
         {
           "@type": "Question",
           "name": "Will it overwrite my existing variables?",
-          "acceptedAnswer": { "@type": "Answer", "text": "It writes to the Brand, Alias, Mapped and Responsive collections. A variable with the same name has its value updated in place, and hand-tuned Mapped values are kept unless you ask for a reset. Add dry run to any line to see what would happen first." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not the ones you tuned by hand. If you edit a value in Mapped, Spacing, Border radius, Border width, Motion or your type styles, a re-run keeps your edit. To put a group back to the preset, add reset, for example reset Mapped/Text. The exceptions are color scales and alias links: if you re-run a line with the same name, such as Purple:#5C3FC4 with a new hex, the skill updates those steps to match. Add dry run to any line to see what would happen first."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this for starting a system or maintaining one?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For starting one. The skills build a consistent base fast: scales, roles, Light and Dark usage, spacing, type and more. After that, the system is yours to edit in Figma. Add steps like 850, tune a disabled gray, or darken a danger color by hand. The skills won’t track why you made those changes, so a note in the variable’s description field is a good habit."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I add my own steps, like Purple/850?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, in Figma. Skills only write the names they generate, so a custom name is not part of what they write."
+          }
         },
         {
           "@type": "Question",
           "name": "Is it free?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. It is open source under the MIT license, including for commercial work." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. It is open source under the MIT license, including for commercial work."
+          }
         }
       ]
     }
